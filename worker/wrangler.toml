@@ -1,5 +1,5 @@
 # The site's form handler, deployed to his own Cloudflare account.
-# Nothing secret in this file. Set with `npx wrangler secret put`: TURNSTILE_SECRET, and MAILBOX (the project Gmail).
+# Nothing secret in this file. Set with `npx wrangler secret put`: TURNSTILE_SECRET, MAILBOX (the project Gmail) and KIT_API_KEY (Kit v4 key).
 name = "projecttrinity-forms"
 main = "src/index.js"
 compatibility_date = "2026-11-01"

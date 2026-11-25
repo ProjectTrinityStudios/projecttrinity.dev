@@ -2,7 +2,7 @@
 //   POST /request    a build request: checked by Turnstile, kept in D1, mailed to the project mailbox,
 //                    and added to the email list only if the requester ticked that box
 //   POST /subscribe  the email list: checked by Turnstile, handed to Kit's form (Kit sends its own confirm email)
-// No cookies, nothing logged beyond the request row. Secrets (TURNSTILE_SECRET) live in Cloudflare, never in this repo.
+// No cookies, nothing kept beyond the request row. Secrets (TURNSTILE_SECRET, MAILBOX, KIT_API_KEY) live in Cloudflare, never in this repo.
 
 const PLATFORMS = ["windows", "mac", "linux"];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -85,20 +85,30 @@ async function checkTurnstile(env, token, ip) {
   return { ok: out.success === true, codes: out["error-codes"] || [] };
 }
 
-// Kit's own form endpoint, the one its plain-HTML embed posts to: Kit then sends the form's confirm email.
+// Kit's v4 API (its public form endpoint quarantines posts from servers as bots). The key is the
+// KIT_API_KEY secret in Cloudflare. Step 1 creates the subscriber, step 2 adds them to the site's form.
 async function addToKit(env, email) {
-  if (!env.KIT_FORM_ID) return false;
-  const res = await fetch(`https://app.kit.com/forms/${encodeURIComponent(env.KIT_FORM_ID)}/subscriptions`, {
+  if (!env.KIT_FORM_ID || !env.KIT_API_KEY) {
+    console.log("kit not set up", !!env.KIT_FORM_ID, !!env.KIT_API_KEY);
+    return false;
+  }
+  const headers = { "X-Kit-Api-Key": env.KIT_API_KEY, "Content-Type": "application/json", "Accept": "application/json" };
+  const made = await fetch("https://api.kit.com/v4/subscribers", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json" },
-    body: new URLSearchParams({ email_address: email }),
+    headers,
+    body: JSON.stringify({ email_address: email, state: env.KIT_NEW_STATE || "inactive" }),
   });
-  const raw = await res.text().catch(() => "");
-  // Kit answers 200 with {"status":"success"} or {"status":"failed", ...}; keep its answer in the logs.
-  console.log("kit", res.status, raw.slice(0, 300));
-  let status = "";
-  try { status = JSON.parse(raw).status || ""; } catch {}
-  return res.ok && status !== "failed";
+  const madeText = await made.text().catch(() => "");
+  console.log("kit subscriber", made.status, madeText.slice(0, 300));
+  if (!made.ok) return false;
+  const added = await fetch(`https://api.kit.com/v4/forms/${encodeURIComponent(env.KIT_FORM_ID)}/subscribers`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ email_address: email, referrer: "https://projecttrinity.dev/" }),
+  });
+  const addedText = await added.text().catch(() => "");
+  console.log("kit form", added.status, addedText.slice(0, 300));
+  return added.ok;
 }
 
 // To the project mailbox, a verified Email Routing destination (the Free plan sends only to those).
