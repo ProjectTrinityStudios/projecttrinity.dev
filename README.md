@@ -37,4 +37,4 @@ then open http://127.0.0.1:8176/. Add `?theme=dark` or `?theme=light` to force a
 
 ## Not connected yet
 
-- The devlog entry links to `devlog/i-miss-playing-with-my-friends/`, which does not exist yet.
+- `devlog/i-miss-playing-with-my-friends/` is a "still being written" page (caution tape) until the post is written.
