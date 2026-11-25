@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Trinity: Shatterbound</title>
+  <meta name="description" content="A dungeon crawler built around the tank, healer and DPS of MMO raiding, with an AI party that plays to win and lets you swap into any of them mid-fight. Alpha on Windows, Mac and Linux.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ebe4f2">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1424">
+
+  <!-- The link card: what a shared link shows -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Project Trinity">
+  <meta property="og:title" content="Project Trinity: Shatterbound">
+  <meta property="og:description" content="A dungeon crawler with an AI raid party: a tank, a healer and DPS that play to win. Swap into any of them mid-fight. Alpha.">
+  <meta property="og:url" content="https://projecttrinity.dev/">
+  <meta property="og:image" content="https://projecttrinity.dev/img/share-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Old Hunger, a huge armoured grub with a split jaw, lit pale against a dark dungeon floor, under the title Project Trinity: Shatterbound.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/TrinityConfluence-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="css/site.css">
+  <script src="js/site.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the page</a>
+
+  <header class="masthead">
+    <a class="mark" href="#top" aria-label="Project Trinity, back to the top">
+      <svg class="mark-shard" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#shard"/></svg>
+      <span>Project Trinity</span>
+    </a>
+    <nav aria-label="On this page">
+      <ul>
+        <li><a href="#builds">Builds</a></li>
+        <li><a href="#devlog">Devlog</a></li>
+        <li><a href="#research">Research</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+      <span data-theme-label>Dark</span>
+    </button>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="game-title">
+      <h1 id="game-title">Project Trinity: Shatterbound</h1>
+
+      <figure class="film">
+        <button class="film-play" type="button" aria-describedby="film-note" data-film>
+          <img
+            src="img/old-hunger-1280.jpg"
+            srcset="img/old-hunger-800.jpg 800w, img/old-hunger-1280.jpg 1280w, img/old-hunger-1920.jpg 1920w"
+            sizes="(min-width: 1180px) 1100px, 100vw"
+            width="1920" height="1080"
+            alt="Old Hunger, the first boss: a huge armoured grub with a split, toothed jaw, lit pale in the dark of its chamber at the bottom of the Hungry Deep.">
+          <span class="film-mark" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 64 64" focusable="false"><path d="M25 19v26l21-13z"/></svg>
+          </span>
+          <span class="visually-hidden">Play the gameplay video, 74 seconds</span>
+        </button>
+        <figcaption>
+          <span>Gameplay, 74 seconds: the AI party at Old Hunger, a second player dropping in, and Patchwork's last stand.</span>
+          <span class="film-note" id="film-note" role="status" data-film-note></span>
+        </figcaption>
+      </figure>
+
+      <div class="about">
+      <div class="about-game">
+      <div class="status">
+        <p class="status-stage"><span class="visually-hidden">Status: </span>Alpha</p>
+        <ul class="platforms" aria-label="Builds for">
+          <li>
+            <svg role="img" aria-labelledby="pf-win" width="26" height="26" viewBox="0 0 24 24" focusable="false"><title id="pf-win">Windows</title>
+              <path d="M2 4.4 10.2 3.3v7.9H2zM11.2 3.2 22 1.7v9.5H11.2zM2 12.2h8.2v7.9L2 19zM11.2 12.2H22v9.5l-10.8-1.5z"/></svg>
+          </li>
+          <li>
+            <svg role="img" aria-labelledby="pf-mac" width="26" height="26" viewBox="0 0 24 24" focusable="false"><title id="pf-mac">Mac</title>
+              <path d="M12 7.6c-1.3 0-2.4-.8-3.7-.8C5.9 6.8 4 8.9 4 12.2 4 16.3 6.6 21 8.7 21c1.2 0 1.9-.8 3.3-.8s2 .8 3.3.8c1.7 0 3.4-2.8 4.3-5.1-1.7-.8-2.7-2.3-2.7-4 0-1.6.9-2.9 2.1-3.6-.9-1.1-2.2-1.5-3.3-1.5-1.3 0-2.3.8-3.7.8Z"/>
+              <path d="M12.2 6.2c-.1-1.8 1.3-3.5 3.1-3.7.1 1.8-1.3 3.5-3.1 3.7Z"/></svg>
+          </li>
+          <li>
+            <svg role="img" aria-labelledby="pf-linux" width="26" height="26" viewBox="0 0 24 24" focusable="false"><title id="pf-linux">Linux</title>
+              <defs>
+                <mask id="tux-cut">
+                  <rect width="24" height="24" fill="#fff"/>
+                  <ellipse cx="12" cy="15.4" rx="3.5" ry="4.9" fill="#000"/>
+                  <circle cx="10.5" cy="6.4" r=".9" fill="#000"/>
+                  <circle cx="13.5" cy="6.4" r=".9" fill="#000"/>
+                </mask>
+              </defs>
+              <g mask="url(#tux-cut)">
+                <circle cx="12" cy="6.8" r="4.2"/>
+                <ellipse cx="12" cy="14.8" rx="6" ry="6.6"/>
+              </g>
+              <path d="M10.4 8.3h3.2L12 9.9z"/>
+              <ellipse cx="8.4" cy="21.3" rx="3" ry="1.4"/>
+              <ellipse cx="15.6" cy="21.3" rx="3" ry="1.4"/>
+            </svg>
+          </li>
+        </ul>
+      </div>
+
+      <div class="pitch">
+        <p>A hub-based dungeon crawler built around the Holy Trinity of MMO raiding: a tank, a healer and DPS.</p>
+        <p>Your party is AI, and it's never throttled. It plays like a raid team chasing day-one clears.</p>
+        <p>Swap into any of them mid-fight. One second you're tanking, the next you're the healer.</p>
+      </div>
+      </div>
+
+      <section class="made" aria-labelledby="made-title">
+        <h2 id="made-title">How it was made</h2>
+        <ul class="made-lines">
+          <li>I've been a software engineer for six years and didn't write a single line of code on this. AI agents built it; I architected it, played it and decided.</li>
+          <li>Claude built every dungeon and set piece by hand in Blender, and I clean up the textures after. Most of the main cast and some bosses are AI generated.</li>
+          <li>The animations, music and sound effects are packs I bought, and the voice lines are ElevenLabs.</li>
+        </ul>
+      </section>
+      </div>
+    </section>
+
+    <section class="builds" id="builds" aria-labelledby="builds-title">
+      <h2 id="builds-title" class="visually-hidden">Get a build, or hear when there's news</h2>
+      <div class="book">
+        <div class="page page-left">
+          <h3 id="request-title">Request a build</h3>
+          <p class="page-lede">Builds go out by hand, a few at a time. Tell me where you'll play it and I'll email you when there's one for you.</p>
+          <form class="ledger-form" aria-labelledby="request-title" data-unconnected novalidate>
+            <div class="field">
+              <label for="req-email">Email</label>
+              <input id="req-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <fieldset class="field">
+              <legend>Where you'll play</legend>
+              <div class="choices">
+                <label><input type="radio" name="platform" value="windows" required> Windows</label>
+                <label><input type="radio" name="platform" value="mac"> Mac</label>
+                <label><input type="radio" name="platform" value="linux"> Linux</label>
+              </div>
+            </fieldset>
+            <div class="field">
+              <label for="req-note">Anything I should know? <span class="optional">(optional)</span></label>
+              <textarea id="req-note" name="note" rows="2" maxlength="500"></textarea>
+            </div>
+            <div class="ticks">
+              <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
+              <label class="tick"><input type="checkbox" name="join_list"> <span>Also add me to the email list</span></label>
+            </div>
+            <button class="seal" type="submit">Request a build</button>
+            <p class="form-note" role="status" aria-live="polite" data-form-note></p>
+          </form>
+        </div>
+
+        <div class="spine" aria-hidden="true"></div>
+
+        <div class="page page-right">
+          <h3 id="list-title">Join the email list</h3>
+          <p class="page-lede">A note when there's a new devlog or a new build. Not often, and you can leave any time.</p>
+          <form class="ledger-form" aria-labelledby="list-title" data-unconnected novalidate>
+            <div class="field">
+              <label for="list-email">Email</label>
+              <input id="list-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="ticks">
+              <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
+            </div>
+            <button class="seal" type="submit">Sign up</button>
+            <p class="form-note" role="status" aria-live="polite" data-form-note></p>
+          </form>
+          <p class="page-foot">Your email stays with the project. It's never sold or shared.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="devlog" id="devlog" aria-labelledby="devlog-title">
+      <h2 id="devlog-title">Devlog</h2>
+      <article class="entry">
+        <img class="entry-image"
+          src="img/ledger-friends-720.jpg"
+          srcset="img/ledger-friends-720.jpg 720w, img/ledger-friends-1200.jpg 1200w"
+          sizes="(min-width: 860px) 420px, 100vw"
+          width="1200" height="675" loading="lazy"
+          alt="The game's Ledger, an open book. The roster lists Bastion, Oracle, Reaver and Asha, each ticked fit for duty, beside a photo of the fallen boss and the words They held. At the foot of the page, Four assets is struck out and friends written above it.">
+        <div class="entry-text">
+          <p class="entry-date"><time datetime="2026-11-25">25 November 2026</time></p>
+          <h3><a href="devlog/i-miss-playing-with-my-friends/">I miss playing with my friends and raiding. So I built this.</a></h3>
+          <p>I built it because I miss playing with my friends. TERA shut down, everybody's busy and in different time zones now, and some raid buddies of mine have died, so I can never really play with them again. So I've built some AI party members to help me.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="research" id="research" aria-labelledby="research-title">
+      <h2 id="research-title">Project Trinity</h2>
+      <div class="research-text">
+        <p>Project Trinity is the AI party: the tank, healer and DPS that run with you. The goal was to make them extremely competent, like my own days chasing leaderboards and day-one clears. The only thing I take away is knowledge, and only where it helps the raid leader fantasy. I just tell it less.</p>
+        <p>It's half research, half game development: a machine learning project and a game built at once, with the fights simulated in the cloud.</p>
+        <p>The building is research too. It started with one AI session, then it grew, and it kept growing. Now it's one orchestrator and a seat for each job, each one working off a sheet with a line it has to knock off.</p>
+      </div>
+      <div class="charts">
+        <figure>
+          <picture>
+            <source media="(prefers-reduced-motion: reduce)" srcset="img/how-the-work-grew-still.png">
+            <img src="img/how-the-work-grew.gif" width="720" height="900" loading="lazy"
+              alt="Animated chart, How our way of building grew, in four eras along a timeline. July 2026: one session building from a numbered spec. August: a backend and a frontend track, each an AI lead with helpers on its own branch, sharing a ledger of decisions, 3,409 commits and 1 pull request. September to October: a standing seat for each area. November to now: one orchestrator and a seat for each line. The first three eras are crumpled into a bin and the chart ends on today's way of working.">
+          </picture>
+          <figcaption>How the work grew, July to now.</figcaption>
+        </figure>
+        <figure>
+          <picture>
+            <source media="(prefers-reduced-motion: reduce)" srcset="img/how-the-work-runs-still.png">
+            <img src="img/how-the-work-runs.gif" width="720" height="900" loading="lazy"
+              alt="Animated chart, How Project Trinity: Shatterbound gets built. AI agents do the work; I design it, play it and decide. I sit down with Fable and the sit-down fills the sheets. The orchestrator, Claude Opus, pulls one line at a time and sends it to a seat: VFX on Claude Opus, Backend on Codex, Tooling on Claude Sonnet. Each line becomes a pull request whose checks must pass, then two AI reviews by Gemini and Codex or Opus, a film check where every frame is opened, and my eye: I watch every look before it merges into develop. Counts at the foot: 1,238 pull requests merged since July, 662 sheet lines landed, 75 orchestrators so far.">
+          </picture>
+          <figcaption>How the work runs today.</figcaption>
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <footer class="colophon">
+    <div class="colophon-grid">
+      <div>
+        <h2>Contact</h2>
+        <p><a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a></p>
+      </div>
+      <div>
+        <h2>Video</h2>
+        <p>YouTube channel coming soon.</p>
+      </div>
+      <div class="privacy">
+        <h2>Privacy</h2>
+        <p>No cookies, no trackers, no ads. If you request a build or join the list, your email goes to the project mailbox, and to the list only if you ask. Both are for people 13 or older.</p>
+      </div>
+    </div>
+    <p class="colophon-foot">Project Trinity: Shatterbound is in alpha. Made with AI agents, by one human.</p>
+  </footer>
+
+  <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
+    <symbol id="shard" viewBox="0 0 32 32">
+      <path d="M16 2 27 14 16 30 5 14Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M16 2 16 30M5 14 16 18 27 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+    </symbol>
+  </svg>
+</body>
+</html>
