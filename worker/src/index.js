@@ -37,8 +37,11 @@ export default {
     if (!EMAIL_RE.test(email)) return reply(400, { ok: false, error: "email" });
     if (data.age !== true) return reply(400, { ok: false, error: "age" });
 
-    const human = await checkTurnstile(env, data.token, request.headers.get("CF-Connecting-IP"));
-    if (!human) return reply(400, { ok: false, error: "turnstile" });
+    const check = await checkTurnstile(env, data.token, request.headers.get("CF-Connecting-IP"));
+    if (!check.ok) {
+      console.log("turnstile refused", JSON.stringify(check.codes));
+      return reply(400, { ok: false, error: "turnstile", codes: check.codes });
+    }
 
     if (path === "/subscribe") {
       const listed = await addToKit(env, email);
@@ -71,14 +74,15 @@ export default {
 };
 
 async function checkTurnstile(env, token, ip) {
-  if (!token || !env.TURNSTILE_SECRET) return false;
+  if (!token) return { ok: false, codes: ["no-token"] };
+  if (!env.TURNSTILE_SECRET) return { ok: false, codes: ["no-secret-set"] };
   const body = new FormData();
   body.append("secret", env.TURNSTILE_SECRET);
   body.append("response", String(token));
   if (ip) body.append("remoteip", ip);
   const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body });
   const out = await res.json().catch(() => ({}));
-  return out.success === true;
+  return { ok: out.success === true, codes: out["error-codes"] || [] };
 }
 
 // Kit's own form endpoint, the one its plain-HTML embed posts to: Kit then sends the form's confirm email.
