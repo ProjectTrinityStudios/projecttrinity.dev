@@ -583,6 +583,8 @@ p { margin: 0; }
 .colophon p { color: var(--text-soft); max-width: 52ch; }
 .colophon a { color: var(--link); }
 .colophon-foot { margin-top: 2rem; font-size: 0.92rem; color: var(--text-soft); }
+.colophon-foot + .colophon-foot { margin-top: 0.4rem; }
+.colophon .colophon-foot { max-width: 90ch; }
 
 /* ---- Phone and narrow widths -------------------------------------------- */
 @media (max-width: 900px) {
