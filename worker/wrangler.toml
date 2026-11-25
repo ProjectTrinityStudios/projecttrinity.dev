@@ -15,7 +15,7 @@ KIT_FORM_ID = "10244458"  # Kit's form number (public, not a secret)
 [[d1_databases]]
 binding = "DB"
 database_name = "projecttrinity-forms"
-database_id = ""          # printed by `npx wrangler d1 create projecttrinity-forms`
+database_id = "5e6cb21b-30bb-4f73-855f-96356de12418"
 
 [[send_email]]
 name = "NOTIFY"
