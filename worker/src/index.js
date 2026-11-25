@@ -93,7 +93,12 @@ async function addToKit(env, email) {
     headers: { "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json" },
     body: new URLSearchParams({ email_address: email }),
   });
-  return res.ok;
+  const raw = await res.text().catch(() => "");
+  // Kit answers 200 with {"status":"success"} or {"status":"failed", ...}; keep its answer in the logs.
+  console.log("kit", res.status, raw.slice(0, 300));
+  let status = "";
+  try { status = JSON.parse(raw).status || ""; } catch {}
+  return res.ok && status !== "failed";
 }
 
 // To the project mailbox, a verified Email Routing destination (the Free plan sends only to those).
