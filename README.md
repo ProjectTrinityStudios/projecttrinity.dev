@@ -23,9 +23,18 @@ then open http://127.0.0.1:8176/. Add `?theme=dark` or `?theme=light` to force a
 | `fonts/` | The game's UI fonts (Trinity Confluence, Source Sans 3), SIL Open Font License; licences beside them. |
 | `img/` | Stills cut from the main cut and the fly-through, the share card (1200x630), and the two flow charts with a still of each for people who turn motion off. |
 
+## The boxes and the video
+
+- The video is a poster until someone presses play; then YouTube's privacy-enhanced player (youtube-nocookie.com) loads in its place.
+- Both boxes post to `https://api.projecttrinity.dev`, the Worker in `worker/` on his Cloudflare account: Turnstile checks
+  it's a person, a build request is kept in D1 and mailed to the project mailbox, and the email list goes to Kit's form
+  (Kit sends its own confirm email). The Turnstile site key in `js/site.js` is public by design; the secret lives only in
+  Cloudflare (`npx wrangler secret put TURNSTILE_SECRET`).
+- Locally: `cd worker`, put Cloudflare's published test secret in `.dev.vars` (`TURNSTILE_SECRET=1x0000000000000000000000000000000AA`),
+  `npx wrangler d1 execute projecttrinity-forms --local --file=./schema.sql`, `npx wrangler dev --local --port 8787 --ip 127.0.0.1`;
+  on localhost the page uses the test site key and talks to port 8787.
+- `worker/` is not served (`_config.yml` excludes it).
+
 ## Not connected yet
 
-- The video plays from YouTube once the channel is up; the play mark shows a note until then.
-- "Request a build" and "Join the email list" check what is typed and say nothing was sent.
 - The devlog entry links to `devlog/i-miss-playing-with-my-friends/`, which does not exist yet.
-- `hello@projecttrinity.dev` is not live until the domain is bought and forwarded.

@@ -1,0 +1,23 @@
+# The site's form handler, deployed to his own Cloudflare account.
+# Nothing secret in this file. Set with `npx wrangler secret put`: TURNSTILE_SECRET, and MAILBOX (the project Gmail).
+name = "projecttrinity-forms"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+workers_dev = false
+
+routes = [{ pattern = "api.projecttrinity.dev", custom_domain = true }]
+
+[vars]
+ALLOWED_ORIGINS = "https://projecttrinity.dev,https://www.projecttrinity.dev,http://127.0.0.1:8176,http://localhost:8176"
+MAIL_FROM = "forms@projecttrinity.dev"
+KIT_FORM_ID = "10244458"  # Kit's form number (public, not a secret)
+
+[[d1_databases]]
+binding = "DB"
+database_name = "projecttrinity-forms"
+database_id = ""          # printed by `npx wrangler d1 create projecttrinity-forms`
+
+[[send_email]]
+name = "NOTIFY"
+# No address here: MAILBOX (the project Gmail, a verified Email Routing destination) is set as a secret,
+# so the Gmail address stays out of this public repository.

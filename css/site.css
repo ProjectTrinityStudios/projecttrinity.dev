@@ -247,6 +247,15 @@ p { margin: 0; }
 }
 .film-play:focus-visible { outline: 3px solid var(--focus); outline-offset: 6px; }
 .film-play img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.film-embed {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: #05070c;
+  outline: 1px solid var(--plate-edge);
+  outline-offset: 6px;
+}
 /* brass corners, after the game's card corners */
 .film-play::before,
 .film-play::after {

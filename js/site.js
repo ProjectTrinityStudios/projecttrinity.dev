@@ -1,7 +1,7 @@
 // Project Trinity: the site's only script. No tracking, no cookies, nothing stored.
 // 1. The light/dark switch (for this visit only; the page otherwise follows the system setting).
-// 2. The film's play mark (the video goes on YouTube later).
-// 3. The two boxes: checked here, and not sent anywhere yet.
+// 2. The film: loads YouTube's privacy-enhanced player only when play is pressed.
+// 3. The two boxes: checked here, then sent to the site's form handler (with Cloudflare's Turnstile spam check).
 
 (function () {
   "use strict";
@@ -34,22 +34,77 @@
     paintToggle();
   }
 
-  // 2. The film
+  // 2. The film: the poster stays until the visitor presses play; only then does YouTube load,
+  // from its privacy-enhanced domain (youtube-nocookie.com), so nothing of YouTube's runs before that.
   var film = document.querySelector("[data-film]");
-  var filmNote = document.querySelector("[data-film-note]");
-  if (film && filmNote) {
+  if (film) {
     film.addEventListener("click", function () {
-      filmNote.textContent = "The video goes up on YouTube soon and will play right here.";
+      var id = film.getAttribute("data-film");
+      var frame = document.createElement("iframe");
+      frame.className = "film-embed";
+      frame.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?autoplay=1&rel=0&playsinline=1";
+      frame.title = "Project Trinity: Shatterbound, gameplay video";
+      frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      frame.allowFullscreen = true;
+      frame.referrerPolicy = "strict-origin-when-cross-origin";
+      film.parentNode.replaceChild(frame, film);
+      frame.focus();
     });
   }
 
-  // 3. The boxes
-  var forms = document.querySelectorAll("form[data-unconnected]");
+  // 3. The boxes: checked here, then sent to the site's form handler on Cloudflare
+  // (api.projecttrinity.dev). Cloudflare Turnstile, the spam check, loads only once someone starts filling a box.
+  var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
+  // On this machine the boxes talk to `wrangler dev`; on the site, to the deployed handler.
+  var API = LOCAL ? "http://127.0.0.1:8787" : "https://api.projecttrinity.dev";
+  // The site key is public by design. On this machine, Cloudflare's published always-pass test key.
+  var TURNSTILE_SITE_KEY = LOCAL ? "1x00000000000000000000AA" : "0x4AAAAAAGTNcejv966pk7dd";
+
+  var turnstileReady = null;
+  function loadTurnstile() {
+    if (turnstileReady) return turnstileReady;
+    turnstileReady = new Promise(function (resolve, reject) {
+      window.onTurnstileLoad = function () { resolve(window.turnstile); };
+      var s = document.createElement("script");
+      s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad";
+      s.async = true;
+      s.onerror = function () { turnstileReady = null; reject(new Error("turnstile")); };
+      document.head.appendChild(s);
+    });
+    return turnstileReady;
+  }
+
+  var forms = document.querySelectorAll("form[data-endpoint]");
   Array.prototype.forEach.call(forms, function (form) {
     var note = form.querySelector("[data-form-note]");
+    var slot = form.querySelector("[data-turnstile]");
+    var button = form.querySelector('button[type="submit"]');
+    var widgetId = null;
+    var sending = false;
+
+    function startCheck() {
+      if (widgetId !== null || !slot) return;
+      widgetId = "pending";
+      loadTurnstile().then(function (ts) {
+        widgetId = ts.render(slot, {
+          sitekey: TURNSTILE_SITE_KEY,
+          size: "flexible",
+          theme: "auto",
+          appearance: "interaction-only"
+        });
+      }).catch(function () { widgetId = null; });
+    }
+    form.addEventListener("focusin", startCheck);
+    form.addEventListener("pointerdown", startCheck);
+
+    function say(text, isError) {
+      note.classList.toggle("is-error", !!isError);
+      note.textContent = text;
+    }
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
+      if (sending) return;
       var problems = [];
       var firstBad = null;
 
@@ -65,7 +120,8 @@
       }
 
       var platforms = form.querySelectorAll('input[name="platform"]');
-      if (platforms.length && !form.querySelector('input[name="platform"]:checked')) {
+      var picked = form.querySelector('input[name="platform"]:checked');
+      if (platforms.length && !picked) {
         Array.prototype.forEach.call(platforms, function (r) { r.setAttribute("aria-invalid", "true"); });
         problems.push("Pick where you'll play.");
         firstBad = firstBad || platforms[0];
@@ -79,14 +135,54 @@
       }
 
       if (problems.length) {
-        note.classList.add("is-error");
-        note.textContent = problems.join(" ");
+        say(problems.join(" "), true);
         if (firstBad) firstBad.focus();
         return;
       }
 
-      note.classList.remove("is-error");
-      note.textContent = "This box isn't connected yet, so nothing was sent.";
+      var token = window.turnstile && widgetId !== null && widgetId !== "pending"
+        ? window.turnstile.getResponse(widgetId) : "";
+      if (!token) {
+        startCheck();
+        say("One moment: the spam check is still loading. Press the button again in a second.", true);
+        return;
+      }
+
+      var join = form.querySelector('input[name="join_list"]');
+      var noteField = form.querySelector('textarea[name="note"]');
+      var body = {
+        email: email.value.trim(),
+        age: true,
+        token: token,
+        platform: picked ? picked.value : undefined,
+        note: noteField ? noteField.value : undefined,
+        join_list: join ? join.checked : undefined
+      };
+
+      sending = true;
+      button.disabled = true;
+      say("Sending...", false);
+      fetch(API + form.getAttribute("data-endpoint"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        credentials: "omit"
+      }).then(function (res) {
+        return res.json().catch(function () { return { ok: false }; });
+      }).then(function (out) {
+        if (out.ok) {
+          form.reset();
+          say(form.getAttribute("data-thanks"), false);
+        } else {
+          say("That didn't go through. Please try again in a minute, or email hello@projecttrinity.dev.", true);
+        }
+      }).catch(function () {
+        say("That didn't go through. Please try again in a minute, or email hello@projecttrinity.dev.", true);
+      }).then(function () {
+        sending = false;
+        button.disabled = false;
+        if (window.turnstile && widgetId !== null && widgetId !== "pending") window.turnstile.reset(widgetId);
+      });
     });
   });
 })();
