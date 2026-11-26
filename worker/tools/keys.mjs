@@ -175,9 +175,9 @@ try {
     const c = counts();
     console.log(`Unused: ${c.unused}   Sent: ${c.used}`);
   } else if (command === "list") {
-    const rows = query("SELECT id, created_at, email, platform, status FROM build_requests WHERE status IN ('new', 'sending') ORDER BY id DESC LIMIT 100");
+    const rows = query("SELECT id, created_at, email, platform, status FROM build_requests WHERE status IN ('new', 'sending', 'repeat-unsent') ORDER BY id DESC LIMIT 100");
     if (!rows.length) console.log("No requests waiting.");
-    for (const r of rows) console.log(`${String(r.id).padStart(5)}  ${r.created_at}  ${r.platform.padEnd(7)}  ${r.status.padEnd(7)}  ${r.email}`);
+    for (const r of rows) console.log(`${String(r.id).padStart(5)}  ${r.created_at}  ${r.platform.padEnd(7)}  ${r.status.padEnd(13)}  ${r.email}`);
   } else if (command === "link") {
     const id = parseInt(target || "", 10);
     if (!(id > 0)) fail("Give the request's number: node tools/keys.mjs link <id>");

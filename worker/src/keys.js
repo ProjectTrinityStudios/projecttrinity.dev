@@ -11,6 +11,10 @@
 // later try returns: only It arrived or his Decline ends it, and Decline keeps the key out of stock. The page offers
 // Send again (the same key to the same person, with an idempotency key so Resend delivers it once). A request holds at
 // most one key: keys are reserved by one conditional statement.
+// One key per address (Tooling 201): a request from an address that already holds a sent key takes no key. The request
+// route mails them their own key's link again (remindKey) and stores the request as 'repeat' ('repeat-unsent' if that
+// mail did not go); its page says so and offers Mail their link again, never Send key, and reserveKey refuses a key to
+// any request whose address already holds one, so two tabs or two requests can never take a second.
 // RESEND_API_KEY is a Cloudflare secret. KEY_SENDER (local .dev.vars only): "fake" logs the mail instead of sending,
 // "fake-fail" is a plain refusal, "fake-lost" an unknown outcome.
 
@@ -76,6 +80,15 @@ export async function keysLeft(env) {
   return row ? row.n : 0;
 }
 
+// The key this address already holds through another request: a sent one, or one held by an unclear send ('sending').
+// A key kept out of stock by a Decline after an unclear send does not count: he revokes those on itch.io.
+export async function heldKey(env, email, exceptId = 0) {
+  return env.DB.prepare(
+    `SELECT k.id, k.url, k.used_at, r.id AS request_id, r.status FROM build_keys k JOIN build_requests r ON r.id = k.request_id
+     WHERE r.email = ? AND r.id <> ? AND r.status IN ('sent', 'sending') ORDER BY r.status = 'sent' DESC, k.used_at LIMIT 1`
+  ).bind(email, exceptId).first();
+}
+
 function lowMark(env) {
   const n = parseInt(env.KEYS_LOW || "5", 10);
   return Number.isFinite(n) && n >= 0 ? n : 5;
@@ -102,6 +115,7 @@ export async function handleApprove(request, env) {
     if (action === "retry") return retryKey(env, id, token);
     if (action === "arrived") return markArrived(env, id, token);
     if (action === "decline") return decline(env, id, token);
+    if (action === "remind") return remindAgain(env, id, token);
     return page(400, "Nothing done", [p("That button is not one this page knows. Nothing was sent.")]);
   }
   return page(405, "Nothing done", [p("Open the Approve link from the request mail.")]);
@@ -116,9 +130,7 @@ async function showRequest(env, id, token, notice) {
   const req = await loadRequest(env, id);
   if (!req) return page(404, "No such request", [p("This request is no longer in the store. Nothing was sent.")]);
   const left = await keysLeft(env);
-  const earlier = await env.DB.prepare(
-    "SELECT r.id, k.used_at FROM build_requests r JOIN build_keys k ON k.request_id = r.id WHERE r.email = ? AND r.id <> ? ORDER BY k.used_at"
-  ).bind(req.email, id).all();
+  const held = await heldKey(env, req.email, id);
   const key = await env.DB.prepare("SELECT used_at FROM build_keys WHERE request_id = ?").bind(id).first();
 
   const parts = [];
@@ -130,11 +142,24 @@ async function showRequest(env, id, token, notice) {
     <dt>Email list</dt><dd>${req.join_list ? "asked to join" : "no"}</dd>
     <dt>Note</dt><dd>${req.note ? esc(req.note) : "<span class=\"quiet\">(none)</span>"}</dd>
   </dl>`);
-  if (earlier.results && earlier.results.length) {
-    parts.push(p(`This address already has ${earlier.results.length === 1 ? "a key" : earlier.results.length + " keys"}, sent ${earlier.results.map((r) => esc(r.used_at)).join(", ")}.`, "warn"));
-  }
+  const buttons = (remind) => `<form method="post" action="/approve" class="buttons">
+      <input type="hidden" name="r" value="${id}"><input type="hidden" name="t" value="${esc(token)}">
+      ${remind ? `<button type="submit" name="action" value="remind" class="send">Mail their link again</button>\n      ` : ""}<button type="submit" name="action" value="decline" class="decline">Decline</button>
+    </form>`;
+  const wentOn = held ? ` (its key went on ${esc(held.used_at)}, request ${held.request_id})` : "";
 
-  if (req.status === "new") {
+  if (req.status === "repeat") {
+    parts.push(p(`This address already has a build${wentOn}, so its own key's link was mailed to ${esc(req.email)} again. No new key was taken.`, "done"));
+  } else if (req.status === "repeat-unsent") {
+    parts.push(p(`This address already has a build${wentOn}, so no new key is taken. The mail with its own key's link did not go out: Mail their link again sends that same link.`, "warn"));
+    parts.push(buttons(true));
+  } else if (req.status === "new" && held && held.status === "sent") {
+    parts.push(p(`This address already has a build${wentOn}. One key per address, so there is no Send key: Mail their link again sends ${esc(req.email)} their own key's link, and no new key is taken.`, "warn"));
+    parts.push(buttons(true));
+  } else if (req.status === "new" && held) {
+    parts.push(p(`This address has a key held by request ${held.request_id}, whose mail is not sure to have arrived. One key per address, so there is no Send key: settle that request first (its Approve link, or <code>node tools/keys.mjs link ${held.request_id}</code>).`, "warn"));
+    parts.push(buttons(false));
+  } else if (req.status === "new") {
     parts.push(left > 0
       ? p(`${left} unused ${left === 1 ? "key" : "keys"} in the store. Send key takes the next one and mails it to ${esc(req.email)} with the ${esc(PLATFORM_NAMES[req.platform])} note.`, left <= lowMark(env) ? "warn" : "")
       : p("No unused keys in the store: generate a batch on itch.io and import it (<code>node tools/keys.mjs import</code>) before sending.", "warn"));
@@ -176,8 +201,10 @@ async function reserveKey(env, id) {
   await env.DB.prepare(
     `UPDATE build_keys SET request_id = ?, used_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now')
      WHERE id = (SELECT id FROM build_keys WHERE request_id IS NULL ORDER BY id LIMIT 1) AND request_id IS NULL
-       AND NOT EXISTS (SELECT 1 FROM build_keys WHERE request_id = ?)`
-  ).bind(id, id).run();
+       AND NOT EXISTS (SELECT 1 FROM build_keys WHERE request_id = ?)
+       AND NOT EXISTS (SELECT 1 FROM build_keys k JOIN build_requests o ON o.id = k.request_id
+                       WHERE o.email = (SELECT email FROM build_requests WHERE id = ?) AND o.id <> ? AND o.status IN ('sent', 'sending'))`
+  ).bind(id, id, id, id).run();
   return env.DB.prepare("SELECT id, url FROM build_keys WHERE request_id = ? ORDER BY id LIMIT 1").bind(id).first();
 }
 
@@ -191,6 +218,7 @@ async function sendKey(env, id, token) {
   const key = await reserveKey(env, id);
   if (!key) {
     await env.DB.prepare("UPDATE build_requests SET status = 'new' WHERE id = ?").bind(id).run();
+    if (await heldKey(env, claimed.email, id)) return showRequest(env, id, token, p("This address already holds a key, so no second one was taken. Nothing was sent.", "warn"));
     return showRequest(env, id, token, p("No unused key was left, so nothing was sent. Import a batch and press Send key again.", "warn"));
   }
 
@@ -227,6 +255,7 @@ async function retryKey(env, id, token) {
   if (!req) return showRequest(env, id, token);
   // Normally the key it already holds; a send that stopped before taking one takes one now.
   const key = await reserveKey(env, id);
+  if (!key && (await heldKey(env, req.email, id))) return showRequest(env, id, token, p("This address already holds a key through another request, so no second one was taken. Nothing was sent: Decline this one.", "warn"));
   if (!key) return showRequest(env, id, token, p("No unused key was left, so nothing was sent. Import a batch and press Send again.", "warn"));
   return deliver(env, id, token, req, key, false);
 }
@@ -236,6 +265,25 @@ async function markArrived(env, id, token) {
     "UPDATE build_requests SET status = 'sent' WHERE id = ? AND status = 'sending' AND EXISTS (SELECT 1 FROM build_keys WHERE request_id = ?) RETURNING id"
   ).bind(id, id).first();
   return showRequest(env, id, token, done ? p("Marked as sent.", "done") : null);
+}
+
+// A request from an address that already holds a sent key: mail them that key's link again and store the outcome on the
+// request ('repeat', or 'repeat-unsent' when the mail did not go). Takes no key. Returns the mail's outcome.
+export async function remindKey(env, id, email, platform, held) {
+  const sent = await mailKey(env, email, platform, held.url, `build-key-again-${id}-${held.id}`, true);
+  await env.DB.prepare("UPDATE build_requests SET status = ? WHERE id = ?").bind(sent.ok ? "repeat" : "repeat-unsent", id).run();
+  return sent;
+}
+
+// The page's Mail their link again: a repeat whose mail did not go, or a waiting request whose address has since had a key.
+async function remindAgain(env, id, token) {
+  const req = await loadRequest(env, id);
+  if (!req || !["new", "repeat-unsent"].includes(req.status)) return showRequest(env, id, token);
+  const held = await heldKey(env, req.email, id);
+  if (!held || held.status !== "sent") return showRequest(env, id, token);
+  const sent = await remindKey(env, id, req.email, req.platform, held);
+  // On success the page's own line says it went; a failure adds why.
+  return showRequest(env, id, token, sent.ok ? null : p(`The mail did not go out (${esc(sent.error)}). No key was taken.`, "warn"));
 }
 
 // ---- the mails ----
@@ -259,13 +307,34 @@ export function keyMailText(platform, keyUrl) {
   ].join("\n");
 }
 
+// The mail to an address that asks again after its key went: the same link, nothing new.
+export function againMailText(platform, keyUrl) {
+  return [
+    "Hello,",
+    "",
+    "Thanks for asking to play Project Trinity: Shatterbound again. This address already has a build, so here is its link once more:",
+    "",
+    keyUrl,
+    "",
+    "It is the same link as before and still yours. It opens the game's itch.io page with the Windows, Mac and Linux downloads, no itch.io account needed. Please keep it to yourself.",
+    "",
+    ...(PLATFORM_NOTES[platform] || []),
+    "",
+    "It is an alpha: expect rough edges. To tell us what you found, reply to this mail.",
+    "",
+    "Project Trinity Studios",
+    "https://projecttrinity.dev",
+  ].join("\n");
+}
+
 // { ok } when Resend took the mail; { refused } when it plainly did not (nothing went out); neither when unknown.
-async function mailKey(env, to, platform, keyUrl, idempotencyKey) {
+// again: the mail to an address that already has a build (againMailText) instead of the first key mail.
+async function mailKey(env, to, platform, keyUrl, idempotencyKey, again = false) {
   const mail = {
     from: env.KEY_FROM || "Project Trinity <builds@projecttrinity.dev>",
     to: [to],
-    subject: "Your Project Trinity: Shatterbound build",
-    text: keyMailText(platform, keyUrl),
+    subject: again ? "You already have a Project Trinity: Shatterbound build" : "Your Project Trinity: Shatterbound build",
+    text: again ? againMailText(platform, keyUrl) : keyMailText(platform, keyUrl),
   };
   if (env.REPLY_TO) mail.reply_to = env.REPLY_TO;
 
