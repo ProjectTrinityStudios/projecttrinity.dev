@@ -80,8 +80,10 @@ through Resend with their platform's note, and marks the key and the request use
 each send also mails him a warning. The link's secret is stored only as its SHA-256 (`approvals`), and each request sends
 one key at most. The platform notes are `PLATFORM_NOTES` at the top of `keys.js`.
 
-- Keys go in from `worker/` with `node tools/keys.mjs import <file>` (or a pasted list): any text holding key links, or
-  bare keys with `--page <itch page>`. `count`, `list`, `link <id>` and `sent [email]` (which key went to whom) do the rest; `--local` works on
+- Keys go in from `worker/` with `node tools/keys.mjs import <file>` (or a pasted list): either export of an itch.io key
+  group ("Download keys", the full links, is the one to press; "Download short URLs" also works, each `itch.io/get-...`
+  followed to its full link, which is what is stored), any text holding key links, or bare keys with `--page <itch page>`.
+  `KEYS_ITCH_ORIGIN` points the short-link check at a local stand-in, for a test only. `count`, `list`, `link <id>` and `sent [email]` (which key went to whom) do the rest; `--local` works on
   `wrangler dev`'s store. It uses wrangler's own login and holds no key.
 - The sender's key is `RESEND_API_KEY`, set with `npx wrangler secret put` and nowhere else. Locally, `KEY_SENDER=fake` in
   `.dev.vars` logs the key mail instead of sending it (`fake-fail` is a plain refusal, which gives the key back on a first try and keeps it held on a retry; `fake-lost` an unclear answer, which keeps the key bound to the request until It arrived or Decline), and

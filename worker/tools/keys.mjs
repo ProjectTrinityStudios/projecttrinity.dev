@@ -2,10 +2,12 @@
 // Build keys in the site's D1 store (Tooling 189). Run from the worker folder, after `npm install` once.
 //
 //   node tools/keys.mjs import [file] [--page <itch page url>] [--batch <label>]
-//       Adds itch.io download key links. Reads the file, or, with no file, a pasted list (end it with Ctrl+Z then Enter
-//       on Windows, Ctrl+D elsewhere). Any text works (a CSV export, a copied list): every key link in it is taken.
-//       A list of bare keys needs --page, the game page's address, to build each link (<page>/download/<key>).
-//       A key already in the store is skipped.
+//       Adds itch.io download key links. Reads the file (either of the key group's exports, "Download keys" or
+//       "Download short URLs"), or, with no file, a pasted list (end it with Ctrl+Z then Enter on Windows, Ctrl+D
+//       elsewhere). Any text works, CSV or one per line: every full key link (.../download/<key>) is taken. A short
+//       link (itch.io/get-...) is followed to the full link it opens, which is what is stored, so importing both
+//       exports never stores a key twice; if one cannot be followed, nothing is imported. A list of bare keys needs
+//       --page, the game page's address, to build each link (<page>/download/<key>). A key already in the store is skipped.
 //   node tools/keys.mjs count            unused and used keys
 //   node tools/keys.mjs list             the requests still waiting, newest first
 //   node tools/keys.mjs link <id>        a fresh Approve link for request <id> (one made before keys existed, or a lost mail)
@@ -28,6 +30,10 @@ import { fileURLToPath } from "node:url";
 const DATABASE = "projecttrinity-forms";
 const PUBLIC_API = "https://api.projecttrinity.dev";
 const WORKER_DIR = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ITCH = process.env.KEYS_ITCH_ORIGIN || "https://itch.io"; // where short links are followed; changed only by a local test
+
+const FULL_RE = /https?:\/\/[^\s,;"'<>]+\/download\/[A-Za-z0-9_-]{8,}/g;
+const SHORT_RE = /(?:https?:\/\/)?(?:www\.)?itch\.io\/get-([A-Za-z0-9_-]{4,})/g;
 
 const args = process.argv.slice(2);
 const local = takeFlag("--local");
@@ -112,10 +118,24 @@ function readInput(file) {
   }
 }
 
-// Every key link in the text; or, with --page, every bare key (a long run of letters and digits on its own).
-function findKeys(text, pageUrl) {
+// The key links in the text: full links as they are; short links followed to the full link they open (a line holding
+// both is one key, so its short link is not followed); or, with --page and no links at all, every bare key.
+async function findKeys(text, pageUrl) {
   const links = new Set();
-  for (const m of text.matchAll(/https?:\/\/[^\s,;"'<>]+\/download\/[A-Za-z0-9_-]{8,}/g)) links.add(m[0]);
+  const shorts = new Set();
+  for (const line of text.split(/\r?\n/)) {
+    const full = [...line.matchAll(FULL_RE)].map((m) => m[0]);
+    full.forEach((url) => links.add(url));
+    if (!full.length) for (const m of line.matchAll(SHORT_RE)) shorts.add(m[1]);
+  }
+  if (shorts.size) {
+    const codes = [...shorts];
+    const found = [];
+    for (let i = 0; i < codes.length; i += 8) found.push(...(await Promise.all(codes.slice(i, i + 8).map(followShort))));
+    const lost = found.filter((url) => !url).length;
+    if (lost) fail(`${lost} of ${codes.length} short links did not lead to a key link, so nothing was imported. Import the "Download keys" export instead.`);
+    found.forEach((url) => links.add(url));
+  }
   if (links.size || !pageUrl) return [...links];
   const base = pageUrl.replace(/\/+$/, "");
   for (const field of text.split(/[\s,;"']+/)) {
@@ -124,9 +144,22 @@ function findKeys(text, pageUrl) {
   return [...links];
 }
 
+// itch.io answers a short link with a redirect to the key's full link; that link is read, not opened.
+async function followShort(code) {
+  try {
+    const res = await fetch(`${ITCH}/get-${encodeURIComponent(code)}`, { redirect: "manual" });
+    const to = res.headers.get("location");
+    if (!to) return null;
+    const url = new URL(to, ITCH).href;
+    return url.match(FULL_RE) && url.match(FULL_RE)[0] === url ? url : null;
+  } catch {
+    return null;
+  }
+}
+
 try {
   if (command === "import") {
-    const keys = findKeys(readInput(target), page);
+    const keys = await findKeys(readInput(target), page);
     if (!keys.length) {
       fail(page
         ? "No keys found in that text."
@@ -161,7 +194,7 @@ try {
     if (!rows.length) console.log(target ? `No key went to ${target}.` : "No keys sent yet.");
     for (const r of rows) console.log(`${String(r.id).padStart(5)}  ${r.used_at}  ${r.status.padEnd(7)}  ${r.email}  ${r.url}`);
   } else {
-    console.log(readFileSync(fileURLToPath(import.meta.url), "utf8").split("\n").slice(1, 18).map((l) => l.replace(/^\/\/ ?/, "")).join("\n"));
+    console.log(readFileSync(fileURLToPath(import.meta.url), "utf8").split("\n").slice(1, 20).map((l) => l.replace(/^\/\/ ?/, "")).join("\n"));
     process.exitCode = command ? 1 : 0;
   }
 } catch (err) {
