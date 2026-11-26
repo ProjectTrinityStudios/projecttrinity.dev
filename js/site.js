@@ -15,6 +15,9 @@
   // ?theme=dark or ?theme=light opens the page in that mode (handy for previews and screenshots)
   var asked = new URLSearchParams(window.location.search).get("theme");
   if (asked === "dark" || asked === "light") root.setAttribute("data-theme", asked);
+  // ?edge=torn or ?edge=fade shows the first screen's edge each way (for previews)
+  var edge = new URLSearchParams(window.location.search).get("edge");
+  if (edge === "torn" || edge === "fade") root.setAttribute("data-edge", edge);
 
   function isDark() {
     var set = root.getAttribute("data-theme");
@@ -62,6 +65,36 @@
     });
     // Only now does the phone layout fold the links behind the Menu button: if this script fails, they stay visible.
     root.classList.add("js");
+  }
+
+  // The first screen's B-roll: silent, looping, paused whenever it is off screen, and left out altogether
+  // (the still stays) for anyone who has asked for less motion.
+  var broll = document.querySelector("[data-broll]");
+  if (broll) {
+    var still = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var seen = true;
+    var steer = function () {
+      if (still.matches || !seen || document.hidden) {
+        broll.pause();
+      } else {
+        var playing = broll.play();
+        if (playing && playing.catch) playing.catch(function () {});
+      }
+    };
+    broll.muted = true;
+    broll.addEventListener("playing", function () { broll.classList.add("is-playing"); });
+    if (still.matches) {
+      broll.removeAttribute("autoplay");
+      broll.pause();
+    }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        seen = entries[0].isIntersecting;
+        steer();
+      }, { threshold: 0.05 }).observe(broll);
+    }
+    document.addEventListener("visibilitychange", steer);
+    still.addEventListener("change", steer);
   }
 
   // 3. The film: nothing of YouTube's runs until the visitor presses play; then its privacy-enhanced

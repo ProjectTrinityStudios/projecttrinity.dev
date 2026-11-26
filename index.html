@@ -52,7 +52,7 @@
           </ul>
         </nav>
         <div class="header-tools">
-          <a class="button button-gold header-cta" href="/#builds">Request a build</a>
+          <a class="button button-gold header-cta" href="/request/">Request a build</a>
           <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
             <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
             <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
@@ -63,16 +63,26 @@
   </header>
 
   <main id="main">
-    <section class="cine on-film" aria-labelledby="game-title">
-      <picture class="cine-picture">
-        <img
+    <section class="cine on-film" aria-labelledby="game-title" data-cine>
+      <div class="cine-edge"><div class="cine-media">
+        <picture class="cine-picture">
+          <img
           src="/img/old-hunger-1920.jpg"
           srcset="/img/old-hunger-800.jpg 800w, /img/old-hunger-1280.jpg 1280w, /img/old-hunger-1920.jpg 1920w"
           sizes="100vw"
           width="1920" height="1080"
           fetchpriority="high"
           alt="Old Hunger, the first boss of the Hungry Deep: a huge armoured grub with a split, toothed jaw, lit pale in the dark of his chamber.">
-      </picture>
+        </picture>
+        <!-- Silent B-roll, cut from existing films: the Hungry Deep's hall, the Giant, the party at Old Hunger,
+             his chamber, Maera's shore. The still above is its poster, and all there is with motion turned off. -->
+        <video class="cine-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"
+          poster="/img/old-hunger-1280.jpg" data-broll>
+          <source src="/video/broll-720.mp4" type="video/mp4" media="(max-width: 760px)">
+          <source src="/video/broll-1080.webm" type="video/webm">
+          <source src="/video/broll-1080.mp4" type="video/mp4">
+        </video>
+      </div></div>
       <div class="cine-text">
         <div class="cine-status">
           <p class="status-stage"><span class="visually-hidden">Status: </span>Alpha</p>
@@ -112,7 +122,7 @@
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z"/></svg>
             Watch the gameplay
           </a>
-          <a class="button button-slip" href="#builds">Request a build</a>
+          <a class="button button-slip" href="/request/">Request a build</a>
         </div>
       </div>
     </section>
@@ -170,61 +180,48 @@
       </ul>
     </section>
 
-    <section class="wrap section" id="builds" aria-labelledby="builds-title">
-      <h2 id="builds-title" class="visually-hidden">Get a build, or hear when there's news</h2>
-      <div class="book">
-        <div class="page page-left">
-          <h3 id="request-title">Request a build</h3>
-          <p class="page-lede">Builds go out by hand, a few at a time. Say where you'll play, and you'll get an email when there's one for you.</p>
-          <form class="ledger-form" aria-labelledby="request-title" data-endpoint="/request" data-thanks="Thanks! Your request is in. You'll get an email when there's a build for you." method="post" novalidate>
-            <div class="field">
-              <label for="req-email">Email</label>
-              <input id="req-email" name="email" type="email" autocomplete="email" required>
-            </div>
-            <fieldset class="field">
-              <legend>Where you'll play</legend>
-              <div class="choices">
-                <label><input type="radio" name="platform" value="windows" required> Windows</label>
-                <label><input type="radio" name="platform" value="mac"> Mac</label>
-                <label><input type="radio" name="platform" value="linux"> Linux</label>
-              </div>
-            </fieldset>
-            <div class="field">
-              <label for="req-note">Anything else to know? <span class="optional">(optional)</span></label>
-              <textarea id="req-note" name="note" rows="2" maxlength="500"></textarea>
-            </div>
-            <div class="ticks">
-              <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
-              <label class="tick"><input type="checkbox" name="join_list"> <span>Also join the email list</span></label>
-            </div>
-            <div class="turnstile" data-turnstile></div>
-            <button class="seal" type="submit" disabled>Request a build</button>
-            <p class="form-note" role="status" aria-live="polite" data-form-note></p>
-            <noscript><p class="form-note is-error">This form needs JavaScript. Write to <a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a> instead.</p></noscript>
-          </form>
-        </div>
-
-        <div class="spine" aria-hidden="true"></div>
-
-        <div class="page page-right">
-          <h3 id="list-title">Join the email list</h3>
-          <p class="page-lede">A note when there's a new devlog or a new build. Not often, and you can leave any time.</p>
-          <form class="ledger-form" aria-labelledby="list-title" data-endpoint="/subscribe" data-thanks="Almost done: check your inbox and confirm to join the list." method="post" novalidate>
-            <div class="field">
-              <label for="list-email">Email</label>
-              <input id="list-email" name="email" type="email" autocomplete="email" required>
-            </div>
-            <div class="ticks">
-              <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
-            </div>
-            <div class="turnstile" data-turnstile></div>
-            <button class="seal" type="submit" disabled>Sign up</button>
-            <p class="form-note" role="status" aria-live="polite" data-form-note></p>
-            <noscript><p class="form-note is-error">This form needs JavaScript. Write to <a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a> instead.</p></noscript>
-          </form>
-          <p class="page-foot">Your email stays with the project. It's never sold or shared.</p>
-        </div>
+    <section class="wrap section" aria-labelledby="bosses-title">
+      <div class="section-head">
+        <h2 id="bosses-title"><span class="title-mark">The bosses</span></h2>
+        <a class="more" href="/shatterbound/#bosses-title">How each fight works</a>
       </div>
+      <ul class="party-strip boss-strip">
+        <li>
+          <a href="/shatterbound/#patchwork">
+            <span class="sticker"><img src="/img/party/patchwork.webp" width="256" height="256" loading="lazy" alt=""></span>
+            <strong class="slip">Patchwork</strong>
+            <span>Patchwork's Hunt</span>
+          </a>
+        </li>
+        <li>
+          <a href="/shatterbound/#giant">
+            <span class="sticker"><img src="/img/party/giant.webp" width="256" height="256" loading="lazy" alt=""></span>
+            <strong class="slip">The Giant</strong>
+            <span>The Giant's Gate</span>
+          </a>
+        </li>
+        <li>
+          <a href="/shatterbound/#old-hunger">
+            <span class="sticker"><img src="/img/party/old-hunger.webp" width="256" height="256" loading="lazy" alt=""></span>
+            <strong class="slip">Old Hunger</strong>
+            <span>The Feeding Pit</span>
+          </a>
+        </li>
+        <li>
+          <a href="/shatterbound/#maera">
+            <span class="sticker"><img src="/img/party/maera.webp" width="256" height="256" loading="lazy" alt=""></span>
+            <strong class="slip">Maera</strong>
+            <span>The Lightless Shoal</span>
+          </a>
+        </li>
+        <li>
+          <a href="/shatterbound/#don-fortuna" class="is-coming">
+            <span class="coming-plate" aria-hidden="true"><svg class="coming-mark" width="64" height="64" viewBox="0 0 32 32" focusable="false"><use href="#shard"/></svg></span>
+            <strong class="slip">Don Fortuna</strong>
+            <span>Coming</span>
+          </a>
+        </li>
+      </ul>
     </section>
 
     <div class="wrap section duo">
@@ -256,6 +253,8 @@
         </div>
       </section>
     </div>
+
+    <p class="wrap foot-line" id="builds">Want to play? <a href="/request/">Request a build</a>. For a note when there's a new devlog or build, <a href="/devlog/#list-title">join the email list</a>.</p>
   </main>
 
   <footer class="colophon">
@@ -267,6 +266,7 @@
           <li><a href="/research/">Research</a></li>
           <li><a href="/devlog/">Devlog</a></li>
           <li><a href="/contact/">Contact</a></li>
+          <li><a href="/request/">Request a build</a></li>
         </ul>
       </div>
       <div>

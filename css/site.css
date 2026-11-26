@@ -481,36 +481,74 @@ p { margin: 0; }
   display: flex;
   align-items: flex-end;
   color: var(--film-text);
-  background: #05070c;
   isolation: isolate;
 }
 @supports (min-height: 100svh) {
   .cine { min-height: min(100svh, 980px); }
 }
+/* the still, the silent B-roll over it, and the scrim that keeps the words readable over any frame */
+.cine-media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #05070c;
+  overflow: hidden;
+}
 .cine-picture,
-.cine-picture img {
+.cine-picture img,
+.cine-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
-.cine-picture { z-index: -2; }
-.cine-picture img { object-fit: cover; object-position: 55% 42%; }
-.cine::after {
+.cine-picture img,
+.cine-video { object-fit: cover; object-position: 55% 42%; }
+.cine-video { opacity: 0; transition: opacity 600ms ease; }
+.cine-video.is-playing { opacity: 1; }
+/* motion turned off: the still only */
+@media (prefers-reduced-motion: reduce) {
+  .cine-video { display: none; }
+}
+.cine-media::after {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: -1;
   background:
-    linear-gradient(0deg, var(--sky-top) 0, rgba(var(--sky-rgb), 0) 10%),
-    linear-gradient(0deg, rgba(10, 8, 30, 0.85) 8%, rgba(10, 8, 30, 0.3) 48%, rgba(10, 8, 30, 0.05) 70%, rgba(10, 8, 30, 0.45) 100%),
-    linear-gradient(90deg, rgba(10, 8, 30, 0.55) 0, rgba(10, 8, 30, 0) 60%);
+    linear-gradient(0deg, rgba(10, 8, 30, 0.82) 0, rgba(10, 8, 30, 0.42) 46%, rgba(10, 8, 30, 0.12) 70%, rgba(10, 8, 30, 0.5) 100%),
+    linear-gradient(90deg, rgba(10, 8, 30, 0.62) 0, rgba(10, 8, 30, 0.12) 62%, rgba(10, 8, 30, 0) 100%);
 }
+
+/* The edge between the first screen and the page. Two ways, for his pick (?edge=torn or ?edge=fade):
+   torn (the default): the picture is a sheet torn across its foot, the sky showing under the tear;
+   fade: the picture melts into the sky over its last third. */
+.cine-media {
+  -webkit-mask:
+    url("../img/book/torn-edge.svg") bottom / 100% 64px no-repeat,
+    linear-gradient(#000, #000) top / 100% calc(100% - 63px) no-repeat;
+  mask:
+    url("../img/book/torn-edge.svg") bottom / 100% 64px no-repeat,
+    linear-gradient(#000, #000) top / 100% calc(100% - 63px) no-repeat;
+}
+/* the torn sheet's pale lip and its shadow on the sky */
+.cine-edge {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  filter: drop-shadow(0 3px 0 #fdfaf2) drop-shadow(0 10px 12px rgba(30, 20, 60, 0.35));
+}
+:root[data-edge="fade"] .cine-media {
+  -webkit-mask: linear-gradient(180deg, #000 0, #000 62%, rgba(0, 0, 0, 0.55) 82%, transparent 100%);
+  mask: linear-gradient(180deg, #000 0, #000 62%, rgba(0, 0, 0, 0.55) 82%, transparent 100%);
+}
+:root[data-edge="fade"] .cine-edge { filter: none; }
+:root[data-edge="fade"] .cine-text { padding-bottom: clamp(150px, 24vh, 250px); }
+
 .cine-text {
   width: 100%;
   max-width: calc(var(--page) + 2 * var(--gutter));
   margin: 0 auto;
-  padding: calc(var(--header-h) + 40px) var(--gutter) clamp(72px, 12vh, 132px);
+  padding: calc(var(--header-h) + 40px) var(--gutter) clamp(110px, 16vh, 170px);
 }
 .cine-status {
   display: flex;
@@ -715,6 +753,21 @@ p { margin: 0; }
 }
 .party-strip span { font-size: 0.95rem; color: var(--ink-soft); }
 .party-strip .sticker { width: clamp(88px, 11vw, 128px); }
+
+.boss-strip { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.boss-strip a { --hero: var(--cold); }
+.boss-strip a.is-coming { --hero: var(--ink-soft); }
+.boss-strip .coming-plate { width: clamp(88px, 11vw, 128px); }
+.party-strip strong.slip { max-width: 100%; }
+
+/* the small line at the front page's foot */
+.foot-line {
+  margin-top: clamp(48px, 7vw, 80px);
+  font-size: 1.1rem;
+  color: var(--on-sky);
+  text-align: center;
+}
+.foot-line a { color: var(--link); font-weight: 600; }
 
 /* the hero's own colour, on their own card */
 [data-hero="bastion"] { --hero: var(--bastion); }
@@ -1315,7 +1368,7 @@ p { margin: 0; }
 @media (max-width: 760px) {
   body { font-size: 1.0625rem; }
   .duo { grid-template-columns: 1fr; }
-  .party-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .party-strip, .boss-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   .book { grid-template-columns: 1fr; box-shadow: 0 0 0 6px var(--cover), 0 18px 40px -18px rgba(18, 16, 40, 0.55); }
   .spine { height: 14px; background: linear-gradient(180deg, rgba(30, 20, 60, 0.18), rgba(30, 20, 60, 0.04) 40%, rgba(30, 20, 60, 0.04) 60%, rgba(30, 20, 60, 0.18)); }
@@ -1323,7 +1376,13 @@ p { margin: 0; }
   .hero-card, .boss-card { grid-template-columns: minmax(0, 104px) minmax(0, 1fr); }
   .jobs { grid-template-columns: 1fr; }
   .walk, .skills { grid-column: 1 / -1; }
-  .cine-picture img { object-position: 66% 42%; }
+  .cine-picture img, .cine-video { object-position: 66% 42%; }
+  .cine-media {
+    -webkit-mask-size: 100% 36px, 100% calc(100% - 35px);
+    mask-size: 100% 36px, 100% calc(100% - 35px);
+  }
+  :root[data-edge="fade"] .cine-media { -webkit-mask-size: auto; mask-size: auto; }
+  .boss-strip li:last-child { grid-column: 1 / -1; justify-self: center; width: calc(50% - 7px); }
   .post-row { grid-template-columns: 1fr; }
   .charts { grid-template-columns: 1fr; }
   .colophon-grid { grid-template-columns: 1fr 1fr; }

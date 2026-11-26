@@ -18,7 +18,9 @@ Add `?theme=dark` or `?theme=light` to force a mode; otherwise it follows the sy
 
 | Path | What |
 |---|---|
-| `index.html` | The front page, a short scroll: the cinematic first screen (Old Hunger, the title, Watch the gameplay and Request a build), the game in three lines and how it was made, the party, the two boxes, the newest post and the Research teaser. |
+| `index.html` | The front page, a short scroll: the cinematic first screen (the B-roll over the Old Hunger still, the title, Watch the gameplay and Request a build), the game in three lines and how it's made, the party, the bosses, the newest post and the Research teaser. `?edge=torn` or `?edge=fade` shows the first screen's edge each way. |
+| `request/` | The Request a build form (the header's button comes here). |
+| `video/` | The first screen's silent B-roll loop (19.9 s; 1080p MP4 and WebM, a 720p MP4 for phones), cut from existing films. It plays muted, pauses off screen, and gives way to the still when motion is turned off. |
 | `shatterbound/` | The heroes (role, resource, one line, key skills) and the bosses, each walkthrough folded behind a click; Don Fortuna is a "coming" card. |
 | `research/` | Three short sections: how the party plays, how the research is done, how the game is built, with the two charts. |
 | `devlog/` | The index, newest first, the email sign-up at its foot; one folder per post (`devlog/<slug>/index.html`). |
