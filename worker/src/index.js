@@ -73,8 +73,15 @@ export default {
         "INSERT INTO build_requests (email, platform, note, join_list) VALUES (?, ?, ?, ?) RETURNING id"
       ).bind(email, platform, note, joinList ? 1 : 0).first();
 
-      const approve = await makeApproveLink(env, row.id);
-      await mailHim(env, email, platform, note, joinList, approve, await keysLeft(env));
+      // The mail goes even if the link cannot be made; `node tools/keys.mjs link <id>` makes one later.
+      let approve = "", left = 0;
+      try {
+        approve = await makeApproveLink(env, row.id);
+        left = await keysLeft(env);
+      } catch (err) {
+        console.log("approve link failed", err && err.message);
+      }
+      await mailHim(env, email, platform, note, joinList, approve, left, row.id);
       if (joinList) await addToKit(env, email);
       return reply(200, { ok: true });
     }
@@ -143,7 +150,7 @@ async function addToKit(env, email) {
 
 // To the project mailbox, a verified Email Routing destination (the Free plan sends only to those).
 // The Approve link is his alone: it opens the request, and only its Send key button mails a key.
-async function mailHim(env, email, platform, note, joinList, approve, left) {
+async function mailHim(env, email, platform, note, joinList, approve, left, id) {
   const text = [
     "A build request from projecttrinity.dev",
     "",
@@ -154,11 +161,15 @@ async function mailHim(env, email, platform, note, joinList, approve, left) {
     "Note:",
     note || "(none)",
     "",
-    "To send a build key, open this link and press Send key (opening it sends nothing):",
-    approve,
-    "",
-    left > 0 ? `Unused keys: ${left}` : "No unused keys left: import a batch before sending (node tools/keys.mjs import).",
-    "Keep this mail to yourself: the link lets whoever has it send this person a key.",
+    ...(approve
+      ? [
+          "To send a build key, open this link and press Send key (opening it sends nothing):",
+          approve,
+          "",
+          left > 0 ? `Unused keys: ${left}` : "No unused keys left: import a batch before sending (node tools/keys.mjs import).",
+          "Keep this mail to yourself: the link lets whoever has it send this person a key.",
+        ]
+      : [`The Approve link could not be made: run node tools/keys.mjs link ${id} for one.`]),
   ].join("\n");
   try {
     await env.NOTIFY.send({

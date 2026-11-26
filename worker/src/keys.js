@@ -3,7 +3,8 @@
 // requester through Resend, and marks the key and the request used. Nothing is sent by opening the link: only the
 // button (a POST) sends, so a mail scanner that follows the link changes nothing.
 //
-// The link's secret is 32 random bytes; D1 keeps only its SHA-256, and each request's link works once.
+// The link's secret is 32 random bytes; D1 keeps only its SHA-256. Each request sends one key at most; the link stays
+// readable afterwards and shows which key went out, so the mail stays his.
 // RESEND_API_KEY is a Cloudflare secret. KEY_SENDER = "fake" (local .dev.vars only) logs the mail instead of sending,
 // and "fake-fail" makes the send fail, to prove a failed send gives the key back.
 
@@ -194,7 +195,7 @@ export function keyMailText(platform, keyUrl) {
     "",
     keyUrl,
     "",
-    "The link opens the game's itch.io page with the Windows, Mac and Linux downloads. It is yours alone, so please keep it to yourself. Claiming it with an itch.io account lets the itch.io app install the game and update it.",
+    "The link opens the game's itch.io page with the Windows, Mac and Linux downloads, no itch.io account needed. It is yours alone, so please keep it to yourself. Claiming it with an itch.io account lets the itch.io app install the game and keep it updated.",
     "",
     ...(PLATFORM_NOTES[platform] || []),
     "",
