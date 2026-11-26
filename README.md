@@ -85,7 +85,8 @@ one key at most. The platform notes are `PLATFORM_NOTES` at the top of `keys.js`
   `wrangler dev`'s store. It uses wrangler's own login and holds no key.
 - The sender's key is `RESEND_API_KEY`, set with `npx wrangler secret put` and nowhere else. Locally, `KEY_SENDER=fake` in
   `.dev.vars` logs the key mail instead of sending it (`fake-fail` makes it fail, to see the key go back), and
-  `PUBLIC_API=http://127.0.0.1:8787` points the Approve links at `wrangler dev`.
+  `PUBLIC_API=http://127.0.0.1:8787` points the Approve links at `wrangler dev`. `wrangler dev` reads `.dev.vars` only at
+  start: restart it after changing one.
 - Switching it on (his steps, also in the game repository's `docs/how-to/itch-io-builds.md`): the Resend account and the
   domain verified (Sign in to Cloudflare), `npx wrangler secret put RESEND_API_KEY`, the schema run with `--remote`,
   `npx wrangler deploy`, then the first batch imported.
