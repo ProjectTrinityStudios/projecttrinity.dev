@@ -64,12 +64,11 @@
     root.classList.add("js");
   }
 
-  // The first screen's B-roll: silent, looping, paused whenever it is off screen, and left out altogether
-  // (the still stays) for anyone who has asked for less motion.
-  var broll = document.querySelector("[data-broll]");
-  if (broll) {
+  // Silent loops (the first screen's B-roll, a devlog clip): playing only while on screen, and left out
+  // altogether (the still or poster stays) for anyone who has asked for less motion.
+  Array.prototype.forEach.call(document.querySelectorAll("[data-broll], [data-loop]"), function (broll) {
     var still = window.matchMedia("(prefers-reduced-motion: reduce)");
-    var seen = true;
+    var seen = !("IntersectionObserver" in window);
     var steer = function () {
       if (still.matches || !seen || document.hidden) {
         broll.pause();
@@ -92,7 +91,8 @@
     }
     document.addEventListener("visibilitychange", steer);
     still.addEventListener("change", steer);
-  }
+    steer();
+  });
 
   // 3. The film: nothing of YouTube's runs until the visitor presses play; then its privacy-enhanced
   // player (youtube-nocookie.com) opens in a window over the page. Without the script, the link goes to YouTube.
