@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<title>Project Trinity</title>
+<!--
+  Project Trinity's Kit email template: the site's Wayfarers' Book look, kept light so mail reads as a letter.
+  One column, no images of its own, real text. Colours are the game's tokens (the site's css/site.css):
+  paper #f7ecd6, ink #2b2452, ink-soft #625a86, gold #f2b53c, coral underline #b8475b; Night: paper #222a5a,
+  ink #efe9f8, link #f5c768. Fonts: Caveat Brush for the masthead and titles and Source Sans 3 to read, from the
+  site; mail apps that won't load them fall back to a hand font and the system sans.
+  Kit fills {{ message_content }}, {{ unsubscribe_url }}, {{ subscriber_preferences_url }} and {{ address }}.
+  Paste this whole file into Kit: Send, Email Templates, New Email Template, Create HTML Template.
+-->
+<style>
+  @font-face { font-family: "Caveat Brush"; src: url("https://projecttrinity.dev/fonts/CaveatBrush-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "Source Sans 3"; src: url("https://projecttrinity.dev/fonts/SourceSans3-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "Source Sans 3"; src: url("https://projecttrinity.dev/fonts/SourceSans3-Semibold.ttf") format("truetype"); font-weight: 600; font-style: normal; }
+
+  body { margin: 0; padding: 0; width: 100% !important; background: #e9e1f6; -webkit-text-size-adjust: 100%; }
+  table { border-collapse: collapse; }
+  img { border: 0; max-width: 100%; height: auto; }
+
+  /* What Kit's editor writes into {{ message_content }} */
+  .letter { font-family: "Source Sans 3", "Segoe UI", Helvetica, Arial, sans-serif; font-size: 17px; line-height: 1.6; color: #2b2452; }
+  .letter p { margin: 0 0 16px; }
+  .letter h1, .letter h2, .letter h3 { font-family: "Caveat Brush", "Segoe Print", "Bradley Hand", "Chalkboard SE", cursive; font-weight: 400; color: #2b2452; line-height: 1.15; }
+  .letter h1 { font-size: 34px; margin: 4px 0 14px; }
+  .letter h2 { font-size: 28px; margin: 26px 0 10px; }
+  .letter h3 { font-size: 23px; margin: 22px 0 8px; }
+  .letter a { color: #5b3db0; text-decoration: underline; }
+  .letter ul, .letter ol { margin: 0 0 16px; padding-left: 22px; }
+  .letter li { margin: 0 0 6px; }
+  .letter blockquote { margin: 0 0 16px; padding: 4px 0 4px 14px; border-left: 3px solid #f2b53c; color: #625a86; }
+  .letter img { display: block; margin: 8px auto 18px; border: 6px solid #fdfaf2; box-shadow: 0 2px 6px rgba(30, 20, 60, 0.25); }
+  .letter > :first-child { margin-top: 0; }
+  .letter hr { border: 0; border-top: 1px solid rgba(43, 36, 82, 0.16); margin: 24px 0; }
+  /* A button made in Kit's editor: the site's gold brush, kept as text */
+  .letter .btn, .letter a.button, .letter .button a { display: inline-block; background: #f2b53c; color: #2b2452 !important; text-decoration: none; font-family: "Caveat Brush", "Segoe Print", "Bradley Hand", cursive; font-size: 22px; padding: 8px 22px; border-radius: 4px; }
+
+  .foot a { color: #625a86; text-decoration: underline; }
+
+  @media (max-width: 620px) {
+    .page { padding: 26px 20px 22px !important; }
+    .outer { padding: 12px 8px !important; }
+    .masthead { font-size: 30px !important; }
+    .letter { font-size: 16px !important; }
+    .letter h1 { font-size: 30px !important; }
+  }
+
+  /* Night, for mail apps that follow the system setting (Apple Mail, Outlook on Mac and iOS) */
+  @media (prefers-color-scheme: dark) {
+    body, .outer, .outer-table { background: #12163a !important; }
+    .page { background: #222a5a !important; border-color: #2c2960 !important; }
+    .masthead, .letter, .letter h1, .letter h2, .letter h3 { color: #efe9f8 !important; }
+    .slip, .foot, .foot a, .letter blockquote { color: #aea8d2 !important; }
+    .letter a { color: #f5c768 !important; }
+    .rule { border-color: rgba(239, 233, 248, 0.16) !important; }
+    .letter img { border-color: #e9e4f4 !important; }
+  }
+  /* Outlook.com and the Outlook apps mark their own dark mode this way */
+  [data-ogsc] .masthead, [data-ogsc] .letter, [data-ogsc] .letter h1, [data-ogsc] .letter h2 { color: #efe9f8 !important; }
+  [data-ogsc] .letter a { color: #f5c768 !important; }
+  [data-ogsb] .page { background: #222a5a !important; }
+</style>
+</head>
+<body style="margin:0; padding:0; background:#e9e1f6;">
+<table role="presentation" class="outer-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#e9e1f6;">
+  <tr>
+    <td align="center" class="outer" style="background:#e9e1f6; padding:28px 12px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;">
+        <tr>
+          <td class="page" style="background:#f7ecd6; border:1px solid #ead8b6; border-top:4px solid #b8475b; border-radius:6px; padding:34px 40px 28px;">
+
+            <!-- Masthead: the name in the Book's lettering, the gold brush under it -->
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="padding:0 0 4px;">
+                  <a href="https://projecttrinity.dev/" class="masthead" style="font-family:'Caveat Brush','Segoe Print','Bradley Hand','Chalkboard SE',cursive; font-size:34px; line-height:1.1; color:#2b2452; text-decoration:none;">Project Trinity</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="slip" style="font-family:'Source Sans 3','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:#625a86; padding:0 0 14px;">Shatterbound devlog</td>
+              </tr>
+              <tr>
+                <td style="padding:0 0 26px;"><div style="width:96px; height:4px; background:#f2b53c; border-radius:2px; line-height:4px; font-size:4px;">&nbsp;</div></td>
+              </tr>
+            </table>
+
+            <!-- The email itself, written in Kit's editor -->
+            <div class="letter" style="font-family:'Source Sans 3','Segoe UI',Helvetica,Arial,sans-serif; font-size:17px; line-height:1.6; color:#2b2452;">
+              {{ message_content }}
+            </div>
+
+            <!-- Footer: plain, small, everything the law asks -->
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td class="rule" style="border-top:1px solid rgba(43,36,82,0.16); padding:18px 0 0;">
+                  <p class="foot" style="margin:0 0 8px; font-family:'Source Sans 3','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; line-height:1.5; color:#625a86;">
+                    You're getting this because this address was put down for the Project Trinity email list at <a href="https://projecttrinity.dev/" style="color:#625a86;">projecttrinity.dev</a>. Reply any time: it reaches the studio.
+                  </p>
+                  <p class="foot" style="margin:0 0 8px; font-family:'Source Sans 3','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; line-height:1.5; color:#625a86;">
+                    <a href="{{ unsubscribe_url }}" style="color:#625a86;">Unsubscribe</a> &nbsp;&middot;&nbsp; <a href="{{ subscriber_preferences_url }}" style="color:#625a86;">Change your details</a>
+                  </p>
+                  <p class="foot" style="margin:0; font-family:'Source Sans 3','Segoe UI',Helvetica,Arial,sans-serif; font-size:12px; line-height:1.5; color:#625a86;">
+                    Project Trinity Studios &nbsp;&middot;&nbsp; {{ address }}
+                  </p>
+                </td>
+              </tr>
+            </table>
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
