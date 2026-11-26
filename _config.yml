@@ -1,3 +1,4 @@
 exclude:
   - worker
   - README.md
+  - tools

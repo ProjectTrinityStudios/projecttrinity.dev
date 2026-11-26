@@ -31,20 +31,22 @@ Add `?theme=dark` or `?theme=light` to force a mode. A visitor's own Day or Nigh
 | `css/site.css` | All styles, in the game's own look, the Wayfarers' Book: paper on a lilac sky by Day, blue paper on the night sky by Night, Caveat Brush lettering, stickers in each hero's colour, photos taped in, the gold brush for what to press. The colours are the game's tokens (`unity-b/Assets/UI/Theme/TrinityTokens.uss`). |
 | `js/site.js` | The light/dark switch, the header (solid on scroll, the phone menu), the film window, and the forms' checks. Nothing is sent or stored except what a form sends. |
 | `fonts/` | The game's UI fonts (Caveat Brush for names and titles, Source Sans 3 for reading), SIL Open Font License; licences beside them. |
-| `img/` | Stills, the share card (1200x630), the two flow charts with a still of each for people who turn motion off, `party/` (the game's round portrait stickers, 256 px WebP), `portraits/` (Models 101's renders: the 4:5 cut-outs, the 16:9 banners and each character's 1200x630 link card, from `tools/make-portraits.py`), `fights/` (the game's fight cards, 16:9), `devlog/` (each post's pictures as WebP, a 720 px and an up-to-1200 px copy, and its 1200x630 link card) and `book/` (the Book's own plates: paper, tape, brush strokes, stamps, clouds, from `unity-b/Assets/UI/Art/Book/`). |
+| `img/` | Stills, `share/` (every page's link card, 1200x630, drawn by the tools; see Link cards below), the two flow charts with a still of each for people who turn motion off, `party/` (the game's round portrait stickers, 256 px WebP), `portraits/` (Models 101's renders: the 4:5 cut-outs and the 16:9 banners, from `tools/make-portraits.py`), `fights/` (the game's fight cards, 16:9), `devlog/` (each post's pictures as WebP, a 720 px and an up-to-1200 px copy) and `book/` (the Book's own plates: paper, tape, brush strokes, stamps, clouds, from `unity-b/Assets/UI/Art/Book/`). |
 
 Every page carries the same header and footer: change one, change them all. Each page has its own link card
-(`og:title`, `og:description`, `og:url`).
+(`og:title`, `og:description`, `og:url`, and the card's picture; see Link cards below).
 
 ## Adding a devlog post
 
 1. Copy `devlog/i-miss-playing-with-my-friends/` to `devlog/<new-slug>/` and replace its title, date, picture, text and
-   link-card tags (`og:*`, `canonical`, `article:published_time`) and its structured data (the `application/ld+json`
+   link-card tags (`og:title`, `og:description`, `og:url`, `canonical`, `article:published_time`, and a one-line
+   `og:image:alt` describing the post's first picture: its card is drawn from it in step 4) and its structured data (the `application/ld+json`
    block in the head: `headline`, `description`, `url`, `mainEntityOfPage`, `image`, `datePublished`).
    A picture in the text is `<figure class="post-photo"><span class="photo"><img ...></span><figcaption>...</figcaption></figure>`: taped in at its own shape, at most 540 px tall, with a hand-written line under it (add `tilt-right` to the span to lean it the other way). A silent loop is a `<video data-loop muted loop playsinline preload="none" poster=...>`: it plays only on screen and never for anyone who asked for less motion.
 2. Add a `<li class="post-row">` at the top of the list in `devlog/index.html` (newest first): picture, date, title, two lines.
 3. On the front page, point the Devlog card at the newest post.
-4. Run `python tools/make-sitemap.py` (the new post joins `sitemap.xml`, and the page is checked), add it to `llms.txt`'s
+4. Run `python tools/make-share-cards.py` (draws the post's link card and writes its image tags), then
+   `python tools/make-sitemap.py` (the new post joins `sitemap.xml`, and the page is checked), add it to `llms.txt`'s
    Devlog section if it is worth an AI reader's time, then `python tools/stamp-assets.py`.
 
 ## The portraits and the mark (Tooling 182)
@@ -55,7 +57,7 @@ Every page carries the same header and footer: change one, change them all. Each
   previews that.
 - The renders are made by `python tools/make-portraits.py <game repo>/art/portraits` (needs the LFS files). Ids: `bastion`,
   `oracle`, `reaver`, `asha`, `giant`, `patchwork`, `old-hunger`, `maera`.
-- Each character page's link card is its 16:9 render (`img/portraits/share-<id>.jpg`).
+- Each character page's link card is drawn from its 16:9 render, with its name on a paper tag (see Link cards below).
 - **The role tags** are the game's own: its role glyph (the HUD's `ui-glyph-role-*`) in ink on the Book's round blank stamp, as the
   HUD shows a role (`img/book/role-*.webp`; the glyph alone, `glyph-*.webp`, is the role pill's icon).
 - **The mark (Tooling 180):** D, the formation, sits in every page's header (`img/brand/mark-ink.svg` on the paper header,
@@ -88,6 +90,9 @@ Every page carries the same header and footer: change one, change them all. Each
 - `python tools/make-portraits.py <path>`: the renders' web copies.
 - `python tools/make-textures.py`: the Book's paper (a seamless 2048 px tile, Day and Night) and the 4K sky with its fade
   built in, from the game's own plates (`img/book/sky-day.jpg` is kept as the sky's source).
+- `python tools/make-share-cards.py`: the front page's link card (shared by Research, Devlog, Contact and Request a
+  build) and every devlog post's, and their image tags. `make-characters.py` draws the character pages' and
+  `/shatterbound/`'s. Both draw through `tools/sharecard.py` (see Link cards below).
 - `python tools/make-sitemap.py`: writes `sitemap.xml` from every page's canonical, and stops with a list if a page lacks
   its title, description, canonical, link card, alt text on an image, one `<h1>` or structured data. Run it after adding
   or changing a page.
@@ -121,6 +126,26 @@ Bing Webmaster Tools (it also feeds Copilot and DuckDuckGo):
    across); or add the site by hand and verify it with the TXT record Bing shows, the same way as above.
 3. Sitemaps: check `https://projecttrinity.dev/sitemap.xml` is listed; submit it if not.
 4. Optional: Settings, IndexNow, turn it on so changes reach Bing sooner.
+
+## Link cards (Tooling 197)
+
+What a shared link shows. Every card is `tools/share-card/card.html`, a 1200x630 page drawn from the site's own parts
+(its stylesheet, fonts, the Book's plates, the mark and the game's art), opened through a local server in headless Chrome
+or Edge (`CHROME=<path>` if it is not found) and saved as `img/share/<name>-<hash>.jpg`. The hash is of what went into
+the card, so a card whose words or picture change gets a new file name: chat apps and social sites keep a preview by its
+image's address and fetch a new address fresh. A card that has not changed is not redrawn. Each page carries
+`og:image` and `twitter:image` with the card's size and alt text, and its structured data names the same picture.
+
+- The front page's card: the title (his pick A) over Old Hunger, the four heroes' stickers on a taped strip.
+- Each hero's and boss's card: their 16:9 render, their name and role (or place) on a paper tag. A render whose body
+  stands mid-picture slides right on its card (`CARD_SHIFT` in `make-characters.py`).
+- `/shatterbound/`'s card: the heroes' and bosses' painted stickers.
+- Each devlog post's card: its first picture taped in beside its title.
+
+A platform that already holds the old preview refetches it on its own after a while; to refresh one now, paste the
+page's address into Facebook's Sharing Debugger (https://developers.facebook.com/tools/debug/, Scrape Again; this also
+serves WhatsApp and Instagram) or LinkedIn's Post Inspector (https://www.linkedin.com/post-inspector/). X, Discord,
+Slack and iMessage read the card when a link is next shared.
 
 ## Cache-busting
 

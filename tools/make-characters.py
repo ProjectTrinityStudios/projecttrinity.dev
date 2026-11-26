@@ -12,6 +12,8 @@ import json
 from html import escape, unescape
 from pathlib import Path
 
+import sharecard
+
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://projecttrinity.dev"
 
@@ -214,11 +216,7 @@ HEAD = """<!doctype html>
   <meta property="og:title" content="{og_title}">
   <meta property="og:description" content="{og_description}">
   <meta property="og:url" content="{url}">
-  <meta property="og:image" content="{image}">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="{image_alt}">
-  <meta name="twitter:card" content="summary_large_image">
+{card_tags}
 {structured}
   <link rel="icon" href="/img/brand/shatterbound/favicon.ico" sizes="48x48">
   <link rel="icon" href="/img/brand/shatterbound/favicon.svg" type="image/svg+xml">
@@ -390,7 +388,8 @@ def structured(head_args):
 
 def page(path, head_args, body):
     foot = FOOT.replace("{icons}", ICONS)
-    html = HEAD.format(structured=structured(head_args), **head_args) + body + foot
+    card_tags = sharecard.tags(head_args["image"], head_args["image_alt"])
+    html = HEAD.format(structured=structured(head_args), card_tags=card_tags, **head_args) + body + foot
     out = ROOT / path
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8", newline="\n")
@@ -541,8 +540,8 @@ def shatterbound():
         url=f"{SITE}/shatterbound/",
         og_title="Shatterbound: the heroes and the bosses",
         og_description="Bastion, Oracle, Reaver and Asha, and the bosses they fight: Patchwork, the Giant, Old Hunger and Maera.",
-        image=f"{SITE}/img/share-card.jpg",
-        image_alt="Old Hunger, a huge armoured grub with a split jaw, lit pale against a dark dungeon floor, under the title Project Trinity: Shatterbound.",
+        image=CARDS["shatterbound"],
+        image_alt="The heroes' painted stickers, Bastion, Oracle, Reaver and Asha, above the bosses', Patchwork, the Giant, Old Hunger and Maera, under the words The heroes and the bosses.",
         current=' aria-current="page"',
     ), body)
 
@@ -626,8 +625,8 @@ def hero_page(h):
         url=f"{SITE}/shatterbound/{h['id']}/",
         og_title=f"{h['name']}, the {h['role']}",
         og_description=h["line"],
-        image=f"{SITE}/img/portraits/share-{h['id']}.jpg",
-        image_alt=h["banner_alt"],
+        image=CARDS[h["id"]],
+        image_alt=f"{h['banner_alt']} A paper tag beside the picture reads {h['name']}, {h['role']}.",
         current="",
     ), body)
 
@@ -691,13 +690,35 @@ def boss_page(b):
         url=f"{SITE}/shatterbound/{b['id']}/",
         og_title=f"{b['name']}: how the fight works",
         og_description=b["about"],
-        image=f"{SITE}/img/portraits/share-{b['id']}.jpg",
-        image_alt=b["banner_alt"],
+        image=CARDS[b["id"]],
+        image_alt=f"{b['banner_alt']} A paper tag beside the picture reads {b['name']}, {b['place']}.",
         current="",
     ), body)
 
 
+# ---- The link cards (Tooling 197): drawn by tools/sharecard.py from the site's own parts --------------------------------
+ROLE_STAMP = {"tank": "tank", "healer": "healer", "dps": "dps"}
+# how far a render slides right on its card, for the ones whose body stands mid-picture (pixels of the 1200 wide card)
+CARD_SHIFT = {"asha": 260, "oracle": 220, "reaver": 230, "maera": 120}
+
+
+def card_specs():
+    cards = {"shatterbound": dict(
+        kind="party", heading="The heroes and the bosses",
+        heroes=[[h["id"], h["name"]] for h in HEROES], bosses=[[b["id"], b["name"]] for b in BOSSES])}
+    for h in HEROES:
+        cards[h["id"]] = dict(kind="character", image=f"/img/portraits/{h['id']}-16x9-1280.jpg", shift=CARD_SHIFT.get(h["id"], 0),
+                              stamp=f"/img/book/role-{ROLE_STAMP[h['group']]}.webp", eyebrow=h["role"], name=h["name"], line=h["line"])
+    for b in BOSSES:
+        cards[b["id"]] = dict(kind="character", image=f"/img/portraits/{b['id']}-16x9-1280.jpg", shift=CARD_SHIFT.get(b["id"], 0),
+                              eyebrow=b["place"], name=b["name"])
+    return cards
+
+
+CARDS = {}
+
 if __name__ == "__main__":
+    CARDS.update(sharecard.render(card_specs()))
     shatterbound()
     for h in HEROES:
         hero_page(h)

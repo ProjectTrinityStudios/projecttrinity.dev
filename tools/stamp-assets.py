@@ -9,7 +9,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SKIP_DIRS = {".git", "node_modules"}
+SKIP_DIRS = {".git", "node_modules", "worker", "tools"}  # not served (tools/share-card is drawn locally)
 CRLF, LF = bytes([13, 10]), bytes([10])
 
 # href="..." or src="..." whose value is a local .css/.js path, optionally with ?query and #fragment
