@@ -46,7 +46,7 @@ def _browser():
 
 def _files(spec):
     """The site files a card draws on, so a changed picture renames the card."""
-    found = {"/css/site.css"}
+    found = {"/css/site.css"} | set(re.findall(r'/img/[\w./-]+\.(?:webp|svg|jpg|png)', TEMPLATE.read_text(encoding="utf-8")))
     for v in json.dumps(spec).split('"'):
         if v.startswith("/img/"):
             found.add(v)

@@ -46,7 +46,9 @@ def posts():
                      if "/brand/" not in s and "/party/" not in s), None)
         if not lead:
             raise SystemExit(f"devlog/{slug}: no picture for its card")
-        picture = meta(html, "og:image:alt").split(TAPED)[0]  # the picture's own short description, kept across runs
+        picture = meta(html, "og:image:alt").split(TAPED)[0].strip()  # the picture's own short description, kept across runs
+        if not picture:
+            raise SystemExit(f"devlog/{slug}: give og:image:alt a one-line description of the post's first picture")
         found[f"devlog-{slug}"] = (f"devlog/{slug}/index.html",
                                    dict(kind="post", image=lead, eyebrow=eyebrow, title=words),
                                    f"{picture}{TAPED}{title}.")

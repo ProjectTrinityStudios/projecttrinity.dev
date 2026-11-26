@@ -29,6 +29,7 @@ Add `?theme=dark` or `?theme=light` to force a mode. A visitor's own Day or Nigh
 | `devlog/` | The index, newest first, the email sign-up at its foot; one folder per post (`devlog/<slug>/index.html`). The five monthly recaps (July to November 2026) carry the same words as the game repository's drafts, `docs/devlog/recaps/`: a fix to one is made to both. |
 | `contact/` | The message form (the Worker's `/contact`). |
 | `css/site.css` | All styles, in the game's own look, the Wayfarers' Book: paper on a lilac sky by Day, blue paper on the night sky by Night, Caveat Brush lettering, stickers in each hero's colour, photos taped in, the gold brush for what to press. The colours are the game's tokens (`unity-b/Assets/UI/Theme/TrinityTokens.uss`). |
+| `tools/` | The generators below, and `share-card/card.html`, the link cards' template (not served). |
 | `js/site.js` | The light/dark switch, the header (solid on scroll, the phone menu), the film window, and the forms' checks. Nothing is sent or stored except what a form sends. |
 | `fonts/` | The game's UI fonts (Caveat Brush for names and titles, Source Sans 3 for reading), SIL Open Font License; licences beside them. |
 | `img/` | Stills, `share/` (every page's link card, 1200x630, drawn by the tools; see Link cards below), the two flow charts with a still of each for people who turn motion off, `party/` (the game's round portrait stickers, 256 px WebP), `portraits/` (Models 101's renders: the 4:5 cut-outs and the 16:9 banners, from `tools/make-portraits.py`), `fights/` (the game's fight cards, 16:9), `devlog/` (each post's pictures as WebP, a 720 px and an up-to-1200 px copy) and `book/` (the Book's own plates: paper, tape, brush strokes, stamps, clouds, from `unity-b/Assets/UI/Art/Book/`). |
@@ -86,7 +87,7 @@ Every page carries the same header and footer: change one, change them all. Each
 
 ## The tools
 
-- `python tools/make-characters.py`: writes `shatterbound/` and every character page from the words in it.
+- `python tools/make-characters.py`: writes `shatterbound/` and every character page from the words in it. It also draws their link cards, so it needs Chrome or Edge (`CHROME=<path>` if not found).
 - `python tools/make-portraits.py <path>`: the renders' web copies.
 - `python tools/make-textures.py`: the Book's paper (a seamless 2048 px tile, Day and Night) and the 4K sky with its fade
   built in, from the game's own plates (`img/book/sky-day.jpg` is kept as the sky's source).

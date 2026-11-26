@@ -699,7 +699,7 @@ def boss_page(b):
 # ---- The link cards (Tooling 197): drawn by tools/sharecard.py from the site's own parts --------------------------------
 ROLE_STAMP = {"tank": "tank", "healer": "healer", "dps": "dps"}
 # how far a render slides right on its card, for the ones whose body stands mid-picture (pixels of the 1200 wide card)
-CARD_SHIFT = {"asha": 260, "oracle": 220, "reaver": 230, "maera": 120}
+CARD_SHIFT = {"asha": 220, "oracle": 220, "reaver": 230, "maera": 120}
 
 
 def card_specs():
