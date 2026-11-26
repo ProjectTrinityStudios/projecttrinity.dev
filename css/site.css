@@ -1693,7 +1693,8 @@ p { margin: 0; }
 .cine-actions > .button-slip { margin-top: calc(1.6rem * 1.15 + 0.5rem); }
 @media (forced-colors: active) { .join-row input { border: 2px solid CanvasText; } }
 
-/* ---- Swap heroes mid-fight: a strip taped under the Shatterbound slip (his pick) ------------------------------------ */
+/* ---- Swap heroes mid-fight: under the Shatterbound slip, on the picture with no backing, like the words below it
+   (his word, Tooling 202) ----------------------------------------------------------------------------------------------- */
 .swap-note { grid-column: 2; grid-row: 1 / span 4; align-self: end; }
 .swap-note {
   position: relative;
@@ -1704,26 +1705,10 @@ p { margin: 0; }
   column-gap: 1.1rem;
   width: fit-content;
   max-width: min(100%, 36rem);
-  margin-top: 1.2rem;
-  padding: 0.75rem 1.1rem 0.8rem;
-  color: var(--ink);
-  background-color: var(--paper);
-  background-image: var(--paper-image);
-  background-size: var(--paper-size);
-  border-radius: 4px;
-  box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.18), 4px 10px 22px -6px rgba(0, 0, 0, 0.5);
-  transform: rotate(-0.8deg);
+  margin-top: 1.4rem;
+  color: var(--film-text);
 }
-.swap-note::before {
-  content: "";
-  position: absolute;
-  left: -26px; top: -10px;
-  width: 84px; height: 28px;
-  background: url("../img/book/tape-2.webp") 0 0 / 100% 100% no-repeat;
-  transform: rotate(-30deg);
-  filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
-}
-.swap-note h2 { grid-area: title; font-size: 1.7rem; line-height: 1.05; }
+.swap-note h2 { grid-area: title; font-size: 1.7rem; line-height: 1.05; color: var(--film-text); text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6); }
 .swap-row {
   grid-area: faces;
   list-style: none;
@@ -1748,8 +1733,9 @@ p { margin: 0; }
   width: 22px; height: 16px;
   margin-top: -8px;
   background: url("../img/book/swap-arrows.svg") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
 }
-.swap-note p { grid-area: line; font-size: 1.02rem; line-height: 1.35; color: var(--ink); }
+.swap-note p { grid-area: line; font-size: 1.02rem; line-height: 1.35; color: var(--film-text); text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6); }
 .cine .cine-line { margin-top: 1.2rem; }
 .cine .cine-actions { margin-top: clamp(26px, 3.4vw, 40px); }
 
