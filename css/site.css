@@ -1009,6 +1009,7 @@ p { margin: 0; }
 .post-body .shard-list { font-size: 1.1rem; color: var(--text); max-width: none; }
 .post-sign { color: var(--text-soft); font-style: italic; }
 .post-nav { margin-top: clamp(32px, 5vw, 56px); padding-top: 1rem; border-top: 1px solid var(--plate-edge); }
+.post + .list-foot { max-width: calc(760px + 2 * var(--gutter)); }
 
 /* ---- Contact -------------------------------------------------------------- */
 .contact-grid {
