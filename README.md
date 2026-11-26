@@ -27,6 +27,7 @@ Add `?theme=dark` or `?theme=light` to force a mode. A visitor's own Day or Nigh
 | `shatterbound/` | The heroes by role (Tank, Healer, DPS), each a sticker holding down a scroll that opens on a click (key skills, clips), with a question-mark slot in each role; the bosses, each walkthrough folded behind a click; Don Fortuna is a "coming" card. One page per character, `shatterbound/<id>/` (every skill, the clips, the job in each fight; a boss's page is its fight). All of it is written by `tools/make-characters.py`: edit the words there and rerun it, never the pages. |
 | `research/` | Three short sections: how the party plays, how the research is done, how the game is built, with the two charts. |
 | `devlog/` | The index, newest first, the email sign-up at its foot; one folder per post (`devlog/<slug>/index.html`). The five monthly recaps (July to November 2026) carry the same words as the game repository's drafts, `docs/devlog/recaps/`: a fix to one is made to both. |
+| `email/` | The email list's mail (Tooling 192): Kit's HTML template in the Book look, the confirm and welcome emails' words, and the sender steps (Kit's domain verification on Cloudflare DNS, DMARC, the hello@ forward). Not served (`_config.yml` excludes it); `python tools/preview-email.py` renders it for a look. |
 | `contact/` | The message form (the Worker's `/contact`). |
 | `css/site.css` | All styles, in the game's own look, the Wayfarers' Book: paper on a lilac sky by Day, blue paper on the night sky by Night, Caveat Brush lettering, stickers in each hero's colour, photos taped in, the gold brush for what to press. The colours are the game's tokens (`unity-b/Assets/UI/Theme/TrinityTokens.uss`). |
 | `tools/` | The generators below, and `share-card/` (`card.html`, the link cards' template, and `banner.html`, the YouTube banner's; not served). |
@@ -74,10 +75,31 @@ Every page carries the same header and footer: change one, change them all. Each
   it's a person, a build request or a Contact message is kept in D1 and mailed to the project mailbox, and the email list goes to Kit's form
   (Kit sends its own confirm email). The Turnstile site key in `js/site.js` is public by design; the secret lives only in
   Cloudflare (`npx wrangler secret put TURNSTILE_SECRET`).
-- Locally: `cd worker`, put Cloudflare's published test secret in `.dev.vars` (`TURNSTILE_SECRET=1x0000000000000000000000000000000AA`),
+- Locally: `cd worker`, `npm install` once (wrangler, pinned in `package.json`), put Cloudflare's published test secret in `.dev.vars` (`TURNSTILE_SECRET=1x0000000000000000000000000000000AA`),
   `npx wrangler d1 execute projecttrinity-forms --local --file=./schema.sql`, `npx wrangler dev --local --port 8787 --ip 127.0.0.1`;
   on localhost the page uses the test site key and talks to port 8787.
 - `worker/` is not served (`_config.yml` excludes it).
+
+## Build keys (Tooling 189)
+
+A build request's mail to him carries an Approve link (`worker/src/keys.js`). Opening it shows the request and sends
+nothing; its **Send key** button takes the next unused itch.io key link from D1 (`build_keys`), mails it to the requester
+through Resend with their platform's note, and marks the key and the request used (the page never shows a sent key: `keys.mjs sent` does; a send with an unclear answer keeps its key held for that request); at `KEYS_LOW` unused keys or fewer
+each send also mails him a warning. The link's secret is stored only as its SHA-256 (`approvals`), and each request sends
+one key at most. The platform notes are `PLATFORM_NOTES` at the top of `keys.js`.
+
+- Keys go in from `worker/` with `node tools/keys.mjs import <file>` (or a pasted list): either export of an itch.io key
+  group ("Download keys", the full links, is the one to press; "Download short URLs" also works, each `itch.io/get-...`
+  followed to its full link, which is what is stored), any text holding key links, or bare keys with `--page <itch page>`.
+  `KEYS_ITCH_ORIGIN` points the short-link check at a local stand-in, for a test only. `count`, `list`, `link <id>` and `sent [email]` (which key went to whom) do the rest; `--local` works on
+  `wrangler dev`'s store. It uses wrangler's own login and holds no key.
+- The sender's key is `RESEND_API_KEY`, set with `npx wrangler secret put` and nowhere else. Locally, `KEY_SENDER=fake` in
+  `.dev.vars` logs the key mail instead of sending it (`fake-fail` is a plain refusal, which gives the key back on a first try and keeps it held on a retry; `fake-lost` an unclear answer, which keeps the key bound to the request until It arrived or Decline), and
+  `PUBLIC_API=http://127.0.0.1:8787` points the Approve links at `wrangler dev`. `wrangler dev` reads `.dev.vars` only at
+  start: restart it after changing one.
+- Switching it on (his steps, also in the game repository's `docs/how-to/itch-io-builds.md`): the Resend account and the
+  domain verified (Sign in to Cloudflare), `npx wrangler secret put RESEND_API_KEY`, the schema run with `--remote`,
+  `npx wrangler deploy`, then the first batch imported.
 
 ## Not connected yet
 

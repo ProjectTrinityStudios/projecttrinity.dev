@@ -1,0 +1,21 @@
+Welcome to the party
+
+Thanks for joining. Project Trinity: Shatterbound is a dungeon crawler built around the tank, healer and DPS of MMO raiding: four heroes, MMO-style bosses with telegraphed mechanics, and an AI party that plays the members you aren't. You can swap into any of them mid-fight.
+
+Here's what to expect: a note when there's a new devlog post or a new build to try. Not often, and every email has a way out at the bottom.
+
+While you wait, the newest post is Meet Project Trinity: Shatterbound:
+https://projecttrinity.dev/devlog/i-miss-playing-with-my-friends/
+
+The heroes and bosses are on the Shatterbound page:
+https://projecttrinity.dev/shatterbound/
+
+One question: which hero would you play first, Bastion the tank, Oracle the healer, or Reaver or Asha on damage? Just reply. Every reply is read.
+
+Project Trinity Studios
+
+P.S. If this landed in Promotions or Updates, drag it to your Primary inbox so the next one finds you.
+
+--
+You're getting this because this address was put down for the Project Trinity email list at projecttrinity.dev.
+Unsubscribe: {{ unsubscribe_url }}
