@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>October 2026: the pre-alpha, the Tear, and a choice to rebuild | Project Trinity</title>
+  <meta name="description" content="October 2026: the first pre-alpha, the Tear and its bosses, the possessed Lamp Maera, and the choice to rebuild the game.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c3b3ea">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#12163a">
+  <link rel="canonical" href="https://projecttrinity.dev/devlog/october-2026-the-pre-alpha-the-tear-and-a-choice-to-rebuild/">
+
+  <!-- The link card: what a shared link shows -->
+  <meta property="og:type" content="article">
+  <meta name="author" content="Project Trinity Studios">
+  <meta property="og:site_name" content="Project Trinity Studios">
+  <meta property="og:title" content="October 2026: the pre-alpha, the Tear, and a choice to rebuild">
+  <meta property="og:description" content="October 2026: the first pre-alpha, the Tear and its bosses, the possessed Lamp Maera, and the choice to rebuild the game.">
+  <meta property="og:url" content="https://projecttrinity.dev/devlog/october-2026-the-pre-alpha-the-tear-and-a-choice-to-rebuild/">
+  <meta property="og:image" content="https://projecttrinity.dev/img/devlog/2026-10-share.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The possessed Lamp Maera, a grey-haired figure in a ragged coat with an anchor and a purple lantern.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-11-26">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="/css/site.css?v=4b2be6d6">
+  <script src="/js/site.js?v=d4095415" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the page</a>
+
+  <header class="site-header" data-header>
+    <div class="header-bar">
+      <a class="mark" href="/">
+        <svg class="mark-shard" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#shard"/></svg>
+        <span>Project Trinity</span>
+      </a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-button>
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Menu</span>
+      </button>
+      <div class="header-menu" id="site-menu">
+        <nav aria-label="Site">
+          <ul>
+          <li><a href="/shatterbound/">Shatterbound</a></li>
+          <li><a href="/research/">Research</a></li>
+          <li><a href="/devlog/" aria-current="location">Devlog</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="header-tools">
+          <a class="button button-gold header-cta" href="/request/">Request a build</a>
+          <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+            <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="page-top">
+    <div class="wrap post">
+    <article class="paper post-sheet" aria-labelledby="post-title">
+      <header class="post-head">
+        <p class="post-date"><a href="/devlog/">Devlog</a> <span aria-hidden="true">·</span> <time datetime="2026-10">October 2026</time></p>
+        <h1 id="post-title">October 2026: the pre-alpha, the Tear, and a choice to rebuild</h1>
+      </header>
+
+      <figure class="post-photo post-figure">
+          <span class="photo"><img src="/img/devlog/2026-10-maera-possessed-1200.webp"
+            srcset="/img/devlog/2026-10-maera-possessed-720.webp 720w, /img/devlog/2026-10-maera-possessed-1200.webp 1187w"
+            sizes="(min-width: 840px) 760px, 100vw"
+            width="1187" height="720"
+            alt="The possessed Lamp Maera: a gaunt grey-haired figure in a ragged dark coat streaked with purple, a huge rusted anchor over one shoulder and a lantern glowing purple in the other hand, beside a close-up of the face with glowing purple eyes."></span>
+          <figcaption>The possessed Lamp Maera, the day her body was accepted, October 24th.</figcaption>
+        </figure>
+
+      <div class="post-body">
+        <p class="post-sign">Covers October 2026. Written in November 2026 from the project's records.</p>
+
+        <p>October opened with a milestone. On October 9th the first pre-alpha came together: Patchwork's Hunt, with a brand-new tutorial called <strong>First Watch</strong> as an optional first chapter. On the ROG Xbox Ally X it averaged 90 frames a second and never dropped below 60, and it was given the go.</p>
+
+        <p>Then the party went somewhere new. On October 10th the first dungeons were reshaped: Patchwork's Hunt, and a second, darker place called <strong>the Tear</strong>, which the menu names the Hungry Deep. Through the rest of the month the Tear filled up:</p>
+
+        <ul>
+          <li><strong>The Giant</strong>, whose Storm gives you a two-and-a-half-second warning before three heavy hits.</li>
+          <li><strong>Old Hunger</strong>, the Glutton, in a court of his own. He breathed for the first time on October 19th, and by October 23rd he could sweep with his tail, retch, burrow underground, leave pools of bile and glow as he fills up.</li>
+          <li><strong>The Lamp Maera</strong>, the lighthouse keeper from July, now possessed. Her new body was accepted on October 24th. That night her dark look was set and a beast form of the Warden joined her, and her first voice lines were picked the next day.</li>
+          <li>Packs of Imps and Brutes, and a captive to find in a side room.</li>
+        </ul>
+
+        <figure class="post-photo">
+          <span class="photo tilt-right"><img src="/img/devlog/2026-10-dungeon-tunnel-1200.webp"
+            srcset="/img/devlog/2026-10-dungeon-tunnel-720.webp 720w, /img/devlog/2026-10-dungeon-tunnel-1200.webp 1200w"
+            sizes="(min-width: 840px) 760px, 100vw"
+            width="1200" height="614" loading="lazy"
+            alt="An old screenshot: Bastion, outlined in red, walks down a rough brown stone tunnel toward an arched gate glowing purple and blue, the party&#x27;s health bars on the left."></span>
+          <figcaption>October 12th: Bastion in one of the newly reshaped dungeons, a glowing gate ahead.</figcaption>
+        </figure>
+
+        <p>The party got smarter as the dungeon got harder. The tank now taunts back a boss that wanders off him, Imps go after whoever healed last, and a fight can tell the tank where to stand.</p>
+
+        <p>Asha changed too. Early in the month her <strong>Glow Up</strong> zone, which speeds up and sharpens any friend standing in it, was set to 6 metres, and her hands learned to close properly around her pistols.</p>
+
+        <figure class="post-photo">
+          <span class="photo"><img src="/img/devlog/2026-10-glow-up-1200.webp"
+            srcset="/img/devlog/2026-10-glow-up-720.webp 720w, /img/devlog/2026-10-glow-up-1200.webp 1200w"
+            sizes="(min-width: 840px) 760px, 100vw"
+            width="1200" height="618" loading="lazy"
+            alt="An old screenshot of the Patchwork fight: Patchwork, now a bright cartoonish giant, towers over Asha in pink, glowing white corner marks on the floor around her, the party&#x27;s health bars on the left and the Trinity Dial at top right."></span>
+          <figcaption>October 3rd, the day Glow Up was set to 6 metres: Asha and the party in the Patchwork fight.</figcaption>
+        </figure>
+
+        <p>And on October 21st the project made the biggest call of the year. The game could do everything it was meant to, but a fresh-eyes review of how it was built, told to assume everything was bad, found plenty to do differently. The game had proved that it works and that it can do everything. Now it had to be done right. So the project chose to rebuild the game, one for one, in a fresh Unity project, starting with the Tear, keeping the rules of every fight exactly as they were. It was called Path B.</p>
+
+        <p class="post-sign">Disclosure: AI tools and AI-generated assets were used in making this game.</p>
+      </div>
+
+      <p class="post-nav"><a class="more" href="/devlog/">All devlog posts</a></p>
+    </article>
+    </div>
+
+    <section class="wrap list-foot" aria-labelledby="list-title">
+      <div class="book book-single">
+        <div class="page">
+          <h2 id="list-title">Join the email list</h2>
+          <p class="page-lede">A note when there's a new devlog or a new build. Not often, and you can leave any time.</p>
+          <form class="ledger-form" aria-labelledby="list-title" data-endpoint="/subscribe" data-thanks="Almost done: check your inbox and confirm to join the list." method="post" novalidate>
+            <div class="field">
+              <label for="list-email">Email</label>
+              <input id="list-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="ticks">
+              <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
+            </div>
+            <div class="turnstile" data-turnstile></div>
+            <button class="seal" type="submit" disabled>Sign up</button>
+            <p class="form-note" role="status" aria-live="polite" data-form-note></p>
+            <noscript><p class="form-note is-error">This form needs JavaScript. Write to <a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a> instead.</p></noscript>
+          </form>
+          <p class="page-foot">Your email stays with the project. It's never sold or shared.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="colophon">
+    <div class="colophon-grid">
+      <div>
+        <h2>Pages</h2>
+        <ul>
+          <li><a href="/shatterbound/">Shatterbound</a></li>
+          <li><a href="/research/">Research</a></li>
+          <li><a href="/devlog/">Devlog</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/request/">Request a build</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <ul>
+          <li><a href="/contact/">Send a message</a></li>
+          <li><a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Video</h2>
+        <p><a href="https://www.youtube.com/@ProjectTrinityStudios">YouTube: @ProjectTrinityStudios</a></p>
+      </div>
+      <div class="privacy">
+        <h2>Privacy</h2>
+        <p>This site sets no cookies and runs no trackers or ads. The gameplay video plays from YouTube's privacy-enhanced player, and only once you press play; from then, YouTube's own privacy terms apply to it. If you request a build or send a message, it goes to the project mailbox; your email joins the list only if you ask. All of it is for people 13 or older.</p>
+      </div>
+    </div>
+    <p class="colophon-foot">Disclosure: AI tools and AI-generated assets were used in making this game.</p>
+    <p class="colophon-foot">© 2026 Project Trinity Studios. Project Trinity: Shatterbound is in alpha.</p>
+  </footer>
+
+  <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
+    <symbol id="shard" viewBox="0 0 32 32">
+      <path d="M16 2 27 14 16 30 5 14Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M16 2 16 30M5 14 16 18 27 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
+    <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
+    <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>
+  </svg>
+</body>
+</html>

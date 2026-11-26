@@ -20,15 +20,15 @@ Add `?theme=dark` or `?theme=light` to force a mode; otherwise it follows the sy
 |---|---|
 | `index.html` | The front page, a short scroll: the cinematic first screen (the B-roll over the Old Hunger still, the title, Watch the gameplay and Request a build), the game in three lines and how it's made, the party, the bosses, the newest post and the Research teaser. |
 | `request/` | The Request a build form (the header's button comes here). |
-| `video/` | The first screen's silent B-roll loop (19.9 s; 1080p MP4 and WebM, a 720p MP4 for phones), cut from existing films. It plays muted, pauses off screen, and gives way to the still when motion is turned off. |
+| `video/` | A devlog clip (`healer-steps-out-s8-139.mp4`, side by side, and a `-stacked` copy, before above after, for phones; CSS shows one) and the first screen's silent B-roll loop (19.9 s; 1080p MP4 and WebM, a 720p MP4 for phones), cut from existing films. It plays muted, pauses off screen, and gives way to the still when motion is turned off. |
 | `shatterbound/` | The heroes (role, resource, one line, key skills) and the bosses, each walkthrough folded behind a click; Don Fortuna is a "coming" card. |
 | `research/` | Three short sections: how the party plays, how the research is done, how the game is built, with the two charts. |
-| `devlog/` | The index, newest first, the email sign-up at its foot; one folder per post (`devlog/<slug>/index.html`). |
+| `devlog/` | The index, newest first, the email sign-up at its foot; one folder per post (`devlog/<slug>/index.html`). The five monthly recaps (July to November 2026) carry the same words as the game repository's drafts, `docs/devlog/recaps/`: a fix to one is made to both. |
 | `contact/` | The message form (the Worker's `/contact`). |
 | `css/site.css` | All styles, in the game's own look, the Wayfarers' Book: paper on a lilac sky by Day, blue paper on the night sky by Night, Caveat Brush lettering, stickers in each hero's colour, photos taped in, the gold brush for what to press. The colours are the game's tokens (`unity-b/Assets/UI/Theme/TrinityTokens.uss`). |
 | `js/site.js` | The light/dark switch, the header (solid on scroll, the phone menu), the film window, and the forms' checks. Nothing is sent or stored except what a form sends. |
 | `fonts/` | The game's UI fonts (Caveat Brush for names and titles, Source Sans 3 for reading), SIL Open Font License; licences beside them. |
-| `img/` | Stills, the share card (1200x630), the two flow charts with a still of each for people who turn motion off, `party/` (the game's round portrait stickers, 256 px WebP), `fights/` (the game's fight cards, 16:9) and `book/` (the Book's own plates: paper, tape, brush strokes, stamps, clouds, from `unity-b/Assets/UI/Art/Book/`). |
+| `img/` | Stills, the share card (1200x630), the two flow charts with a still of each for people who turn motion off, `party/` (the game's round portrait stickers, 256 px WebP), `fights/` (the game's fight cards, 16:9), `devlog/` (each post's pictures as WebP, a 720 px and an up-to-1200 px copy, and its 1200x630 link card) and `book/` (the Book's own plates: paper, tape, brush strokes, stamps, clouds, from `unity-b/Assets/UI/Art/Book/`). |
 
 Every page carries the same header and footer: change one, change them all. Each page has its own link card
 (`og:title`, `og:description`, `og:url`).
@@ -37,6 +37,7 @@ Every page carries the same header and footer: change one, change them all. Each
 
 1. Copy `devlog/i-miss-playing-with-my-friends/` to `devlog/<new-slug>/` and replace its title, date, picture, text and
    link-card tags (`og:*`, `canonical`, `article:published_time`).
+   A picture in the text is `<figure class="post-photo"><span class="photo"><img ...></span><figcaption>...</figcaption></figure>`: taped in at its own shape, at most 540 px tall, with a hand-written line under it (add `tilt-right` to the span to lean it the other way). A silent loop is a `<video data-loop muted loop playsinline preload="none" poster=...>`: it plays only on screen and never for anyone who asked for less motion.
 2. Add a `<li class="post-row">` at the top of the list in `devlog/index.html` (newest first): picture, date, title, two lines.
 3. On the front page, point the Devlog card at the newest post.
 
