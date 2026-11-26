@@ -413,6 +413,15 @@ p { margin: 0; }
   opacity: 1;
 }
 .header-menu ul a[aria-current] { color: #2b2452; }
+.header-menu ul a[aria-current]::after {
+  content: "";
+  position: absolute;
+  left: -12px; top: 50%;
+  width: 22px; height: 23px;
+  margin-top: -11px;
+  background: url("../img/book/focus-star.webp") 0 0 / 100% 100% no-repeat;
+  pointer-events: none;
+}
 .header-tools { display: flex; align-items: center; gap: 0.9rem; }
 .header-cta { min-height: 42px; font-size: 1.3rem; padding: 0.2rem 1.7rem 0.25rem 1.5rem; }
 
@@ -695,12 +704,14 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   .party-strip a, .party-strip a:hover { transition: none; }
 }
-.party-strip strong {
-  font-family: var(--font-hand);
+.party-strip strong.slip {
+  position: relative;
+  z-index: 2;
+  filter: none; /* a filter over its words drops them in Chrome when drawn off-screen */
   font-weight: 400;
-  font-size: 1.7rem;
-  line-height: 1;
-  margin-top: 0.5rem;
+  font-size: 1.55rem;
+  margin-top: -0.9rem;
+  margin-bottom: 0.2rem;
 }
 .party-strip span { font-size: 0.95rem; color: var(--ink-soft); }
 .party-strip .sticker { width: clamp(88px, 11vw, 128px); }
@@ -811,8 +822,24 @@ p { margin: 0; }
 }
 .card-links li:nth-child(2) a::before { background-image: url("../img/book/row-wash-mid.webp"); right: 12%; }
 .card-links a::after { content: "\2192"; font-family: var(--font-body); font-size: 1rem; }
-.card-links a:hover { color: #2b2452; }
-.card-links a:hover::before { background-image: url("../img/book/focus-brush.webp"); opacity: 1; right: 0; }
+.card-links a:hover,
+.card-links a:focus-visible { color: #2b2452; }
+.card-links a:hover::after,
+.card-links a:focus-visible::after { color: #2b2452; }
+.card-links a:hover::before,
+.card-links a:focus-visible::before { background-image: url("../img/book/focus-brush.webp"); opacity: 1; right: 0; }
+.card-links li { position: relative; }
+.card-links li:has(a:hover)::before,
+.card-links li:has(a:focus-visible)::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: -14px; top: 50%;
+  width: 26px; height: 27px;
+  margin-top: -13px;
+  background: url("../img/book/focus-star.webp") 0 0 / 100% 100% no-repeat;
+  pointer-events: none;
+}
 
 /* ---- The book: request a build and join the list ------------------------ */
 .book {
