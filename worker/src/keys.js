@@ -314,11 +314,11 @@ export function againMailText(platform, keyUrl) {
   return [
     "Hello,",
     "",
-    "Thanks for asking to play Project Trinity: Shatterbound again. This address already has a build, so here is its link once more:",
+    "Thanks for asking to play Project Trinity: Shatterbound again. Good news: you already have a key, so here is your build again:",
     "",
     keyUrl,
     "",
-    "It is the same link as before and still yours. It opens the game's itch.io page with the Windows, Mac and Linux downloads, no itch.io account needed. Please keep it to yourself.",
+    "It is the same link as before and it is still yours. It opens the game's itch.io page with the Windows, Mac and Linux downloads, no itch.io account needed. Please keep it to yourself. Claiming it with an itch.io account lets the itch.io app install the game and keep it updated.",
     "",
     ...(PLATFORM_NOTES[platform] || []),
     "",
