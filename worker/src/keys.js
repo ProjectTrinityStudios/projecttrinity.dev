@@ -6,9 +6,11 @@
 // The link's secret is 32 random bytes; D1 keeps only its SHA-256. Each request sends one key at most; the link stays
 // readable afterwards and shows which key went out, so the mail stays his.
 // The page never shows a sent key: whoever holds an old link sees only when and to whom it went.
-// A mail Resend plainly refused gives the key back; a send whose outcome is unknown (Resend down, the answer lost) keeps
-// the key on that request, marked 'sending', so it can never go to a second person; the page then offers Send again
-// (the same key to the same person, with an idempotency key so Resend delivers it once) or It arrived.
+// Only a first try that Resend plainly refused gives the key back (nothing ever went out). A try whose outcome is unknown
+// (Resend down, the answer lost) leaves the request 'sending', and from then on its key stays bound to it whatever a
+// later try returns: only It arrived or his Decline ends it, and Decline keeps the key out of stock. The page offers
+// Send again (the same key to the same person, with an idempotency key so Resend delivers it once). A request holds at
+// most one key: keys are reserved by one conditional statement.
 // RESEND_API_KEY is a Cloudflare secret. KEY_SENDER (local .dev.vars only): "fake" logs the mail instead of sending,
 // "fake-fail" is a plain refusal, "fake-lost" an unknown outcome.
 
@@ -144,23 +146,39 @@ async function showRequest(env, id, token, notice) {
   } else if (req.status === "sent") {
     parts.push(p(`Sent to ${esc(req.email)}${key ? ` on ${esc(key.used_at)}` : ""}. Which key went is in <code>node tools/keys.mjs sent</code>.`, "done"));
   } else if (req.status === "declined") {
-    parts.push(p("Declined. Nothing was sent.", "done"));
+    parts.push(key
+      ? p("Declined after an unclear send. Its key stays out of stock in case that mail did arrive; <code>node tools/keys.mjs sent</code> shows it, to revoke on itch.io.", "done")
+      : p("Declined. Nothing was sent.", "done"));
   } else {
-    parts.push(p(`Not sure the key mail reached ${esc(req.email)}: Resend did not answer clearly${key ? ` (tried ${esc(key.used_at)})` : ""}. The key stays held for this request, so it cannot go to anyone else. Look for this address in Resend's Emails list: if it is there, press It arrived; if not, Send again mails the same key, and Resend delivers it once even if the first try did go.`, "warn"));
+    parts.push(p(`Not sure the key mail reached ${esc(req.email)}: Resend did not answer clearly${key ? ` (tried ${esc(key.used_at)})` : ""}. The key stays held for this request, so it cannot go to anyone else. Look for this address in Resend's Emails list: if it is there, press It arrived; if not, Send again mails the same key, and Resend delivers it once even if the first try did go. Decline ends it and keeps the key out of stock.`, "warn"));
     parts.push(`<form method="post" action="/approve" class="buttons">
       <input type="hidden" name="r" value="${id}"><input type="hidden" name="t" value="${esc(token)}">
       <button type="submit" name="action" value="retry" class="send">Send again</button>
       <button type="submit" name="action" value="arrived" class="decline">It arrived</button>
+      <button type="submit" name="action" value="decline" class="decline">Decline</button>
     </form>`);
   }
   if (req.status !== "new") parts.push(p(`${left} unused ${left === 1 ? "key" : "keys"} left.`, "quiet"));
   return page(200, `Build request ${id}`, parts);
 }
 
+// Declines a new request, or ends a 'sending' one; a key a 'sending' request holds stays bound to it, out of stock.
 async function decline(env, id, token) {
-  const done = await env.DB.prepare("UPDATE build_requests SET status = 'declined' WHERE id = ? AND status = 'new' RETURNING id")
-    .bind(id).first();
-  return showRequest(env, id, token, done ? p("Declined. Nothing was sent.", "done") : null);
+  const done = await env.DB.prepare(
+    "UPDATE build_requests SET status = 'declined' WHERE id = ? AND status IN ('new', 'sending') RETURNING id"
+  ).bind(id).first();
+  return showRequest(env, id, token, done ? p("Declined.", "done") : null);
+}
+
+// The key this request holds, reserving the next unused one if it holds none. One conditional statement, so two
+// overlapping presses can never leave a request holding two keys; both then use the one it holds.
+async function reserveKey(env, id) {
+  await env.DB.prepare(
+    `UPDATE build_keys SET request_id = ?, used_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now')
+     WHERE id = (SELECT id FROM build_keys WHERE request_id IS NULL ORDER BY id LIMIT 1) AND request_id IS NULL
+       AND NOT EXISTS (SELECT 1 FROM build_keys WHERE request_id = ?)`
+  ).bind(id, id).run();
+  return env.DB.prepare("SELECT id, url FROM build_keys WHERE request_id = ? ORDER BY id LIMIT 1").bind(id).first();
 }
 
 async function sendKey(env, id, token) {
@@ -170,21 +188,18 @@ async function sendKey(env, id, token) {
   ).bind(id).first();
   if (!claimed) return showRequest(env, id, token);
 
-  const key = await env.DB.prepare(
-    `UPDATE build_keys SET request_id = ?, used_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now')
-     WHERE id = (SELECT id FROM build_keys WHERE request_id IS NULL ORDER BY id LIMIT 1) AND request_id IS NULL
-     RETURNING id, url`
-  ).bind(id).first();
+  const key = await reserveKey(env, id);
   if (!key) {
     await env.DB.prepare("UPDATE build_requests SET status = 'new' WHERE id = ?").bind(id).run();
     return showRequest(env, id, token, p("No unused key was left, so nothing was sent. Import a batch and press Send key again.", "warn"));
   }
 
-  return deliver(env, id, token, claimed, key);
+  return deliver(env, id, token, claimed, key, true);
 }
 
-// Mails the request's key and settles the outcome. Only a plain refusal gives the key back.
-async function deliver(env, id, token, req, key) {
+// Mails the request's key and settles the outcome. Only a refusal of the first try gives the key back: after an
+// unclear try, a later refusal says nothing about whether the earlier mail arrived.
+async function deliver(env, id, token, req, key, firstTry) {
   const sent = await mailKey(env, req.email, req.platform, key.url, `build-key-${id}-${key.id}`);
   if (sent.ok) {
     await env.DB.prepare("UPDATE build_requests SET status = 'sent' WHERE id = ? AND status = 'sending'").bind(id).run();
@@ -192,12 +207,15 @@ async function deliver(env, id, token, req, key) {
     if (left <= lowMark(env)) await warnLow(env, left);
     return showRequest(env, id, token, p(`Sent to ${esc(req.email)}.`, "done"));
   }
-  if (sent.refused) {
+  if (sent.refused && firstTry) {
     await env.DB.batch([
       env.DB.prepare("UPDATE build_keys SET request_id = NULL, used_at = NULL WHERE id = ?").bind(key.id),
       env.DB.prepare("UPDATE build_requests SET status = 'new' WHERE id = ?").bind(id),
     ]);
     return showRequest(env, id, token, p(`The mail did not go out (${esc(sent.error)}), so the key went back unused. Nothing was sent.`, "warn"));
+  }
+  if (sent.refused) {
+    return showRequest(env, id, token, p(`Resend refused this try (${esc(sent.error)}). The key stays held for this person, since an earlier try may have arrived: fix the cause and press Send again.`, "warn"));
   }
   // Unknown outcome: the request stays 'sending' with its key, and the page says what to do.
   return showRequest(env, id, token, p(`Resend's answer was unclear (${esc(sent.error)}).`, "warn"));
@@ -207,17 +225,10 @@ async function deliver(env, id, token, req, key) {
 async function retryKey(env, id, token) {
   const req = await env.DB.prepare("SELECT id, email, platform FROM build_requests WHERE id = ? AND status = 'sending'").bind(id).first();
   if (!req) return showRequest(env, id, token);
-  let key = await env.DB.prepare("SELECT id, url FROM build_keys WHERE request_id = ?").bind(id).first();
-  if (!key) {
-    // A send that stopped before taking a key: take one now.
-    key = await env.DB.prepare(
-      `UPDATE build_keys SET request_id = ?, used_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now')
-       WHERE id = (SELECT id FROM build_keys WHERE request_id IS NULL ORDER BY id LIMIT 1) AND request_id IS NULL
-       RETURNING id, url`
-    ).bind(id).first();
-    if (!key) return showRequest(env, id, token, p("No unused key was left, so nothing was sent. Import a batch and press Send again.", "warn"));
-  }
-  return deliver(env, id, token, req, key);
+  // Normally the key it already holds; a send that stopped before taking one takes one now.
+  const key = await reserveKey(env, id);
+  if (!key) return showRequest(env, id, token, p("No unused key was left, so nothing was sent. Import a batch and press Send again.", "warn"));
+  return deliver(env, id, token, req, key, false);
 }
 
 async function markArrived(env, id, token) {

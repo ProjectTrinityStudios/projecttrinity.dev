@@ -84,7 +84,7 @@ one key at most. The platform notes are `PLATFORM_NOTES` at the top of `keys.js`
   bare keys with `--page <itch page>`. `count`, `list`, `link <id>` and `sent [email]` (which key went to whom) do the rest; `--local` works on
   `wrangler dev`'s store. It uses wrangler's own login and holds no key.
 - The sender's key is `RESEND_API_KEY`, set with `npx wrangler secret put` and nowhere else. Locally, `KEY_SENDER=fake` in
-  `.dev.vars` logs the key mail instead of sending it (`fake-fail` is a plain refusal, which gives the key back; `fake-lost` an unclear answer, which keeps the key held and offers Send again or It arrived), and
+  `.dev.vars` logs the key mail instead of sending it (`fake-fail` is a plain refusal, which gives the key back on a first try and keeps it held on a retry; `fake-lost` an unclear answer, which keeps the key bound to the request until It arrived or Decline), and
   `PUBLIC_API=http://127.0.0.1:8787` points the Approve links at `wrangler dev`. `wrangler dev` reads `.dev.vars` only at
   start: restart it after changing one.
 - Switching it on (his steps, also in the game repository's `docs/how-to/itch-io-builds.md`): the Resend account and the
