@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SKIP_DIRS = {".git", "node_modules"}
+CRLF, LF = bytes([13, 10]), bytes([10])
 
 # href="..." or src="..." whose value is a local .css/.js path, optionally with ?query and #fragment
 ATTR = re.compile(
@@ -20,7 +21,9 @@ ATTR = re.compile(
 
 
 def digest(p: Path) -> str:
-    return hashlib.sha256(p.read_bytes()).hexdigest()[:8]
+    # CRLF to LF: git stores LF, which is what the server serves.
+    data = p.read_bytes().replace(CRLF, LF)
+    return hashlib.sha256(data).hexdigest()[:8]
 
 
 def resolve(html: Path, ref: str):
