@@ -14,14 +14,14 @@
 // RESEND_API_KEY is a Cloudflare secret. KEY_SENDER (local .dev.vars only): "fake" logs the mail instead of sending,
 // "fake-fail" is a plain refusal, "fake-lost" an unknown outcome.
 
-// The note each platform's key mail carries. Edit here when a player changes (Tooling 190: a Universal Mac player).
+// The note each platform's key mail carries. Edit here when a player changes.
 export const PLATFORM_NOTES = {
   windows: [
     "On Windows: download the Windows build from the page, unzip it, and run Trinity.exe.",
     "If Windows SmartScreen stops it, choose More info, then Run anyway.",
   ],
   mac: [
-    "On a Mac: the Mac build needs Apple Silicon (an M1 or newer) and macOS 12 or newer.",
+    "On a Mac: the Mac build runs on Intel and Apple Silicon Macs with macOS 12 or newer.",
     "Downloaded in a browser, macOS will say the app is damaged or cannot be verified. After unzipping, run this once in Terminal:",
     "    xattr -dr com.apple.quarantine /path/to/Trinity.app",
     "or open it once from System Settings, Privacy & Security, Open Anyway. The itch.io app avoids this.",
