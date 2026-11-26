@@ -398,6 +398,8 @@ function mailHtml(blocks, title) {
   [data-ogsc] .masthead, [data-ogsc] .letter { color: #efe9f8 !important; }
   [data-ogsc] .key { color: #f5c768 !important; }
   [data-ogsb] .page { background: #222a5a !important; }
+  [data-ogsb] .keyslip, [data-ogsb] .code { background: #1b2150 !important; }
+  [data-ogsc] .code { color: #efe9f8 !important; }
 </style>
 </head>
 <body style="margin:0; padding:0; background:#e9e1f6;">
