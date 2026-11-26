@@ -9,7 +9,10 @@
 //   node tools/keys.mjs count            unused and used keys
 //   node tools/keys.mjs list             the requests still waiting, newest first
 //   node tools/keys.mjs link <id>        a fresh Approve link for request <id> (one made before keys existed, or a lost mail)
-//   node tools/keys.mjs reset <id>       a request stuck as 'sending' back to 'new', its key back to unused
+//   node tools/keys.mjs sent [email]     which key went to whom (all, or one address), to revoke one on itch.io
+//
+// A request whose send had an unclear answer stays 'sending' with its key held; `list` shows it, and its Approve page
+// offers Send again (the same key) or It arrived.
 //
 // Add --local to any of them to work on `wrangler dev --local`'s store instead of the live one.
 // It uses wrangler's own Cloudflare login (`npx wrangler login`); it holds no key or token.
@@ -47,9 +50,11 @@ function takeOption(name) {
   return value;
 }
 
+// Thrown, never process.exit, so an import's finally always deletes its temp file of keys.
+class Refusal extends Error {}
+
 function fail(message) {
-  console.error(message);
-  process.exit(1);
+  throw new Refusal(message);
 }
 
 // wrangler, run directly with node (no shell, so SQL needs no shell quoting).
@@ -119,46 +124,47 @@ function findKeys(text, pageUrl) {
   return [...links];
 }
 
-if (command === "import") {
-  const keys = findKeys(readInput(target), page);
-  if (!keys.length) {
-    fail(page
-      ? "No keys found in that text."
-      : "No key links found. If the list holds bare keys, give the game page: --page https://<name>.itch.io/<game>");
+try {
+  if (command === "import") {
+    const keys = findKeys(readInput(target), page);
+    if (!keys.length) {
+      fail(page
+        ? "No keys found in that text."
+        : "No key links found. If the list holds bare keys, give the game page: --page https://<name>.itch.io/<game>");
+    }
+    const before = counts();
+    runFile(keys.map((url) => `INSERT OR IGNORE INTO build_keys (url, batch) VALUES (${sql(url)}, ${sql(batch)});`));
+    const after = counts();
+    const added = after.unused + after.used - before.unused - before.used;
+    console.log(`Found ${keys.length} key${keys.length === 1 ? "" : "s"}; added ${added} (${keys.length - added} already in the store).`);
+    console.log(`Unused keys now: ${after.unused}.`);
+  } else if (command === "count") {
+    const c = counts();
+    console.log(`Unused: ${c.unused}   Sent: ${c.used}`);
+  } else if (command === "list") {
+    const rows = query("SELECT id, created_at, email, platform, status FROM build_requests WHERE status IN ('new', 'sending') ORDER BY id DESC LIMIT 100");
+    if (!rows.length) console.log("No requests waiting.");
+    for (const r of rows) console.log(`${String(r.id).padStart(5)}  ${r.created_at}  ${r.platform.padEnd(7)}  ${r.status.padEnd(7)}  ${r.email}`);
+  } else if (command === "link") {
+    const id = parseInt(target || "", 10);
+    if (!(id > 0)) fail("Give the request's number: node tools/keys.mjs link <id>");
+    if (!query(`SELECT id FROM build_requests WHERE id = ${id}`).length) fail(`No request ${id}.`);
+    const token = randomBytes(32).toString("base64url");
+    const hash = createHash("sha256").update(token).digest("hex");
+    query(`INSERT OR REPLACE INTO approvals (request_id, token_hash) VALUES (${id}, ${sql(hash)})`);
+    const base = local ? "http://127.0.0.1:8787" : PUBLIC_API;
+    console.log(`${base}/approve?r=${id}&t=${token}`);
+    console.log("This replaces any earlier link for that request. Keep it to yourself.");
+  } else if (command === "sent") {
+    const only = target ? `WHERE r.email = ${sql(target.trim().toLowerCase())}` : "";
+    const rows = query(`SELECT r.id, r.email, r.status, k.used_at, k.url FROM build_keys k JOIN build_requests r ON r.id = k.request_id ${only} ORDER BY k.used_at`);
+    if (!rows.length) console.log(target ? `No key went to ${target}.` : "No keys sent yet.");
+    for (const r of rows) console.log(`${String(r.id).padStart(5)}  ${r.used_at}  ${r.status.padEnd(7)}  ${r.email}  ${r.url}`);
+  } else {
+    console.log(readFileSync(fileURLToPath(import.meta.url), "utf8").split("\n").slice(1, 18).map((l) => l.replace(/^\/\/ ?/, "")).join("\n"));
+    process.exitCode = command ? 1 : 0;
   }
-  const before = counts();
-  runFile(keys.map((url) => `INSERT OR IGNORE INTO build_keys (url, batch) VALUES (${sql(url)}, ${sql(batch)});`));
-  const after = counts();
-  const added = after.unused + after.used - before.unused - before.used;
-  console.log(`Found ${keys.length} key${keys.length === 1 ? "" : "s"}; added ${added} (${keys.length - added} already in the store).`);
-  console.log(`Unused keys now: ${after.unused}.`);
-} else if (command === "count") {
-  const c = counts();
-  console.log(`Unused: ${c.unused}   Sent: ${c.used}`);
-} else if (command === "list") {
-  const rows = query("SELECT id, created_at, email, platform, status FROM build_requests WHERE status IN ('new', 'sending') ORDER BY id DESC LIMIT 100");
-  if (!rows.length) console.log("No requests waiting.");
-  for (const r of rows) console.log(`${String(r.id).padStart(5)}  ${r.created_at}  ${r.platform.padEnd(7)}  ${r.status.padEnd(7)}  ${r.email}`);
-} else if (command === "link") {
-  const id = parseInt(target || "", 10);
-  if (!(id > 0)) fail("Give the request's number: node tools/keys.mjs link <id>");
-  if (!query(`SELECT id FROM build_requests WHERE id = ${id}`).length) fail(`No request ${id}.`);
-  const token = randomBytes(32).toString("base64url");
-  const hash = createHash("sha256").update(token).digest("hex");
-  query(`INSERT OR REPLACE INTO approvals (request_id, token_hash) VALUES (${id}, ${sql(hash)})`);
-  const base = local ? "http://127.0.0.1:8787" : PUBLIC_API;
-  console.log(`${base}/approve?r=${id}&t=${token}`);
-  console.log("This replaces any earlier link for that request. Keep it to yourself.");
-} else if (command === "reset") {
-  const id = parseInt(target || "", 10);
-  if (!(id > 0)) fail("Give the request's number: node tools/keys.mjs reset <id>");
-  const [req] = query(`SELECT status FROM build_requests WHERE id = ${id}`);
-  if (!req) fail(`No request ${id}.`);
-  if (req.status !== "sending") fail(`Request ${id} is '${req.status}', not 'sending': nothing to reset.`);
-  query(`UPDATE build_keys SET request_id = NULL, used_at = NULL WHERE request_id = ${id}`);
-  query(`UPDATE build_requests SET status = 'new' WHERE id = ${id}`);
-  console.log(`Request ${id} is open again. If its mail did reach them, revoke that key on itch.io.`);
-} else {
-  console.log(readFileSync(fileURLToPath(import.meta.url), "utf8").split("\n").slice(1, 17).map((l) => l.replace(/^\/\/ ?/, "")).join("\n"));
-  process.exit(command ? 1 : 0);
+} catch (err) {
+  console.error(err instanceof Refusal ? err.message : err);
+  process.exitCode = 1;
 }

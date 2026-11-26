@@ -5,8 +5,12 @@
 //
 // The link's secret is 32 random bytes; D1 keeps only its SHA-256. Each request sends one key at most; the link stays
 // readable afterwards and shows which key went out, so the mail stays his.
-// RESEND_API_KEY is a Cloudflare secret. KEY_SENDER = "fake" (local .dev.vars only) logs the mail instead of sending,
-// and "fake-fail" makes the send fail, to prove a failed send gives the key back.
+// The page never shows a sent key: whoever holds an old link sees only when and to whom it went.
+// A mail Resend plainly refused gives the key back; a send whose outcome is unknown (Resend down, the answer lost) keeps
+// the key on that request, marked 'sending', so it can never go to a second person; the page then offers Send again
+// (the same key to the same person, with an idempotency key so Resend delivers it once) or It arrived.
+// RESEND_API_KEY is a Cloudflare secret. KEY_SENDER (local .dev.vars only): "fake" logs the mail instead of sending,
+// "fake-fail" is a plain refusal, "fake-lost" an unknown outcome.
 
 // The note each platform's key mail carries. Edit here when a player changes (Tooling 190: a Universal Mac player).
 export const PLATFORM_NOTES = {
@@ -93,6 +97,8 @@ export async function handleApprove(request, env) {
     const action = String((form && form.get("action")) || "");
     if (!(await checkToken(env, id, token))) return page(404, "Not a valid link", [p("This Approve link is not valid. Nothing was sent.")]);
     if (action === "send") return sendKey(env, id, token);
+    if (action === "retry") return retryKey(env, id, token);
+    if (action === "arrived") return markArrived(env, id, token);
     if (action === "decline") return decline(env, id, token);
     return page(400, "Nothing done", [p("That button is not one this page knows. Nothing was sent.")]);
   }
@@ -111,7 +117,7 @@ async function showRequest(env, id, token, notice) {
   const earlier = await env.DB.prepare(
     "SELECT r.id, k.used_at FROM build_requests r JOIN build_keys k ON k.request_id = r.id WHERE r.email = ? AND r.id <> ? ORDER BY k.used_at"
   ).bind(req.email, id).all();
-  const key = await env.DB.prepare("SELECT url, used_at FROM build_keys WHERE request_id = ?").bind(id).first();
+  const key = await env.DB.prepare("SELECT used_at FROM build_keys WHERE request_id = ?").bind(id).first();
 
   const parts = [];
   if (notice) parts.push(notice);
@@ -136,11 +142,16 @@ async function showRequest(env, id, token, notice) {
       <button type="submit" name="action" value="decline" class="decline">Decline</button>
     </form>`);
   } else if (req.status === "sent") {
-    parts.push(p(`Sent ${key ? esc(key.used_at) : ""}. Key: <code>${key ? esc(key.url) : "(not found)"}</code>`, "done"));
+    parts.push(p(`Sent to ${esc(req.email)}${key ? ` on ${esc(key.used_at)}` : ""}. Which key went is in <code>node tools/keys.mjs sent</code>.`, "done"));
   } else if (req.status === "declined") {
     parts.push(p("Declined. Nothing was sent.", "done"));
   } else {
-    parts.push(p(`This request is marked <code>${esc(req.status)}</code>: a send is in progress, or one stopped part way. If no mail went out, set it back with <code>node tools/keys.mjs reset ${id}</code>.`, "warn"));
+    parts.push(p(`Not sure the key mail reached ${esc(req.email)}: Resend did not answer clearly${key ? ` (tried ${esc(key.used_at)})` : ""}. The key stays held for this request, so it cannot go to anyone else. Look for this address in Resend's Emails list: if it is there, press It arrived; if not, Send again mails the same key, and Resend delivers it once even if the first try did go.`, "warn"));
+    parts.push(`<form method="post" action="/approve" class="buttons">
+      <input type="hidden" name="r" value="${id}"><input type="hidden" name="t" value="${esc(token)}">
+      <button type="submit" name="action" value="retry" class="send">Send again</button>
+      <button type="submit" name="action" value="arrived" class="decline">It arrived</button>
+    </form>`);
   }
   if (req.status !== "new") parts.push(p(`${left} unused ${left === 1 ? "key" : "keys"} left.`, "quiet"));
   return page(200, `Build request ${id}`, parts);
@@ -169,20 +180,51 @@ async function sendKey(env, id, token) {
     return showRequest(env, id, token, p("No unused key was left, so nothing was sent. Import a batch and press Send key again.", "warn"));
   }
 
-  const sent = await mailKey(env, claimed.email, claimed.platform, key.url);
-  if (!sent.ok) {
-    // Give the key back and leave the request open, so a second press tries again with the same key.
+  return deliver(env, id, token, claimed, key);
+}
+
+// Mails the request's key and settles the outcome. Only a plain refusal gives the key back.
+async function deliver(env, id, token, req, key) {
+  const sent = await mailKey(env, req.email, req.platform, key.url, `build-key-${id}-${key.id}`);
+  if (sent.ok) {
+    await env.DB.prepare("UPDATE build_requests SET status = 'sent' WHERE id = ? AND status = 'sending'").bind(id).run();
+    const left = await keysLeft(env);
+    if (left <= lowMark(env)) await warnLow(env, left);
+    return showRequest(env, id, token, p(`Sent to ${esc(req.email)}.`, "done"));
+  }
+  if (sent.refused) {
     await env.DB.batch([
       env.DB.prepare("UPDATE build_keys SET request_id = NULL, used_at = NULL WHERE id = ?").bind(key.id),
       env.DB.prepare("UPDATE build_requests SET status = 'new' WHERE id = ?").bind(id),
     ]);
     return showRequest(env, id, token, p(`The mail did not go out (${esc(sent.error)}), so the key went back unused. Nothing was sent.`, "warn"));
   }
+  // Unknown outcome: the request stays 'sending' with its key, and the page says what to do.
+  return showRequest(env, id, token, p(`Resend's answer was unclear (${esc(sent.error)}).`, "warn"));
+}
 
-  await env.DB.prepare("UPDATE build_requests SET status = 'sent' WHERE id = ?").bind(id).run();
-  const left = await keysLeft(env);
-  if (left <= lowMark(env)) await warnLow(env, left);
-  return showRequest(env, id, token, p(`Sent to ${esc(claimed.email)}.`, "done"));
+// Send again, for a request left 'sending': the key it already holds, to the same person.
+async function retryKey(env, id, token) {
+  const req = await env.DB.prepare("SELECT id, email, platform FROM build_requests WHERE id = ? AND status = 'sending'").bind(id).first();
+  if (!req) return showRequest(env, id, token);
+  let key = await env.DB.prepare("SELECT id, url FROM build_keys WHERE request_id = ?").bind(id).first();
+  if (!key) {
+    // A send that stopped before taking a key: take one now.
+    key = await env.DB.prepare(
+      `UPDATE build_keys SET request_id = ?, used_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now')
+       WHERE id = (SELECT id FROM build_keys WHERE request_id IS NULL ORDER BY id LIMIT 1) AND request_id IS NULL
+       RETURNING id, url`
+    ).bind(id).first();
+    if (!key) return showRequest(env, id, token, p("No unused key was left, so nothing was sent. Import a batch and press Send again.", "warn"));
+  }
+  return deliver(env, id, token, req, key);
+}
+
+async function markArrived(env, id, token) {
+  const done = await env.DB.prepare(
+    "UPDATE build_requests SET status = 'sent' WHERE id = ? AND status = 'sending' AND EXISTS (SELECT 1 FROM build_keys WHERE request_id = ?) RETURNING id"
+  ).bind(id, id).first();
+  return showRequest(env, id, token, done ? p("Marked as sent.", "done") : null);
 }
 
 // ---- the mails ----
@@ -206,7 +248,8 @@ export function keyMailText(platform, keyUrl) {
   ].join("\n");
 }
 
-async function mailKey(env, to, platform, keyUrl) {
+// { ok } when Resend took the mail; { refused } when it plainly did not (nothing went out); neither when unknown.
+async function mailKey(env, to, platform, keyUrl, idempotencyKey) {
   const mail = {
     from: env.KEY_FROM || "Project Trinity <builds@projecttrinity.dev>",
     to: [to],
@@ -219,22 +262,30 @@ async function mailKey(env, to, platform, keyUrl) {
     console.log("fake sender", JSON.stringify(mail));
     return { ok: true };
   }
-  if (env.KEY_SENDER === "fake-fail") return { ok: false, error: "fake sender set to fail" };
-  if (!env.RESEND_API_KEY) return { ok: false, error: "RESEND_API_KEY is not set" };
+  if (env.KEY_SENDER === "fake-fail") return { ok: false, refused: true, error: "fake sender set to refuse" };
+  if (env.KEY_SENDER === "fake-lost") return { ok: false, refused: false, error: "fake sender set to lose the answer" };
+  if (!env.RESEND_API_KEY) return { ok: false, refused: true, error: "RESEND_API_KEY is not set" };
 
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
-      headers: { "Authorization": `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+      headers: {
+        "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+        "Idempotency-Key": idempotencyKey,
+      },
       body: JSON.stringify(mail),
     });
     if (res.ok) return { ok: true };
     const body = await res.text().catch(() => "");
-    console.log("resend refused", res.status, body.slice(0, 300));
-    return { ok: false, error: `Resend answered ${res.status}` };
+    console.log("resend answered", res.status, body.slice(0, 300));
+    // A 4xx is Resend saying no (bad request, bad key, rate limit): nothing went out. A 5xx may or may not have sent, and a
+    // 409 means the same send is still in flight, so neither gives the key back.
+    const refused = res.status >= 400 && res.status < 500 && res.status !== 409;
+    return { ok: false, refused, error: `Resend answered ${res.status}` };
   } catch (err) {
     console.log("resend failed", err && err.message);
-    return { ok: false, error: "Resend could not be reached" };
+    return { ok: false, refused: false, error: "no answer from Resend" };
   }
 }
 

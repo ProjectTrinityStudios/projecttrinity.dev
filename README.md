@@ -76,15 +76,15 @@ Every page carries the same header and footer: change one, change them all. Each
 
 A build request's mail to him carries an Approve link (`worker/src/keys.js`). Opening it shows the request and sends
 nothing; its **Send key** button takes the next unused itch.io key link from D1 (`build_keys`), mails it to the requester
-through Resend with their platform's note, and marks the key and the request used; at `KEYS_LOW` unused keys or fewer
+through Resend with their platform's note, and marks the key and the request used (the page never shows a sent key: `keys.mjs sent` does; a send with an unclear answer keeps its key held for that request); at `KEYS_LOW` unused keys or fewer
 each send also mails him a warning. The link's secret is stored only as its SHA-256 (`approvals`), and each request sends
 one key at most. The platform notes are `PLATFORM_NOTES` at the top of `keys.js`.
 
 - Keys go in from `worker/` with `node tools/keys.mjs import <file>` (or a pasted list): any text holding key links, or
-  bare keys with `--page <itch page>`. `count`, `list`, `link <id>` and `reset <id>` do the rest; `--local` works on
+  bare keys with `--page <itch page>`. `count`, `list`, `link <id>` and `sent [email]` (which key went to whom) do the rest; `--local` works on
   `wrangler dev`'s store. It uses wrangler's own login and holds no key.
 - The sender's key is `RESEND_API_KEY`, set with `npx wrangler secret put` and nowhere else. Locally, `KEY_SENDER=fake` in
-  `.dev.vars` logs the key mail instead of sending it (`fake-fail` makes it fail, to see the key go back), and
+  `.dev.vars` logs the key mail instead of sending it (`fake-fail` is a plain refusal, which gives the key back; `fake-lost` an unclear answer, which keeps the key held and offers Send again or It arrived), and
   `PUBLIC_API=http://127.0.0.1:8787` points the Approve links at `wrangler dev`. `wrangler dev` reads `.dev.vars` only at
   start: restart it after changing one.
 - Switching it on (his steps, also in the game repository's `docs/how-to/itch-io-builds.md`): the Resend account and the
