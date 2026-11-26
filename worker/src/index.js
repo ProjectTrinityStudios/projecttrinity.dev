@@ -2,6 +2,7 @@
 //   POST /request    a build request: checked by Turnstile, kept in D1, mailed to the project mailbox,
 //                    and added to the email list only if the requester ticked that box
 //   POST /subscribe  the email list: checked by Turnstile, handed to Kit's form (Kit sends its own confirm email)
+//   POST /contact    a message from the Contact page: checked by Turnstile, kept in D1, mailed to the project mailbox
 // No cookies, nothing kept beyond the request row. Secrets (TURNSTILE_SECRET, MAILBOX, KIT_API_KEY) live in Cloudflare, never in this repo.
 
 const PLATFORMS = ["windows", "mac", "linux"];
@@ -69,6 +70,25 @@ export default {
       return reply(200, { ok: true });
     }
 
+    if (path === "/contact") {
+      const name = String(data.name || "").trim().slice(0, 100);
+      const message = String(data.message || "").trim().slice(0, 2000);
+      if (!message) return reply(400, { ok: false, error: "message" });
+
+      // A few messages per email per hour is plenty; more are thanked but not stored or mailed.
+      const recent = await env.DB.prepare(
+        "SELECT COUNT(*) AS n FROM messages WHERE email = ? AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 hour')"
+      ).bind(email).first();
+      if (recent && recent.n >= 3) return reply(200, { ok: true });
+
+      await env.DB.prepare(
+        "INSERT INTO messages (email, name, message) VALUES (?, ?, ?)"
+      ).bind(email, name, message).run();
+
+      await mailMessage(env, email, name, message);
+      return reply(200, { ok: true });
+    }
+
     return reply(404, { ok: false, error: "path" });
   },
 };
@@ -132,6 +152,30 @@ async function mailHim(env, email, platform, note, joinList) {
     });
   } catch (err) {
     // The row is already in D1, so a failed mail loses nothing; it shows in `wrangler tail`.
+    console.log("mail failed", err && err.message);
+  }
+}
+
+// A Contact page message, to the same mailbox. The row is already in D1, so a failed mail loses nothing.
+async function mailMessage(env, email, name, message) {
+  const text = [
+    "A message from projecttrinity.dev/contact",
+    "",
+    `From:  ${name || "(no name given)"}`,
+    `Email: ${email}`,
+    "",
+    message,
+    "",
+    "Reply by writing to the address above.",
+  ].join("\n");
+  try {
+    await env.NOTIFY.send({
+      to: env.MAILBOX,
+      from: env.MAIL_FROM,
+      subject: `Message: ${name ? name + ", " : ""}${email}`,
+      text,
+    });
+  } catch (err) {
     console.log("mail failed", err && err.message);
   }
 }
