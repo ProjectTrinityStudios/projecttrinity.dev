@@ -70,12 +70,12 @@ root SPF, and Tooling 189's Resend records (`send` MX and TXT, `resend._domainke
 5. A tool that scores a whole message: send one to the address https://www.mail-tester.com shows, then open its
    report (aim for 9/10 or better).
 
-### 4. DMARC: tighten once Kit has sent for two weeks
+### 4. DMARC: reports now, a tighter policy after two clean weeks
 
 Today `_dmarc` says `v=DMARC1; p=none;`: nobody is told to act on a fake, and no reports come back.
 
 1. Now, in Cloudflare DNS, edit the `_dmarc` TXT to
-   `v=DMARC1; p=none; rua=mailto:hello@projecttrinity.dev; adkim=r; aspf=r` so receivers send daily reports to
+   `v=DMARC1; p=none; rua=mailto:hello@projecttrinity.dev` so receivers send daily reports to
    hello@ (they arrive as zipped XML; Cloudflare's own DMARC Management, under Email, reads them for you if he turns
    it on, and then gives its own `rua` address to use instead).
 2. **Before tightening, check every way mail leaves as @projecttrinity.dev passes.** Today there are four: Kit

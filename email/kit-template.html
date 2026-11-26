@@ -13,7 +13,9 @@
   paper #f7ecd6, ink #2b2452, ink-soft #625a86, gold #f2b53c, coral underline #b8475b; Night: paper #222a5a,
   ink #efe9f8, link #f5c768. Fonts: Caveat Brush for the masthead and titles and Source Sans 3 to read, from the
   site; mail apps that won't load them fall back to a hand font and the system sans.
-  Kit fills {{ message_content }}, {{ unsubscribe_url }}, {{ subscriber_preferences_url }} and {{ address }}.
+  Kit fills four variables below: message_content, unsubscribe_url, subscriber_preferences_url and address
+  (never write them in braces inside a comment: Kit would fill them there too).
+  The outer lilac #e9e1f6 is the Day sky (sky-top #c3b3ea) washed towards white, so the paper reads in a mail app.
   Paste this whole file into Kit: Send, Email Templates, New Email Template, Create HTML Template.
 -->
 <style>
@@ -25,7 +27,7 @@
   table { border-collapse: collapse; }
   img { border: 0; max-width: 100%; height: auto; }
 
-  /* What Kit's editor writes into {{ message_content }} */
+  /* What Kit's editor writes into the letter */
   .letter { font-family: "Source Sans 3", "Segoe UI", Helvetica, Arial, sans-serif; font-size: 17px; line-height: 1.6; color: #2b2452; }
   .letter p { margin: 0 0 16px; }
   .letter h1, .letter h2, .letter h3 { font-family: "Caveat Brush", "Segoe Print", "Bradley Hand", "Chalkboard SE", cursive; font-weight: 400; color: #2b2452; line-height: 1.15; }
