@@ -1,0 +1,13 @@
+{
+  "name": "projecttrinity-forms",
+  "private": true,
+  "type": "module",
+  "description": "The site's form handler and build keys (Cloudflare Worker). Nothing secret here.",
+  "scripts": {
+    "dev": "wrangler dev --local --port 8787 --ip 127.0.0.1",
+    "keys": "node tools/keys.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.162.0"
+  }
+}

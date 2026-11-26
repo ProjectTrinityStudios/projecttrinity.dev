@@ -1,5 +1,6 @@
 # The site's form handler, deployed to his own Cloudflare account.
-# Nothing secret in this file. Set with `npx wrangler secret put`: TURNSTILE_SECRET, MAILBOX (the project Gmail) and KIT_API_KEY (Kit v4 key).
+# Nothing secret in this file. Set with `npx wrangler secret put`: TURNSTILE_SECRET, MAILBOX (the project Gmail), KIT_API_KEY (Kit v4 key)
+# and RESEND_API_KEY (the sender for build keys, Tooling 189).
 name = "projecttrinity-forms"
 main = "src/index.js"
 compatibility_date = "2026-11-01"
@@ -11,6 +12,10 @@ routes = [{ pattern = "api.projecttrinity.dev", custom_domain = true }]
 ALLOWED_ORIGINS = "https://projecttrinity.dev,https://www.projecttrinity.dev,http://127.0.0.1:8176,http://localhost:8176"
 MAIL_FROM = "forms@projecttrinity.dev"
 KIT_FORM_ID = "10244458"  # Kit's form number (public, not a secret)
+PUBLIC_API = "https://api.projecttrinity.dev"            # where the Approve links in his request mails point
+KEY_FROM = "Project Trinity <builds@projecttrinity.dev>"  # the key mails' sender, on the domain Resend verified
+REPLY_TO = "hello@projecttrinity.dev"                     # a tester's reply goes here, never to the Gmail itself
+KEYS_LOW = "5"                                            # at or under this many unused keys, each send mails him a warning
 
 [[d1_databases]]
 binding = "DB"
