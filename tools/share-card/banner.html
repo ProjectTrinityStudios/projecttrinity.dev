@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>YouTube banner</title>
+<meta name="robots" content="noindex">
+<!-- The YouTube channel banner, 2560x1440, from the same parts as the link cards (card.html beside it): the site's
+     stylesheet, fonts, the Book's plates, the studio mark and the front page's title A over Old Hunger. YouTube shows the
+     whole picture on a TV, a wide band on desktop and only the centre 1546x423 on a phone, so everything that matters sits
+     in that centre box; the rest is Old Hunger's room. Drawn by tools/make-banner.py. -->
+<link rel="stylesheet" href="/css/site.css">
+<style>
+  html, body { margin: 0; width: 2560px; height: 1440px; overflow: hidden; background: #12163a; }
+  .banner { position: relative; width: 2560px; height: 1440px; overflow: hidden; }
+  .bleed { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 58%; }
+  /* the room darkens toward the centre band, where the words sit */
+  .shade { position: absolute; inset: 0;
+    background: radial-gradient(ellipse 1300px 520px at 50% 50%, rgba(14, 16, 44, 0.86) 0%, rgba(14, 16, 44, 0.62) 55%, rgba(14, 16, 44, 0.28) 100%); }
+  /* YouTube's safe area: 1546x423, centred */
+  .safe { position: absolute; left: 507px; top: 508px; width: 1546px; height: 424px;
+    display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+  .safe.show { outline: 3px dashed #f2b53c; }
+  .mark { flex: none; width: 220px; height: 220px; filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.6)); }
+  .words { flex: 1; position: relative; align-self: stretch; justify-content: center; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; color: var(--film-text);
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6); }
+  .studio { font-family: var(--font-hand); font-size: 50px; line-height: 1; color: var(--film-soft); }
+  .title { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; font-family: var(--font-hand);
+    font-weight: 400; font-size: 128px; line-height: 1.02; }
+  .title .title-mark { padding-bottom: 0.16em; white-space: nowrap; }
+  .t-game { position: relative; isolation: isolate; margin: 6px 0 0 6px; font-size: 54px; line-height: 1.15; padding: 4px 50px 10px;
+    color: #2b2452; text-shadow: none; transform: rotate(-2deg); white-space: nowrap; }
+  .t-game::before { content: ""; position: absolute; inset: 0; z-index: -1;
+    background: url("/img/book/slip-mid.webp") center / 100% 100% no-repeat; filter: drop-shadow(1px 3px 3px rgba(0, 0, 0, 0.35)); }
+  .where { position: absolute; right: 30px; bottom: 82px; font-family: var(--font-hand); font-size: 46px; line-height: 1; color: var(--focus); }
+  /* the four heroes on a taped strip, as on the front page */
+  .strip { position: relative; flex: none; display: grid; grid-template-columns: repeat(2, auto); gap: 20px 24px; padding: 24px 28px 28px; margin-right: 24px;
+    background: #f7ecd6 url("/img/book/paper-day.webp") 0 0 / 1024px 1024px; border-radius: 6px;
+    box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.18), 6px 16px 34px -8px rgba(0, 0, 0, 0.65); transform: rotate(1.4deg); }
+  .strip::before { content: ""; position: absolute; right: -40px; top: -16px; width: 130px; height: 44px;
+    background: url("/img/book/tape-2.webp") 0 0 / 100% 100% no-repeat; transform: rotate(30deg);
+    filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2)); }
+  .strip img { display: block; width: 118px; height: 118px; border-radius: 50%; border: 6px solid #fffdf8;
+    box-shadow: 0 0 0 6px var(--hero), 3px 5px 9px rgba(30, 20, 60, 0.35); }
+</style>
+</head>
+<body>
+<div class="banner">
+  <img class="bleed" src="/img/old-hunger-1920.jpg" alt="">
+  <div class="shade"></div>
+  <div class="safe" id="safe">
+    <img class="mark" src="/img/brand/mark-chalk.svg" alt="">
+    <div class="words">
+      <div class="studio">Project Trinity Studios</div>
+      <h1 class="title"><span class="title-mark title-star">Project Trinity</span><span class="t-game">Shatterbound</span></h1>
+      <div class="where">projecttrinity.dev</div>
+    </div>
+    <div class="strip">
+      <img src="/img/party/bastion.webp" alt="" style="--hero: var(--bastion)">
+      <img src="/img/party/oracle.webp" alt="" style="--hero: var(--oracle)">
+      <img src="/img/party/reaver.webp" alt="" style="--hero: var(--reaver)">
+      <img src="/img/party/asha.webp" alt="" style="--hero: var(--asha)">
+    </div>
+  </div>
+</div>
+<script>
+  // ?c={"safe": true} draws the safe area's outline, for checking only
+  var c = JSON.parse(new URLSearchParams(location.search).get("c") || "{}");
+  if (c.safe) document.getElementById("safe").classList.add("show");
+</script>
+</body>
+</html>

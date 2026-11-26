@@ -86,11 +86,26 @@ class _Quiet(http.server.SimpleHTTPRequestHandler):
         pass
 
 
-def _shoot(browser, url, png):
+def _shoot(browser, url, png, w=W, h=H):
     with tempfile.TemporaryDirectory() as profile:
         subprocess.run([browser, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--force-device-scale-factor=1",
-                        f"--user-data-dir={profile}", f"--window-size={W},{H}", "--virtual-time-budget=10000",
+                        f"--user-data-dir={profile}", f"--window-size={w},{h}", "--virtual-time-budget=10000",
                         f"--screenshot={png}", url], check=True, capture_output=True, timeout=120)
+
+
+def draw(template, spec, dest, w, h):
+    """Draws one page of tools/share-card/ (template, a file name there) at w x h into dest (PNG or JPEG by suffix)."""
+    with _Server() as srv, tempfile.TemporaryDirectory() as tmp:
+        png = Path(tmp) / "shot.png"
+        q = urllib.parse.quote(json.dumps(spec))
+        _shoot(_browser(), f"{srv.base}/tools/share-card/{template}?c={q}", png, w, h)
+        img = Image.open(png).convert("RGB").crop((0, 0, w, h))
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        if dest.suffix == ".png":
+            img.save(dest, "PNG", optimize=True)
+        else:
+            img.save(dest, "JPEG", quality=90, optimize=True, progressive=True)
+    print("drew", dest.as_posix())
 
 
 def render(cards):
@@ -118,7 +133,7 @@ def render(cards):
                 buf = io.BytesIO()
                 img.save(buf, "JPEG", quality=86, optimize=True, progressive=True)
                 dest.write_bytes(buf.getvalue())
-                print("drew", dest.relative_to(ROOT).as_posix())
+                print("drew", dest.as_posix())
     return urls
 
 

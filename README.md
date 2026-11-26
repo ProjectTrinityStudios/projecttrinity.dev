@@ -29,7 +29,7 @@ Add `?theme=dark` or `?theme=light` to force a mode. A visitor's own Day or Nigh
 | `devlog/` | The index, newest first, the email sign-up at its foot; one folder per post (`devlog/<slug>/index.html`). The five monthly recaps (July to November 2026) carry the same words as the game repository's drafts, `docs/devlog/recaps/`: a fix to one is made to both. |
 | `contact/` | The message form (the Worker's `/contact`). |
 | `css/site.css` | All styles, in the game's own look, the Wayfarers' Book: paper on a lilac sky by Day, blue paper on the night sky by Night, Caveat Brush lettering, stickers in each hero's colour, photos taped in, the gold brush for what to press. The colours are the game's tokens (`unity-b/Assets/UI/Theme/TrinityTokens.uss`). |
-| `tools/` | The generators below, and `share-card/card.html`, the link cards' template (not served). |
+| `tools/` | The generators below, and `share-card/` (`card.html`, the link cards' template, and `banner.html`, the YouTube banner's; not served). |
 | `js/site.js` | The light/dark switch, the header (solid on scroll, the phone menu), the film window, and the forms' checks. Nothing is sent or stored except what a form sends. |
 | `fonts/` | The game's UI fonts (Caveat Brush for names and titles, Source Sans 3 for reading), SIL Open Font License; licences beside them. |
 | `img/` | Stills, `share/` (every page's link card, 1200x630, drawn by the tools; see Link cards below), the two flow charts with a still of each for people who turn motion off, `party/` (the game's round portrait stickers, 256 px WebP), `portraits/` (Models 101's renders: the 4:5 cut-outs and the 16:9 banners, from `tools/make-portraits.py`), `fights/` (the game's fight cards, 16:9), `devlog/` (each post's pictures as WebP, a 720 px and an up-to-1200 px copy) and `book/` (the Book's own plates: paper, tape, brush strokes, stamps, clouds, from `unity-b/Assets/UI/Art/Book/`). |
@@ -94,6 +94,9 @@ Every page carries the same header and footer: change one, change them all. Each
 - `python tools/make-share-cards.py`: the front page's link card (shared by Research, Devlog, Contact and Request a
   build) and every devlog post's, and their image tags. `make-characters.py` draws the character pages' and
   `/shatterbound/`'s. Both draw through `tools/sharecard.py` (see Link cards below).
+- `python tools/make-banner.py`: the YouTube channel banner, `img/brand/youtube-banner.png` (2560x1440), from the link
+  cards' parts (`tools/share-card/banner.html`), with everything that matters in YouTube's centre 1546x423, all a phone
+  shows. `--check <path.png>` also writes a copy with that area outlined, for looking at only.
 - `python tools/make-sitemap.py`: writes `sitemap.xml` from every page's canonical, and stops with a list if a page lacks
   its title, description, canonical, link card, alt text on an image, one `<h1>` or structured data. Run it after adding
   or changing a page.
