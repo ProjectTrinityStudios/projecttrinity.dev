@@ -62,5 +62,6 @@ Every page carries the same header and footer: change one, change them all. Each
 
 ## Not connected yet
 
-- The Contact form needs the Worker redeployed with its `/contact` route and the `messages` table made in D1 (steps in
-  the pull request that added it); until then it answers with the "didn't go through" note.
+- The Contact form needs the Worker's `/contact` route live, so run these from `worker/` **before** the pages that use it
+  reach `main`: `npx wrangler d1 execute projecttrinity-forms --remote --file=./schema.sql` (adds the `messages` table),
+  then `npx wrangler deploy`.

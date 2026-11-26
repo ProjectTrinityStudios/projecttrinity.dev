@@ -76,11 +76,11 @@ export default {
       const message = String(data.message || "").trim().slice(0, 2000);
       if (!message) return reply(400, { ok: false, error: "message" });
 
-      // A few messages per email per hour is plenty; more are thanked but not stored or mailed.
+      // A few messages per email per hour is plenty; past that the page is told plainly (429) and keeps the draft.
       const recent = await env.DB.prepare(
         "SELECT COUNT(*) AS n FROM messages WHERE email = ? AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 hour')"
       ).bind(email).first();
-      if (recent && recent.n >= 3) return reply(200, { ok: true });
+      if (recent && recent.n >= 3) return reply(429, { ok: false, error: "rate" });
 
       await env.DB.prepare(
         "INSERT INTO messages (email, name, message) VALUES (?, ?, ?)"

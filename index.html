@@ -27,7 +27,6 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="/fonts/TrinityConfluence-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
-  <script>document.documentElement.classList.add("js");</script>
   <script src="/js/site.js" defer></script>
 </head>
 <body>
@@ -177,7 +176,7 @@
         <div class="page page-left">
           <h3 id="request-title">Request a build</h3>
           <p class="page-lede">Builds go out by hand, a few at a time. Say where you'll play, and you'll get an email when there's one for you.</p>
-          <form class="ledger-form" aria-labelledby="request-title" data-endpoint="/request" data-thanks="Thanks! Your request is in. You'll get an email when there's a build for you." novalidate>
+          <form class="ledger-form" aria-labelledby="request-title" data-endpoint="/request" data-thanks="Thanks! Your request is in. You'll get an email when there's a build for you." method="post" novalidate>
             <div class="field">
               <label for="req-email">Email</label>
               <input id="req-email" name="email" type="email" autocomplete="email" required>
@@ -199,8 +198,9 @@
               <label class="tick"><input type="checkbox" name="join_list"> <span>Also join the email list</span></label>
             </div>
             <div class="turnstile" data-turnstile></div>
-            <button class="seal" type="submit">Request a build</button>
+            <button class="seal" type="submit" disabled>Request a build</button>
             <p class="form-note" role="status" aria-live="polite" data-form-note></p>
+            <noscript><p class="form-note is-error">This form needs JavaScript. Write to <a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a> instead.</p></noscript>
           </form>
         </div>
 
@@ -209,7 +209,7 @@
         <div class="page page-right">
           <h3 id="list-title">Join the email list</h3>
           <p class="page-lede">A note when there's a new devlog or a new build. Not often, and you can leave any time.</p>
-          <form class="ledger-form" aria-labelledby="list-title" data-endpoint="/subscribe" data-thanks="Almost done: check your inbox and confirm to join the list." novalidate>
+          <form class="ledger-form" aria-labelledby="list-title" data-endpoint="/subscribe" data-thanks="Almost done: check your inbox and confirm to join the list." method="post" novalidate>
             <div class="field">
               <label for="list-email">Email</label>
               <input id="list-email" name="email" type="email" autocomplete="email" required>
@@ -218,8 +218,9 @@
               <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
             </div>
             <div class="turnstile" data-turnstile></div>
-            <button class="seal" type="submit">Sign up</button>
+            <button class="seal" type="submit" disabled>Sign up</button>
             <p class="form-note" role="status" aria-live="polite" data-form-note></p>
+            <noscript><p class="form-note is-error">This form needs JavaScript. Write to <a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a> instead.</p></noscript>
           </form>
           <p class="page-foot">Your email stays with the project. It's never sold or shared.</p>
         </div>
@@ -227,7 +228,7 @@
     </section>
 
     <div class="wrap section duo">
-      <article class="card">
+      <article class="card" id="devlog">
         <img class="card-image"
           src="/img/ledger-friends-720.jpg"
           srcset="/img/ledger-friends-720.jpg 720w, /img/ledger-friends-1200.jpg 1200w"
@@ -241,7 +242,7 @@
           <a class="more" href="/devlog/">All devlog posts</a>
         </div>
       </article>
-      <section class="card" aria-labelledby="research-teaser-title">
+      <section class="card" id="research" aria-labelledby="research-teaser-title">
         <div class="card-body">
           <p class="card-kicker">Research</p>
           <h2 id="research-teaser-title"><a href="/research/">Project Trinity, the AI party</a></h2>

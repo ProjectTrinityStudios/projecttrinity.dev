@@ -60,6 +60,8 @@
     header.querySelector("#site-menu").addEventListener("click", function (event) {
       if (event.target.closest("a")) setOpen(false);
     });
+    // Only now does the phone layout fold the links behind the Menu button: if this script fails, they stay visible.
+    root.classList.add("js");
   }
 
   // 3. The film: nothing of YouTube's runs until the visitor presses play; then its privacy-enhanced
@@ -98,6 +100,7 @@
   // The site key is public by design. On this machine, Cloudflare's published always-pass test key.
   var TURNSTILE_SITE_KEY = LOCAL ? "1x00000000000000000000AA" : "0x4AAAAAAGTNcejv966pk7dd";
   var FAILED = "That didn't go through. Please try again in a minute, or email hello@projecttrinity.dev.";
+  var RATE = "Too many messages for now. Try again later, or write to hello@projecttrinity.dev.";
 
   var turnstileReady = null;
   function loadTurnstile() {
@@ -218,11 +221,17 @@
         body: JSON.stringify(body),
         credentials: "omit"
       }).then(function (res) {
-        return res.json().catch(function () { return { ok: false }; });
+        return res.json().catch(function () { return { ok: false }; }).then(function (out) {
+          if (res.status === 429) out.error = "rate";
+          return out;
+        });
       }).then(function (out) {
         if (out.ok) {
           form.reset();
           say(form.getAttribute("data-thanks"), false);
+        } else if (out.error === "rate") {
+          // the draft stays in the box
+          say(RATE, true);
         } else {
           say(FAILED, true);
         }
@@ -234,6 +243,9 @@
         if (window.turnstile && widgetId !== null && widgetId !== "pending") window.turnstile.reset(widgetId);
       });
     });
+
+    // Send starts disabled in the page, so a visitor without this script never sends a form to nowhere.
+    if (button) button.disabled = false;
   });
 
   // 5. The welcome note: Kit sends people here (?subscribed=1) after they confirm the email list.

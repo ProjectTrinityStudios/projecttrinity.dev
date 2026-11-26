@@ -771,6 +771,9 @@ p { margin: 0; }
 }
 .seal:hover { background: var(--seal-hover); }
 .seal:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+/* Send stays off until site.js arms the form (no script, no send), and while a form is sending */
+.seal:disabled { opacity: 0.55; cursor: not-allowed; }
+.seal:disabled:hover { background: var(--seal); }
 
 .form-note { font-size: 0.98rem; color: var(--ink); min-height: 1.5em; }
 .form-note.is-error { color: var(--seal); font-weight: 600; }

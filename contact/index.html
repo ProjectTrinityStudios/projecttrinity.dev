@@ -26,7 +26,6 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="/fonts/TrinityConfluence-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
-  <script>document.documentElement.classList.add("js");</script>
   <script src="/js/site.js" defer></script>
 </head>
 <body>
@@ -73,7 +72,7 @@
       <div class="book book-single">
         <div class="page">
           <h2 id="contact-title">Your message</h2>
-          <form class="ledger-form" aria-labelledby="contact-title" data-endpoint="/contact" data-thanks="Thanks! Your message is in. Any reply goes to the email you gave." novalidate>
+          <form class="ledger-form" aria-labelledby="contact-title" data-endpoint="/contact" data-thanks="Thanks! Your message is in. Any reply goes to the email you gave." method="post" novalidate>
             <div class="field">
               <label for="msg-name">Name <span class="optional">(optional)</span></label>
               <input id="msg-name" name="name" type="text" autocomplete="name" maxlength="100">
@@ -90,8 +89,9 @@
               <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
             </div>
             <div class="turnstile" data-turnstile></div>
-            <button class="seal" type="submit">Send</button>
+            <button class="seal" type="submit" disabled>Send</button>
             <p class="form-note" role="status" aria-live="polite" data-form-note></p>
+            <noscript><p class="form-note is-error">This form needs JavaScript. Write to <a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a> instead.</p></noscript>
           </form>
         </div>
       </div>

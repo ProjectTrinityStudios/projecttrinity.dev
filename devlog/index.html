@@ -26,7 +26,6 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="/fonts/TrinityConfluence-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
-  <script>document.documentElement.classList.add("js");</script>
   <script src="/js/site.js" defer></script>
 </head>
 <body>
@@ -88,7 +87,7 @@
         <div class="page">
           <h2 id="list-title">Join the email list</h2>
           <p class="page-lede">A note when there's a new devlog or a new build. Not often, and you can leave any time.</p>
-          <form class="ledger-form" aria-labelledby="list-title" data-endpoint="/subscribe" data-thanks="Almost done: check your inbox and confirm to join the list." novalidate>
+          <form class="ledger-form" aria-labelledby="list-title" data-endpoint="/subscribe" data-thanks="Almost done: check your inbox and confirm to join the list." method="post" novalidate>
             <div class="field">
               <label for="list-email">Email</label>
               <input id="list-email" name="email" type="email" autocomplete="email" required>
@@ -97,8 +96,9 @@
               <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
             </div>
             <div class="turnstile" data-turnstile></div>
-            <button class="seal" type="submit">Sign up</button>
+            <button class="seal" type="submit" disabled>Sign up</button>
             <p class="form-note" role="status" aria-live="polite" data-form-note></p>
+            <noscript><p class="form-note is-error">This form needs JavaScript. Write to <a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a> instead.</p></noscript>
           </form>
           <p class="page-foot">Your email stays with the project. It's never sold or shared.</p>
         </div>
