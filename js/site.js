@@ -15,9 +15,6 @@
   // ?theme=dark or ?theme=light opens the page in that mode (handy for previews and screenshots)
   var asked = new URLSearchParams(window.location.search).get("theme");
   if (asked === "dark" || asked === "light") root.setAttribute("data-theme", asked);
-  // ?edge=torn or ?edge=fade shows the first screen's edge each way (for previews)
-  var edge = new URLSearchParams(window.location.search).get("edge");
-  if (edge === "torn" || edge === "fade") root.setAttribute("data-edge", edge);
 
   function isDark() {
     var set = root.getAttribute("data-theme");

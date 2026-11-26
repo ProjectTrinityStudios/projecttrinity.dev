@@ -516,36 +516,20 @@ p { margin: 0; }
     linear-gradient(90deg, rgba(10, 8, 30, 0.62) 0, rgba(10, 8, 30, 0.12) 62%, rgba(10, 8, 30, 0) 100%);
 }
 
-/* The edge between the first screen and the page. Two ways, for his pick (?edge=torn or ?edge=fade):
-   torn (the default): the picture is a sheet torn across its foot, the sky showing under the tear;
-   fade: the picture melts into the sky over its last third. */
+/* The edge between the first screen and the page: the picture melts into the sky over its last third (his pick). */
 .cine-media {
-  -webkit-mask:
-    url("../img/book/torn-edge.svg") bottom / 100% 64px no-repeat,
-    linear-gradient(#000, #000) top / 100% calc(100% - 63px) no-repeat;
-  mask:
-    url("../img/book/torn-edge.svg") bottom / 100% 64px no-repeat,
-    linear-gradient(#000, #000) top / 100% calc(100% - 63px) no-repeat;
-}
-/* the torn sheet's pale lip and its shadow on the sky */
-.cine-edge {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  filter: drop-shadow(0 3px 0 #fdfaf2) drop-shadow(0 10px 12px rgba(30, 20, 60, 0.35));
-}
-:root[data-edge="fade"] .cine-media {
   -webkit-mask: linear-gradient(180deg, #000 0, #000 62%, rgba(0, 0, 0, 0.55) 82%, transparent 100%);
   mask: linear-gradient(180deg, #000 0, #000 62%, rgba(0, 0, 0, 0.55) 82%, transparent 100%);
 }
-:root[data-edge="fade"] .cine-edge { filter: none; }
-:root[data-edge="fade"] .cine-text { padding-bottom: clamp(150px, 24vh, 250px); }
+.cine-edge { position: absolute; inset: 0; z-index: -1; }
+
+.cine-text { padding-bottom: clamp(150px, 24vh, 250px); }
 
 .cine-text {
   width: 100%;
   max-width: calc(var(--page) + 2 * var(--gutter));
   margin: 0 auto;
-  padding: calc(var(--header-h) + 40px) var(--gutter) clamp(110px, 16vh, 170px);
+  padding: calc(var(--header-h) + 40px) var(--gutter) clamp(150px, 24vh, 250px);
 }
 .cine-status {
   display: flex;
@@ -900,7 +884,8 @@ p { margin: 0; }
   background-image: var(--paper-image);
   background-size: cover;
   box-shadow:
-    0 0 0 8px var(--cover),         /* the book's own edge */
+    0 0 0 1px rgba(120, 90, 60, 0.25),
+    6px 7px 0 -1px var(--paper-deep),   /* the page stack */
     0 22px 50px -18px rgba(18, 16, 40, 0.55);
   border-radius: 6px;
 }
@@ -1367,18 +1352,13 @@ p { margin: 0; }
   .duo { grid-template-columns: 1fr; }
   .party-strip, .boss-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-  .book { grid-template-columns: 1fr; box-shadow: 0 0 0 6px var(--cover), 0 18px 40px -18px rgba(18, 16, 40, 0.55); }
+  .book { grid-template-columns: 1fr; }
   .spine { height: 14px; background: linear-gradient(180deg, rgba(30, 20, 60, 0.18), rgba(30, 20, 60, 0.04) 40%, rgba(30, 20, 60, 0.04) 60%, rgba(30, 20, 60, 0.18)); }
 
   .hero-card, .boss-card { grid-template-columns: minmax(0, 104px) minmax(0, 1fr); }
   .jobs { grid-template-columns: 1fr; }
   .walk, .skills { grid-column: 1 / -1; }
   .cine-picture img, .cine-video { object-position: 66% 42%; }
-  .cine-media {
-    -webkit-mask-size: 100% 36px, 100% calc(100% - 35px);
-    mask-size: 100% 36px, 100% calc(100% - 35px);
-  }
-  :root[data-edge="fade"] .cine-media { -webkit-mask-size: auto; mask-size: auto; }
   .boss-strip li:last-child { grid-column: 1 / -1; justify-self: center; width: calc(50% - 7px); }
   .post-row { grid-template-columns: 1fr; }
   .charts { grid-template-columns: 1fr; }
@@ -1412,7 +1392,7 @@ p { margin: 0; }
   background-color: var(--paper);
   background-image: var(--paper-image);
   background-size: cover;
-  box-shadow: 0 0 0 8px var(--cover), 0 22px 50px -18px rgba(18, 16, 40, 0.55);
+  box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.25), 6px 7px 0 -1px var(--paper-deep), 0 22px 50px -18px rgba(18, 16, 40, 0.55);
   border-radius: 6px;
   padding: clamp(22px, 5vw, 36px);
 }
@@ -1469,4 +1449,20 @@ p { margin: 0; }
   .party-strip .sticker { width: min(38vw, 170px); }
   .boss-strip .sticker, .boss-strip .coming-plate { width: min(34vw, 150px); }
   .party-strip strong.slip { font-size: 1.5rem; margin-top: -1rem; }
+}
+
+/* skill and fight text straight on the sky: full ink, a little larger, on a soft wash of paper with no edge */
+.skills,
+.walk-body {
+  padding: 1rem 1.2rem 1.1rem;
+  border-radius: 14px;
+  background: rgba(var(--paper-rgb), 0.5);
+}
+.skills { font-size: 1.04rem; }
+.skills span { color: var(--on-sky); }
+.walk .shard-list { font-size: 1.04rem; }
+.job { font-size: 1.02rem; }
+@media (max-width: 760px) {
+  .skills, .walk-body { padding: 0.9rem 0.9rem 1rem; }
+  .skills, .walk .shard-list { font-size: 1.06rem; }
 }
