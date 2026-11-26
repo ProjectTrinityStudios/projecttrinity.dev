@@ -111,7 +111,7 @@ CLIP_LABEL = {
 GROUPS = [
     ("tank", "Tank", ["tank"]),
     ("healer", "Healer", ["healer"]),
-    ("dps", "DPS", ["melee", "ranged"]),
+    ("dps", "DPS", ["dps"]),
 ]
 
 # ---- The bosses, in the order you meet them -------------------------------------------------------------------------
@@ -305,8 +305,13 @@ def e(s):
     return escape(s, quote=True)
 
 
+# The role tags are the game's own: its role glyph (the HUD's ui-glyph-role-*) in ink on the Book's round blank stamp,
+# the way the HUD shows a role (his word, 2026-11-25: "we have actual icons in the game ... for the roles").
+ROLE_TAG = {"tank": "tank", "healer": "healer", "melee": "dps", "ranged": "dps", "dps": "dps"}
+
+
 def stamp_img(kind, cls="stamp"):
-    return f'<img class="{cls}" src="/img/book/stamp-{kind}.svg" width="120" height="120" alt="">'
+    return f'<img class="{cls}" src="/img/book/role-{ROLE_TAG[kind]}.webp" width="192" height="192" alt="">'
 
 
 def sticker(pid, painted_alt, render_alt, stamp=None, eager=False, sizes="(max-width: 760px) 60vw, 260px"):
@@ -342,14 +347,10 @@ def kit_by_name(h, name):
 
 
 def role_pill(h):
-    icon = {"tank": "i-tank", "healer": "i-healer", "dps": "i-dps"}[h["group"]]
-    return f'<span class="role"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#{icon}"/></svg>{e(h["role"])}</span>'
+    return f'<span class="role"><span class="role-glyph role-glyph-{h["group"]}" aria-hidden="true"></span>{e(h["role"])}</span>'
 
 
-ICONS = """    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
-    <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
-    <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>
-"""
+ICONS = ""
 
 
 def page(path, head_args, body):
@@ -400,7 +401,7 @@ def boss_jobs(b, level=5):
     out = []
     for key in ("tank", "healer", "dps"):
         hid, stamp, label = JOB[key]
-        stamps = stamp_img("melee", "job-stamp") + stamp_img("ranged", "job-stamp") if key == "dps" else stamp_img(stamp, "job-stamp")
+        stamps = stamp_img(key, "job-stamp")
         out.append(f"""                <div class="job" data-hero="{hid}">
                   <h{level}>{stamps}{label}</h{level}>
                   <p>{b['jobs'][key]}</p>
@@ -533,6 +534,10 @@ def hero_page(h):
     )
     body = f"""
   <main id="main" class="page-top" data-hero="{h['id']}">
+    <div class="wrap char-banner">
+      <span class="photo banner"><img src="/img/portraits/{h['id']}-16x9-800.jpg" srcset="/img/portraits/{h['id']}-16x9-800.jpg 800w, /img/portraits/{h['id']}-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 1000px, 100vw" width="1280" height="720" fetchpriority="high" alt="{e(h['banner_alt'])}"></span>
+    </div>
+
     <header class="wrap char-head">
       <figure class="char-portrait">
         {sticker(h['id'], h['painted_alt'], h['render_alt'], h['stamp'], eager=True, sizes="(max-width: 760px) 70vw, 340px")}
@@ -546,10 +551,6 @@ def hero_page(h):
         <p class="char-swap">Play {him} yourself, or swap to another hero mid-fight and the party AI plays {him} for you.</p>
       </div>
     </header>
-
-    <div class="wrap char-banner pt-render-only">
-      <span class="photo banner"><img src="/img/portraits/{h['id']}-16x9-800.jpg" srcset="/img/portraits/{h['id']}-16x9-800.jpg 800w, /img/portraits/{h['id']}-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 1000px, 100vw" width="1280" height="720" loading="lazy" alt="{e(h['banner_alt'])}"></span>
-    </div>
 
     <section class="wrap section" aria-labelledby="kit-title">
       <div class="section-head">
@@ -600,6 +601,10 @@ def boss_page(b):
     jobs = boss_jobs(b, level=4)
     body = f"""
   <main id="main" class="page-top">
+    <div class="wrap char-banner">
+      <span class="photo banner"><img src="/img/portraits/{b['id']}-16x9-800.jpg" srcset="/img/portraits/{b['id']}-16x9-800.jpg 800w, /img/portraits/{b['id']}-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 1000px, 100vw" width="1280" height="720" fetchpriority="high" alt="{e(b['banner_alt'])}"></span>
+    </div>
+
     <header class="wrap char-head">
       <figure class="char-portrait is-boss">
         {sticker(b['id'], b['painted_alt'], b['render_alt'], eager=True, sizes="(max-width: 760px) 70vw, 340px")}
@@ -615,18 +620,22 @@ def boss_page(b):
       <div class="section-head">
         <h2 id="fight-title"><span class="title-mark">How the fight works</span></h2>
       </div>
-      <p class="section-lede">Spoilers from here on.</p>
-      <div class="char-sheet walk-open">
-        {banner(b, sizes="(min-width: 1100px) 860px, 100vw")}
-        <ul class="shard-list">
+      <div class="char-sheet">
+        <details class="walk">
+          <summary>Open the walkthrough <span class="spoiler">(spoilers)</span></summary>
+          <div class="walk-body">
+            {banner(b, sizes="(min-width: 1100px) 860px, 100vw")}
+            <ul class="shard-list">
 {b['walk']}
-        </ul>
-        <div>
-          <h3 class="jobs-title">Your job</h3>
-          <div class="jobs">
+            </ul>
+            <div>
+              <h3 class="jobs-title">Your job</h3>
+              <div class="jobs">
 {jobs}
+              </div>
+            </div>
           </div>
-        </div>
+        </details>
       </div>
     </section>
 

@@ -29,8 +29,8 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-  <link rel="stylesheet" href="/css/site.css?v=77ff5fcc">
-  <script src="/js/site.js?v=ecaaf61b" defer></script>
+  <link rel="stylesheet" href="/css/site.css?v=06fca8b8">
+  <script src="/js/site.js?v=67492294" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to the page</a>
@@ -66,7 +66,7 @@
   </header>
 
   <main id="main">
-    <section class="cine on-film" aria-labelledby="game-title" data-cine data-title="a">
+    <section class="cine on-film" aria-labelledby="game-title" data-cine>
       <div class="cine-edge"><div class="cine-media">
         <picture class="cine-picture">
           <img
@@ -118,12 +118,23 @@
             </li>
           </ul>
         </div>
-        <!-- The title (Tooling 183): Project Trinity is the line; Shatterbound sits beneath it (a), above it (b) or only in
-             the menu (c). One is picked in data-title on the section above; ?title=a, b or c previews the others. -->
+        <!-- The title (Tooling 183, his pick A): Project Trinity is the line, Shatterbound on a name slip beneath it. -->
         <h1 id="game-title" class="game-title">
           <span class="t-studio title-mark title-star">Project Trinity</span>
           <span class="t-game"><a href="/shatterbound/">Shatterbound</a></span>
         </h1>
+        <!-- Swapping heroes mid-fight, made plain (players don't expect it) -->
+        <aside class="swap-note" aria-labelledby="swap-title">
+          <h2 id="swap-title">Swap heroes mid-fight</h2>
+          <ol class="swap-row" aria-label="The four heroes you can swap between">
+            <li data-hero="bastion"><img src="/img/party/bastion.webp" width="256" height="256" alt="Bastion, the Tank"></li>
+            <li data-hero="oracle"><img src="/img/party/oracle.webp" width="256" height="256" alt="Oracle, the Healer"></li>
+            <li data-hero="reaver"><img src="/img/party/reaver.webp" width="256" height="256" alt="Reaver, the melee DPS"></li>
+            <li data-hero="asha"><img src="/img/party/asha.webp" width="256" height="256" alt="Asha, the ranged DPS"></li>
+          </ol>
+          <p>Tank one second, heal the next. Whoever you leave, the party AI plays.</p>
+        </aside>
+
         <p class="cine-line">A dungeon crawler built like an MMO raid: a tank, a healer and DPS. Play alone, or with a friend on one split screen; the AI plays the rest of the party, and it plays to win.</p>
 
         <div class="cine-actions" id="join">
@@ -145,17 +156,6 @@
           </a>
         </div>
 
-        <!-- Swapping heroes mid-fight, made plain (players don't expect it) -->
-        <aside class="swap-note" aria-labelledby="swap-title">
-          <h2 id="swap-title">Swap heroes mid-fight</h2>
-          <ol class="swap-row" aria-label="The four heroes you can swap between">
-            <li data-hero="bastion"><img src="/img/party/bastion.webp" width="256" height="256" alt="Bastion, the Tank"></li>
-            <li data-hero="oracle"><img src="/img/party/oracle.webp" width="256" height="256" alt="Oracle, the Healer"></li>
-            <li data-hero="reaver"><img src="/img/party/reaver.webp" width="256" height="256" alt="Reaver, the melee DPS"></li>
-            <li data-hero="asha"><img src="/img/party/asha.webp" width="256" height="256" alt="Asha, the ranged DPS"></li>
-          </ol>
-          <p>Tank one second, heal the next. Whoever you leave, the party AI plays.</p>
-        </aside>
       </div>
     </section>
 
@@ -183,28 +183,28 @@
       <ul class="party-strip">
         <li>
           <a href="/shatterbound/#bastion" data-hero="bastion">
-            <span class="sticker" data-portrait="bastion"><img class="pt-painted" src="/img/party/bastion.webp" width="256" height="256" loading="lazy" alt="Bastion's portrait: a broad-shouldered man with a red crest of hair and a hard stare, in red and black armour."><img class="pt-render" src="/img/portraits/bastion-480.webp" width="480" height="600" loading="lazy" alt="Bastion: a broad man with a red crest of hair, arms crossed over spiked red and black plate, a tall shield at his back."><img class="stamp" src="/img/book/stamp-tank.svg" width="120" height="120" alt=""></span>
+            <span class="sticker" data-portrait="bastion"><img class="pt-painted" src="/img/party/bastion.webp" width="256" height="256" loading="lazy" alt="Bastion's portrait: a broad-shouldered man with a red crest of hair and a hard stare, in red and black armour."><img class="pt-render" src="/img/portraits/bastion-480.webp" width="480" height="600" loading="lazy" alt="Bastion: a broad man with a red crest of hair, arms crossed over spiked red and black plate, a tall shield at his back."><img class="stamp" src="/img/book/role-tank.webp" width="192" height="192" alt=""></span>
             <strong class="slip">Bastion</strong>
             <span>Tank</span>
           </a>
         </li>
         <li>
           <a href="/shatterbound/#oracle" data-hero="oracle">
-            <span class="sticker" data-portrait="oracle"><img class="pt-painted" src="/img/party/oracle.webp" width="256" height="256" loading="lazy" alt="Oracle's portrait: a woman with swept-back grey hair and a high collar, against a pale blue sky."><img class="pt-render" src="/img/portraits/oracle-480.webp" width="480" height="600" loading="lazy" alt="Oracle: a woman with swept-back grey hair, hands clasped, in a navy coat with a high white and gold collar."><img class="stamp" src="/img/book/stamp-healer.svg" width="120" height="120" alt=""></span>
+            <span class="sticker" data-portrait="oracle"><img class="pt-painted" src="/img/party/oracle.webp" width="256" height="256" loading="lazy" alt="Oracle's portrait: a woman with swept-back grey hair and a high collar, against a pale blue sky."><img class="pt-render" src="/img/portraits/oracle-480.webp" width="480" height="600" loading="lazy" alt="Oracle: a woman with swept-back grey hair, hands clasped, in a navy coat with a high white and gold collar."><img class="stamp" src="/img/book/role-healer.webp" width="192" height="192" alt=""></span>
             <strong class="slip">Oracle</strong>
             <span>Healer</span>
           </a>
         </li>
         <li>
           <a href="/shatterbound/#reaver" data-hero="reaver">
-            <span class="sticker" data-portrait="reaver"><img class="pt-painted" src="/img/party/reaver.webp" width="256" height="256" loading="lazy" alt="Reaver's portrait: a young man with tousled brown hair and a half smile, against a red sky."><img class="pt-render" src="/img/portraits/reaver-480.webp" width="480" height="600" loading="lazy" alt="Reaver: a young man with tousled brown hair, sitting on the floor with one knee up, in a dark coat over an open white shirt."><img class="stamp" src="/img/book/stamp-melee.svg" width="120" height="120" alt=""></span>
+            <span class="sticker" data-portrait="reaver"><img class="pt-painted" src="/img/party/reaver.webp" width="256" height="256" loading="lazy" alt="Reaver's portrait: a young man with tousled brown hair and a half smile, against a red sky."><img class="pt-render" src="/img/portraits/reaver-480.webp" width="480" height="600" loading="lazy" alt="Reaver: a young man with tousled brown hair, sitting on the floor with one knee up, in a dark coat over an open white shirt."><img class="stamp" src="/img/book/role-dps.webp" width="192" height="192" alt=""></span>
             <strong class="slip">Reaver</strong>
             <span>Melee DPS</span>
           </a>
         </li>
         <li>
           <a href="/shatterbound/#asha" data-hero="asha">
-            <span class="sticker" data-portrait="asha"><img class="pt-painted" src="/img/party/asha.webp" width="256" height="256" loading="lazy" alt="Asha's portrait: a woman with long black hair falling over one shoulder, against a pink sky."><img class="pt-render" src="/img/portraits/asha-480.webp" width="480" height="600" loading="lazy" alt="Asha: a woman with long black hair, one hand on her hip, in a pink cropped jacket."><img class="stamp" src="/img/book/stamp-ranged.svg" width="120" height="120" alt=""></span>
+            <span class="sticker" data-portrait="asha"><img class="pt-painted" src="/img/party/asha.webp" width="256" height="256" loading="lazy" alt="Asha's portrait: a woman with long black hair falling over one shoulder, against a pink sky."><img class="pt-render" src="/img/portraits/asha-480.webp" width="480" height="600" loading="lazy" alt="Asha: a woman with long black hair, one hand on her hip, in a pink cropped jacket."><img class="stamp" src="/img/book/role-dps.webp" width="192" height="192" alt=""></span>
             <strong class="slip">Asha</strong>
             <span>Ranged DPS</span>
           </a>
@@ -336,9 +336,6 @@
     </div>
   </dialog>
   <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
-    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
-    <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
-    <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>
   </svg>
 </body>
 </html>

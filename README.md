@@ -19,7 +19,7 @@ Add `?theme=dark` or `?theme=light` to force a mode. A visitor's own Day or Nigh
 
 | Path | What |
 |---|---|
-| `index.html` | The front page, a short scroll: the cinematic first screen (the B-roll over the Old Hunger still, the title, the email list as the main call with Watch the gameplay beside it, and a taped note that heroes swap mid-fight), the game in three lines and how it's made, the party, the bosses, the newest post and the Research teaser. Request a build is only in the header (on a phone, in the menu). |
+| `index.html` | The front page, a short scroll: the cinematic first screen (the B-roll over the Old Hunger still, the title, Project Trinity with Shatterbound on a name slip beneath, a taped strip under it saying heroes swap mid-fight, and the email list as the main call with Watch the gameplay beside it), the game in three lines and how it's made, the party, the bosses, the newest post and the Research teaser. Request a build is only in the header (on a phone, in the menu). |
 | `request/` | The Request a build form (the header's button comes here). |
 | `video/skills/` | Silent skill loops (960x540, a few seconds), cut from films that already existed on his desk, with a poster each; only skills with a film have one (none for Reaver yet). |
 | `video/` | A devlog clip (`healer-steps-out-s8-139.mp4`, side by side, and a `-stacked` copy, before above after, for phones; CSS shows one) and the first screen's silent B-roll loop (19.9 s; 1080p MP4 and WebM, a 720p MP4 for phones), cut from existing films. It plays muted, pauses off screen, and gives way to the still when motion is turned off. |
@@ -45,14 +45,15 @@ Every page carries the same header and footer: change one, change them all. Each
 
 ## The portraits and the mark (Tooling 182)
 
-- **One setting picks the portraits:** `PORTRAITS` near the top of `js/site.js`, `"painted"` (the game's painted stickers, and
-  the fight cards on the boss banners) or `"render"` (Models 101's renders). Every slot holds both; only the picked set is shown
-  and fetched. `?portraits=render` or `?portraits=painted` previews the other. Without the script, the painted set shows.
+- **The stickers are the game's painted ones** (his pick, 2026-11-25). Models 101's renders are each character page's banner,
+  at the top of the page, and its link card. The swap stays in place: `PORTRAITS` near the top of `js/site.js` is `"painted"`;
+  `"render"` would put the 4:5 cut-outs on every sticker and the 16:9 renders on the boss walkthroughs, and `?portraits=render`
+  previews that.
 - The renders are made by `python tools/make-portraits.py <game repo>/art/portraits` (needs the LFS files). Ids: `bastion`,
   `oracle`, `reaver`, `asha`, `giant`, `patchwork`, `old-hunger`, `maera`.
 - Each character page's link card is its 16:9 render (`img/portraits/share-<id>.jpg`).
-- **The title:** `data-title` on the front page's first screen: `a` (Shatterbound beneath, on a name slip), `b` (above, small,
-  in gold) or `c` (Project Trinity alone; Shatterbound in the menu). `?title=b` previews another.
+- **The role tags** are the game's own: its role glyph (the HUD's `ui-glyph-role-*`) in ink on the Book's round blank stamp, as the
+  HUD shows a role (`img/book/role-*.webp`; the glyph alone, `glyph-*.webp`, is the role pill's icon).
 - **The mark (Tooling 180):** D, the formation, sits in every page's header (`img/brand/mark-ink.svg` on the paper header,
   `mark-chalk.svg` over the film and by Night). The tab carries A: the studio's `favicon.ico`, `favicon.svg` (it turns light
   in a dark browser) and `apple-touch-icon.png` at the root, and the Shatterbound cut (the crack through the boss) from

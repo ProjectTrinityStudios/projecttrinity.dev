@@ -1545,8 +1545,18 @@ p { margin: 0; }
 }
 :root[data-portraits="render"] .sticker[data-portrait] .stamp { right: -8%; bottom: 2%; }
 
-/* the role stamps, redrawn clean (SVG, a smooth rim in place of the perforations that read as bitten) */
-.sticker .stamp { width: 36%; }
+/* the role tags: the game's own role glyph in ink on its round blank stamp (img/book/role-*.webp), as the HUD shows a role */
+.sticker .stamp { width: 34%; right: -6%; bottom: -4%; border-radius: 50%; }
+.role-glyph {
+  display: inline-block;
+  width: 1em; height: 1em;
+  background: currentColor;
+  -webkit-mask: var(--glyph) center / contain no-repeat;
+  mask: var(--glyph) center / contain no-repeat;
+}
+.role-glyph-tank { --glyph: url("../img/book/glyph-tank.webp"); }
+.role-glyph-healer { --glyph: url("../img/book/glyph-healer.webp"); }
+.role-glyph-dps { --glyph: url("../img/book/glyph-dps.webp"); }
 
 /* ---- The mark (Tooling 180) -----------------------------------------------------------------------------------------
    D, the formation (the boss with the Tank, Healer and two DPS where the AI stands them): the ink cut on the paper header,
@@ -1565,7 +1575,7 @@ p { margin: 0; }
 .site-header.is-clear:not(.is-solid):not(.is-open) .mark-glyph .mark-chalk { display: block; }
 .coming-plate img.coming-mark { width: 50%; height: auto; opacity: 0.8; }
 
-/* ---- The title options (front page) ----------------------------------------------------------------------------------- */
+/* ---- The title (front page; his pick A): Project Trinity, with Shatterbound on a name slip beneath ------------------- */
 .cine h1.game-title {
   display: flex;
   flex-direction: column;
@@ -1577,8 +1587,7 @@ p { margin: 0; }
 .game-title .t-studio { white-space: nowrap; }
 .game-title .t-game a { color: inherit; text-decoration: none; }
 .game-title .t-game a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
-/* a: Shatterbound beneath, on the Book's torn name slip */
-.cine[data-title="a"] .t-game {
+.cine .t-game {
   margin-top: 0.12em;
   font-size: 0.42em;
   line-height: 1.15;
@@ -1590,7 +1599,7 @@ p { margin: 0; }
   transform: rotate(-2deg);
 }
 /* the slip's paper and shadow sit behind the word (a filter over the word itself can drop it in Chrome) */
-.cine[data-title="a"] .t-game::before {
+.cine .t-game::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -1598,24 +1607,6 @@ p { margin: 0; }
   background: url("../img/book/slip-mid.webp") center / 100% 100% no-repeat;
   filter: drop-shadow(1px 3px 3px rgba(0, 0, 0, 0.35));
 }
-/* b: Shatterbound above, small, in the gold of the brush */
-.cine[data-title="b"] .t-game {
-  order: -1;
-  font-size: 0.34em;
-  line-height: 1;
-  color: var(--focus);
-  letter-spacing: 0.04em;
-  margin-bottom: 0.08em;
-}
-/* c: Project Trinity alone; Shatterbound is in the menu (the heading still names it for screen readers) */
-.cine[data-title="c"] .t-game {
-  position: absolute;
-  width: 1px; height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 /* ---- The email list, the first screen's main call; Watch the gameplay beside it --------------------------------------- */
 .cine-actions { align-items: flex-start; gap: 1.1rem 1.8rem; }
 .join-form { display: grid; gap: 0.5rem; flex: 0 1 28rem; min-width: 0; }
@@ -1667,40 +1658,41 @@ p { margin: 0; }
 .cine-actions > .button-slip { margin-top: calc(1.6rem * 1.15 + 0.5rem); }
 @media (forced-colors: active) { .join-row input { border: 2px solid CanvasText; } }
 
-/* ---- Swap heroes mid-fight: a note taped on the first screen ---------------------------------------------------------- */
-.cine-text {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
-  column-gap: clamp(24px, 4vw, 56px);
-  align-items: end;
-}
-.cine-text > * { grid-column: 1; }
-.cine-text > .swap-note { grid-column: 2; grid-row: 1 / span 4; align-self: end; }
+/* ---- Swap heroes mid-fight: a strip taped under the Shatterbound slip (his pick) ------------------------------------ */
+.swap-note { grid-column: 2; grid-row: 1 / span 4; align-self: end; }
 .swap-note {
   position: relative;
-  padding: 1.1rem 1.2rem 1.15rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: "faces title" "faces line";
+  align-items: center;
+  column-gap: 1.1rem;
+  width: fit-content;
+  max-width: min(100%, 36rem);
+  margin-top: 1.2rem;
+  padding: 0.75rem 1.1rem 0.8rem;
   color: var(--ink);
   background-color: var(--paper);
   background-image: var(--paper-image);
   background-size: var(--paper-size);
   border-radius: 4px;
   box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.18), 4px 10px 22px -6px rgba(0, 0, 0, 0.5);
-  transform: rotate(1.6deg);
+  transform: rotate(-0.8deg);
 }
 .swap-note::before {
   content: "";
   position: absolute;
-  left: 50%; top: -14px;
-  width: 96px; height: 32px;
-  margin-left: -48px;
+  left: -26px; top: -10px;
+  width: 84px; height: 28px;
   background: url("../img/book/tape-2.webp") 0 0 / 100% 100% no-repeat;
-  transform: rotate(-4deg);
+  transform: rotate(-30deg);
   filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
 }
-.swap-note h2 { font-size: 1.9rem; line-height: 1.05; }
+.swap-note h2 { grid-area: title; font-size: 1.7rem; line-height: 1.05; }
 .swap-row {
+  grid-area: faces;
   list-style: none;
-  margin: 0.7rem 0 0.6rem;
+  margin: 0;
   padding: 0;
   display: flex;
   align-items: center;
@@ -1722,11 +1714,12 @@ p { margin: 0; }
   margin-top: -8px;
   background: url("../img/book/swap-arrows.svg") center / 100% 100% no-repeat;
 }
-.swap-note p { font-size: 1.04rem; line-height: 1.4; color: var(--ink); }
+.swap-note p { grid-area: line; font-size: 1.02rem; line-height: 1.35; color: var(--ink); }
+.cine .cine-line { margin-top: 1.2rem; }
+.cine .cine-actions { margin-top: clamp(26px, 3.4vw, 40px); }
 
-@media (max-width: 900px) {
-  .cine-text { grid-template-columns: minmax(0, 1fr); }
-  .cine-text > .swap-note { grid-column: 1; grid-row: auto; justify-self: start; max-width: 340px; margin-top: 1.8rem; }
+@media (max-width: 560px) {
+  .swap-note { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "faces" "line"; row-gap: 0.5rem; }
 }
 @media (max-width: 560px) {
   .cine-actions > .button-slip { margin-top: 0; }
@@ -1749,8 +1742,7 @@ p { margin: 0; }
   font-size: clamp(2.3rem, 3.4vw, 2.9rem);
   color: var(--on-sky);
 }
-.group-stamp { width: 48px; height: auto; transform: rotate(-6deg); filter: drop-shadow(1px 2px 2px rgba(30, 20, 60, 0.3)); }
-.group-stamp + .group-stamp { margin-left: -1.1rem; transform: rotate(7deg); }
+.group-stamp { width: 50px; height: auto; transform: rotate(-6deg); filter: drop-shadow(1px 2px 2px rgba(30, 20, 60, 0.3)); }
 .hero-slots {
   list-style: none;
   margin: 0; padding: 0;
@@ -1942,8 +1934,7 @@ p { margin: 0; }
   gap: 0.45rem;
   font-size: 1.55rem;
 }
-.job-stamp { width: 30px; height: auto; transform: rotate(-6deg); }
-.job-stamp + .job-stamp { margin-left: -0.9rem; transform: rotate(6deg); }
+.job-stamp { width: 34px; height: auto; transform: rotate(-6deg); }
 
 /* ---- A page per character ------------------------------------------------------------------------------------------- */
 .char-head {
@@ -1999,3 +1990,4 @@ p { margin: 0; }
   .char-sheet .skills.kit { columns: 1; }
   .char-others .sticker { width: min(26vw, 120px); }
 }
+.role .role-glyph { width: 15px; height: 15px; }

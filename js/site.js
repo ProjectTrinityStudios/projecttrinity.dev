@@ -5,7 +5,7 @@
 // 3. The film: loads YouTube's privacy-enhanced player only when play is pressed.
 // 4. The boxes: checked here, then sent to the site's form handler (with Cloudflare's Turnstile spam check).
 // 5. The welcome note after confirming the email list.
-// 6. The portraits (painted or render), the title options, the hero scrolls and the skill clips.
+// 6. The portraits (painted or render), the hero scrolls and the skill clips.
 
 (function () {
   "use strict";
@@ -125,12 +125,7 @@
     steer();
   });
 
-  // 6b. The title options on the front page: ?title=a, b or c shows that one (the page's own pick is in data-title).
-  var cine = document.querySelector("[data-cine]");
-  var askedTitle = query.get("title");
-  if (cine && /^[abc]$/.test(askedTitle || "")) cine.setAttribute("data-title", askedTitle);
-
-  // 6c. A link to a hero (/shatterbound/#bastion) opens that hero's scroll.
+  // 6b. A link to a hero (/shatterbound/#bastion) opens that hero's scroll.
   function openFromHash() {
     var id = window.location.hash.slice(1);
     var target = id && document.getElementById(id);

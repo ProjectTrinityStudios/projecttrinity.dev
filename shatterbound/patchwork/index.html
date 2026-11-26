@@ -28,8 +28,8 @@
   <link rel="apple-touch-icon" href="/img/brand/shatterbound/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-  <link rel="stylesheet" href="/css/site.css?v=77ff5fcc">
-  <script src="/js/site.js?v=ecaaf61b" defer></script>
+  <link rel="stylesheet" href="/css/site.css?v=06fca8b8">
+  <script src="/js/site.js?v=67492294" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to the page</a>
@@ -65,6 +65,10 @@
   </header>
 
   <main id="main" class="page-top">
+    <div class="wrap char-banner">
+      <span class="photo banner"><img src="/img/portraits/patchwork-16x9-800.jpg" srcset="/img/portraits/patchwork-16x9-800.jpg 800w, /img/portraits/patchwork-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 1000px, 100vw" width="1280" height="720" fetchpriority="high" alt="Patchwork in a stone hall with a bright checkered floor: white hood, white beard, a golden ring of orbs behind his head."></span>
+    </div>
+
     <header class="wrap char-head">
       <figure class="char-portrait is-boss">
         <span class="sticker" data-portrait="patchwork"><img class="pt-painted" src="/img/party/patchwork.webp" width="256" height="256" loading="eager" alt="Patchwork&#x27;s portrait: a white-bearded figure in a hood with a golden halo, stitched together from bright mismatched parts."><img class="pt-render" src="/img/portraits/patchwork-480.webp" srcset="/img/portraits/patchwork-480.webp 480w, /img/portraits/patchwork-800.webp 800w" sizes="(max-width: 760px) 70vw, 340px" width="480" height="600" loading="eager" alt="Patchwork: a white-bearded figure in a pointed white hood under a golden ring of orbs, one arm red with a white star, the other grey machinery."></span>
@@ -80,33 +84,37 @@
       <div class="section-head">
         <h2 id="fight-title"><span class="title-mark">How the fight works</span></h2>
       </div>
-      <p class="section-lede">Spoilers from here on.</p>
-      <div class="char-sheet walk-open">
-        <span class="photo banner" data-banner="patchwork"><img class="pt-painted" src="/img/fights/patchwork-800.jpg" srcset="/img/fights/patchwork-800.jpg 800w, /img/fights/patchwork-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Patchwork standing in a wrecked stone hall: a squat, bearded brawler built from mismatched parts, a red cartoon hammer in one hand and a ghostly warlock&#x27;s shadow behind him."><img class="pt-render" src="/img/portraits/patchwork-16x9-800.jpg" srcset="/img/portraits/patchwork-16x9-800.jpg 800w, /img/portraits/patchwork-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Patchwork in a stone hall with a bright checkered floor: white hood, white beard, a golden ring of orbs behind his head."></span>
-        <ul class="shard-list">
+      <div class="char-sheet">
+        <details class="walk">
+          <summary>Open the walkthrough <span class="spoiler">(spoilers)</span></summary>
+          <div class="walk-body">
+            <span class="photo banner" data-banner="patchwork"><img class="pt-painted" src="/img/fights/patchwork-800.jpg" srcset="/img/fights/patchwork-800.jpg 800w, /img/fights/patchwork-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Patchwork standing in a wrecked stone hall: a squat, bearded brawler built from mismatched parts, a red cartoon hammer in one hand and a ghostly warlock&#x27;s shadow behind him."><img class="pt-render" src="/img/portraits/patchwork-16x9-800.jpg" srcset="/img/portraits/patchwork-16x9-800.jpg 800w, /img/portraits/patchwork-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Patchwork in a stone hall with a bright checkered floor: white hood, white beard, a golden ring of orbs behind his head."></span>
+            <ul class="shard-list">
 <li><b>Cartoon Hammer</b>: “I'll stamp you out!” A chain of slams on the party. Every slam that lands earns him another.</li>
 <li><b>Cybernetic Tank Buster</b> comes after two <b>Cybernetic Stomp</b>s: a cone in front of him that can't be blocked. If it hits, <b>Cybernetic Firearm</b> follows on someone else.</li>
 <li><b>Stone Wizard Channel</b>: stun him and he staggers; let it finish and <b>Meteor Shower</b> falls.</li>
 <li><b>Warlock Shadow</b>: “Who stole my shadow?” He marks a hero and <b>Shadow Charge</b>s at them. Charging into a <b>Crash Pillar</b> leaves him <b>Crash</b>ed: he can't attack and takes more damage.</li>
 <li><b>The Collector</b> puts <b>Debt</b>, a growing damage over time, on two heroes.</li>
-        </ul>
-        <div>
-          <h3 class="jobs-title">Your job</h3>
-          <div class="jobs">
+            </ul>
+            <div>
+              <h3 class="jobs-title">Your job</h3>
+              <div class="jobs">
                 <div class="job" data-hero="bastion">
-                  <h4><img class="job-stamp" src="/img/book/stamp-tank.svg" width="120" height="120" alt="">Tank</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-tank.webp" width="192" height="192" alt="">Tank</h4>
                   <p>Step out of the Tank Buster's cone; your shield won't stop it.</p>
                 </div>
                 <div class="job" data-hero="oracle">
-                  <h4><img class="job-stamp" src="/img/book/stamp-healer.svg" width="120" height="120" alt="">Healer</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-healer.webp" width="192" height="192" alt="">Healer</h4>
                   <p>When The Collector calls in a debt, the two heroes with Debt come first.</p>
                 </div>
                 <div class="job" data-hero="asha">
-                  <h4><img class="job-stamp" src="/img/book/stamp-melee.svg" width="120" height="120" alt=""><img class="job-stamp" src="/img/book/stamp-ranged.svg" width="120" height="120" alt="">DPS</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-dps.webp" width="192" height="192" alt="">DPS</h4>
                   <p>Lead his Shadow Charge into a Crash Pillar, then hit him hard while he's Crashed.</p>
                 </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </details>
       </div>
     </section>
 
@@ -156,9 +164,6 @@
   </footer>
 
   <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
-    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
-    <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
-    <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>
   </svg>
 </body>
 </html>

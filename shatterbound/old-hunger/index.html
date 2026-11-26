@@ -28,8 +28,8 @@
   <link rel="apple-touch-icon" href="/img/brand/shatterbound/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-  <link rel="stylesheet" href="/css/site.css?v=77ff5fcc">
-  <script src="/js/site.js?v=ecaaf61b" defer></script>
+  <link rel="stylesheet" href="/css/site.css?v=06fca8b8">
+  <script src="/js/site.js?v=67492294" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to the page</a>
@@ -65,6 +65,10 @@
   </header>
 
   <main id="main" class="page-top">
+    <div class="wrap char-banner">
+      <span class="photo banner"><img src="/img/portraits/old-hunger-16x9-800.jpg" srcset="/img/portraits/old-hunger-16x9-800.jpg 800w, /img/portraits/old-hunger-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 1000px, 100vw" width="1280" height="720" fetchpriority="high" alt="Old Hunger on the tiled floor of his dark chamber, his split, toothed jaw open, his shell bristling with spikes."></span>
+    </div>
+
     <header class="wrap char-head">
       <figure class="char-portrait is-boss">
         <span class="sticker" data-portrait="old-hunger"><img class="pt-painted" src="/img/party/old-hunger.webp" width="256" height="256" loading="eager" alt="Old Hunger&#x27;s portrait: a gaping, fleshy maw ringed with teeth."><img class="pt-render" src="/img/portraits/old-hunger-480.webp" srcset="/img/portraits/old-hunger-480.webp 480w, /img/portraits/old-hunger-800.webp 800w" sizes="(max-width: 760px) 70vw, 340px" width="480" height="600" loading="eager" alt="Old Hunger: a huge armoured grub with a spiked shell and a split, toothed jaw, crouched on curled claws."></span>
@@ -80,33 +84,37 @@
       <div class="section-head">
         <h2 id="fight-title"><span class="title-mark">How the fight works</span></h2>
       </div>
-      <p class="section-lede">Spoilers from here on.</p>
-      <div class="char-sheet walk-open">
-        <span class="photo banner" data-banner="old-hunger"><img class="pt-painted" src="/img/fights/old-hunger-800.jpg" srcset="/img/fights/old-hunger-800.jpg 800w, /img/fights/old-hunger-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Old Hunger in his chamber: a huge armoured grub with a split, toothed jaw, lit pale against a dark floor."><img class="pt-render" src="/img/portraits/old-hunger-16x9-800.jpg" srcset="/img/portraits/old-hunger-16x9-800.jpg 800w, /img/portraits/old-hunger-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Old Hunger on the tiled floor of his dark chamber, his split, toothed jaw open, his shell bristling with spikes."></span>
-        <ul class="shard-list">
+      <div class="char-sheet">
+        <details class="walk">
+          <summary>Open the walkthrough <span class="spoiler">(spoilers)</span></summary>
+          <div class="walk-body">
+            <span class="photo banner" data-banner="old-hunger"><img class="pt-painted" src="/img/fights/old-hunger-800.jpg" srcset="/img/fights/old-hunger-800.jpg 800w, /img/fights/old-hunger-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Old Hunger in his chamber: a huge armoured grub with a split, toothed jaw, lit pale against a dark floor."><img class="pt-render" src="/img/portraits/old-hunger-16x9-800.jpg" srcset="/img/portraits/old-hunger-16x9-800.jpg 800w, /img/portraits/old-hunger-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Old Hunger on the tiled floor of his dark chamber, his split, toothed jaw open, his shell bristling with spikes."></span>
+            <ul class="shard-list">
 <li><b>Imps</b> crawl out of the Tears and feed him. Every <b>Fed</b> stack makes him hit harder. When “HE'S FULL”, he <b>Retch Slam</b>s around himself and a <b>Retch Shower</b> hunts the party.</li>
 <li>The <b>Devouring Glutton</b> comes through a Tear and casts <b>Seize</b> on whoever stands farthest away, never the Tank: “THE GLUTTON HAS ONE OF US”. That hero is <b>Held</b> and can't move, cast, dodge or block. The party calls it mind control.</li>
 <li>The Glutton drags its catch to Old Hunger. If it reaches him, he takes them both and hits far harder. Kill the Glutton first and the hero goes free.</li>
 <li><b>Bile Spit</b> leaves pools of bile that stay, and every pool makes him stronger (<b>Pooled Bile</b>). Bastion's <b>Clear Ground</b> clears them.</li>
 <li><b>Burrow</b>: he tunnels to the farthest hero and comes up with <b>Erupt</b>. Up close: <b>Snap Bite</b> and <b>Head Rake</b> in front, a <b>Tail Sweep</b> behind.</li>
-        </ul>
-        <div>
-          <h3 class="jobs-title">Your job</h3>
-          <div class="jobs">
+            </ul>
+            <div>
+              <h3 class="jobs-title">Your job</h3>
+              <div class="jobs">
                 <div class="job" data-hero="bastion">
-                  <h4><img class="job-stamp" src="/img/book/stamp-tank.svg" width="120" height="120" alt="">Tank</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-tank.webp" width="192" height="192" alt="">Tank</h4>
                   <p>Hold him away from the bile. As Bastion, Clear Ground wipes the pools.</p>
                 </div>
                 <div class="job" data-hero="oracle">
-                  <h4><img class="job-stamp" src="/img/book/stamp-healer.svg" width="120" height="120" alt="">Healer</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-healer.webp" width="192" height="192" alt="">Healer</h4>
                   <p>Seize takes whoever stands farthest away, so stay with the party. Heal everyone up after each Retch.</p>
                 </div>
                 <div class="job" data-hero="asha">
-                  <h4><img class="job-stamp" src="/img/book/stamp-melee.svg" width="120" height="120" alt=""><img class="job-stamp" src="/img/book/stamp-ranged.svg" width="120" height="120" alt="">DPS</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-dps.webp" width="192" height="192" alt="">DPS</h4>
                   <p>Kill Imps before they reach him. On “THE GLUTTON HAS ONE OF US”, switch to the Glutton and kill it.</p>
                 </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </details>
       </div>
     </section>
 
@@ -156,9 +164,6 @@
   </footer>
 
   <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
-    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
-    <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
-    <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>
   </svg>
 </body>
 </html>

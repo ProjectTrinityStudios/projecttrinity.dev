@@ -28,8 +28,8 @@
   <link rel="apple-touch-icon" href="/img/brand/shatterbound/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-  <link rel="stylesheet" href="/css/site.css?v=77ff5fcc">
-  <script src="/js/site.js?v=ecaaf61b" defer></script>
+  <link rel="stylesheet" href="/css/site.css?v=06fca8b8">
+  <script src="/js/site.js?v=67492294" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to the page</a>
@@ -65,6 +65,10 @@
   </header>
 
   <main id="main" class="page-top">
+    <div class="wrap char-banner">
+      <span class="photo banner"><img src="/img/portraits/giant-16x9-800.jpg" srcset="/img/portraits/giant-16x9-800.jpg 800w, /img/portraits/giant-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 1000px, 100vw" width="1280" height="720" fetchpriority="high" alt="The Giant in a dim stone hall, black with ribs of molten orange, a burning ring behind his horned head."></span>
+    </div>
+
     <header class="wrap char-head">
       <figure class="char-portrait is-boss">
         <span class="sticker" data-portrait="giant"><img class="pt-painted" src="/img/party/giant.webp" width="256" height="256" loading="eager" alt="The Giant&#x27;s portrait: a horned face of burning orange with glowing eyes."><img class="pt-render" src="/img/portraits/giant-480.webp" srcset="/img/portraits/giant-480.webp 480w, /img/portraits/giant-800.webp 800w" sizes="(max-width: 760px) 70vw, 340px" width="480" height="600" loading="eager" alt="The Giant: a tall horned demon, black with ribs of molten orange, a burning ring behind his head and an iron-banded club in one hand."></span>
@@ -80,31 +84,35 @@
       <div class="section-head">
         <h2 id="fight-title"><span class="title-mark">How the fight works</span></h2>
       </div>
-      <p class="section-lede">Spoilers from here on.</p>
-      <div class="char-sheet walk-open">
-        <span class="photo banner" data-banner="giant"><img class="pt-painted" src="/img/fights/giant-800.jpg" srcset="/img/fights/giant-800.jpg 800w, /img/fights/giant-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="The Giant at the gate to the Hungry Deep: a tall, thin horned demon, black with molten orange cracks, before a huge iron-banded door."><img class="pt-render" src="/img/portraits/giant-16x9-800.jpg" srcset="/img/portraits/giant-16x9-800.jpg 800w, /img/portraits/giant-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="The Giant in a dim stone hall, black with ribs of molten orange, a burning ring behind his horned head."></span>
-        <ul class="shard-list">
+      <div class="char-sheet">
+        <details class="walk">
+          <summary>Open the walkthrough <span class="spoiler">(spoilers)</span></summary>
+          <div class="walk-body">
+            <span class="photo banner" data-banner="giant"><img class="pt-painted" src="/img/fights/giant-800.jpg" srcset="/img/fights/giant-800.jpg 800w, /img/fights/giant-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="The Giant at the gate to the Hungry Deep: a tall, thin horned demon, black with molten orange cracks, before a huge iron-banded door."><img class="pt-render" src="/img/portraits/giant-16x9-800.jpg" srcset="/img/portraits/giant-16x9-800.jpg 800w, /img/portraits/giant-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="The Giant in a dim stone hall, black with ribs of molten orange, a burning ring behind his horned head."></span>
+            <ul class="shard-list">
 <li><b>Swipe</b>, and <b>Swipe</b> into <b>Cleave</b>: wide arcs in front of him with no warning on the floor. Cleave is the heavy one.</li>
 <li><b>Storm</b>, at half health and again near the end: a ring around him that hits three times and can't be blocked. Every hit leaves a burn that stacks.</li>
 <li>No adds and no phases: it's you and him.</li>
-        </ul>
-        <div>
-          <h3 class="jobs-title">Your job</h3>
-          <div class="jobs">
+            </ul>
+            <div>
+              <h3 class="jobs-title">Your job</h3>
+              <div class="jobs">
                 <div class="job" data-hero="bastion">
-                  <h4><img class="job-stamp" src="/img/book/stamp-tank.svg" width="120" height="120" alt="">Tank</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-tank.webp" width="192" height="192" alt="">Tank</h4>
                   <p>Keep him facing you. Swipe and Cleave give no warning.</p>
                 </div>
                 <div class="job" data-hero="oracle">
-                  <h4><img class="job-stamp" src="/img/book/stamp-healer.svg" width="120" height="120" alt="">Healer</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-healer.webp" width="192" height="192" alt="">Healer</h4>
                   <p>The Storm's burn stacks with every hit. Top people up as it ends.</p>
                 </div>
                 <div class="job" data-hero="asha">
-                  <h4><img class="job-stamp" src="/img/book/stamp-melee.svg" width="120" height="120" alt=""><img class="job-stamp" src="/img/book/stamp-ranged.svg" width="120" height="120" alt="">DPS</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-dps.webp" width="192" height="192" alt="">DPS</h4>
                   <p>Get out of the Storm's ring early: every hit you take adds to the burn.</p>
                 </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </details>
       </div>
     </section>
 
@@ -154,9 +162,6 @@
   </footer>
 
   <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
-    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
-    <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
-    <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>
   </svg>
 </body>
 </html>

@@ -28,8 +28,8 @@
   <link rel="apple-touch-icon" href="/img/brand/shatterbound/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-  <link rel="stylesheet" href="/css/site.css?v=77ff5fcc">
-  <script src="/js/site.js?v=ecaaf61b" defer></script>
+  <link rel="stylesheet" href="/css/site.css?v=06fca8b8">
+  <script src="/js/site.js?v=67492294" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to the page</a>
@@ -65,6 +65,10 @@
   </header>
 
   <main id="main" class="page-top">
+    <div class="wrap char-banner">
+      <span class="photo banner"><img src="/img/portraits/maera-16x9-800.jpg" srcset="/img/portraits/maera-16x9-800.jpg 800w, /img/portraits/maera-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 1000px, 100vw" width="1280" height="720" fetchpriority="high" alt="Maera on a dark, rain-wet shore at night, a huge anchor over her shoulder, her grey hair lit cold blue."></span>
+    </div>
+
     <header class="wrap char-head">
       <figure class="char-portrait is-boss">
         <span class="sticker" data-portrait="maera"><img class="pt-painted" src="/img/party/maera.webp" width="256" height="256" loading="eager" alt="Maera&#x27;s portrait: a stern face framed by long, swept-back hair, against sea green."><img class="pt-render" src="/img/portraits/maera-480.webp" srcset="/img/portraits/maera-480.webp 480w, /img/portraits/maera-800.webp 800w" sizes="(max-width: 760px) 70vw, 340px" width="480" height="600" loading="eager" alt="Maera: a grey-haired woman with a stern face, in a dark hooded cloak, a huge anchor over her shoulder."></span>
@@ -80,33 +84,37 @@
       <div class="section-head">
         <h2 id="fight-title"><span class="title-mark">How the fight works</span></h2>
       </div>
-      <p class="section-lede">Spoilers from here on.</p>
-      <div class="char-sheet walk-open">
-        <span class="photo banner" data-banner="maera"><img class="pt-painted" src="/img/fights/maera-800.jpg" srcset="/img/fights/maera-800.jpg 800w, /img/fights/maera-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Maera on her shore, lantern in hand and an anchor over her shoulder, inside a ring of pale light on dark water."><img class="pt-render" src="/img/portraits/maera-16x9-800.jpg" srcset="/img/portraits/maera-16x9-800.jpg 800w, /img/portraits/maera-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Maera on a dark, rain-wet shore at night, a huge anchor over her shoulder, her grey hair lit cold blue."></span>
-        <ul class="shard-list">
+      <div class="char-sheet">
+        <details class="walk">
+          <summary>Open the walkthrough <span class="spoiler">(spoilers)</span></summary>
+          <div class="walk-body">
+            <span class="photo banner" data-banner="maera"><img class="pt-painted" src="/img/fights/maera-800.jpg" srcset="/img/fights/maera-800.jpg 800w, /img/fights/maera-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Maera on her shore, lantern in hand and an anchor over her shoulder, inside a ring of pale light on dark water."><img class="pt-render" src="/img/portraits/maera-16x9-800.jpg" srcset="/img/portraits/maera-16x9-800.jpg 800w, /img/portraits/maera-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Maera on a dark, rain-wet shore at night, a huge anchor over her shoulder, her grey hair lit cold blue."></span>
+            <ul class="shard-list">
 <li><b>The Lamp</b> is on your side. If it goes out, the pull is lost. It starts low and calls for healing: “THE LAMP CALLS FOR HEALING”.</li>
 <li><b>Spume Crawlers</b>, <b>Catfish</b> and <b>Rakes</b> come for the Lamp. A Spume Crawler killed near it leaves <b>Lamplight</b>, a pool that heals it.</li>
 <li><b>The Dark</b>: your damage to her is cut to a tenth.</li>
 <li><b>The Dark Ring</b> follows her. Heroes in <b>The Small Light</b> are safe from it, and while she stands in it her <b>Deep Hunger</b> can't grow.</li>
 <li>When she <b>Sink</b>s, dodge <b>Lantern Rain</b>, <b>The Dark Wheel</b>, <b>Drowning Chains</b> and <b>The Chasing Tide</b>. Between those: <b>Anchor Slam</b>, which can't be blocked, and <b>Anchor Throw</b>, which hooks a hero in for <b>Anchor Spin</b>.</li>
-        </ul>
-        <div>
-          <h3 class="jobs-title">Your job</h3>
-          <div class="jobs">
+            </ul>
+            <div>
+              <h3 class="jobs-title">Your job</h3>
+              <div class="jobs">
                 <div class="job" data-hero="bastion">
-                  <h4><img class="job-stamp" src="/img/book/stamp-tank.svg" width="120" height="120" alt="">Tank</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-tank.webp" width="192" height="192" alt="">Tank</h4>
                   <p>Hold her inside The Small Light as it moves.</p>
                 </div>
                 <div class="job" data-hero="oracle">
-                  <h4><img class="job-stamp" src="/img/book/stamp-healer.svg" width="120" height="120" alt="">Healer</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-healer.webp" width="192" height="192" alt="">Healer</h4>
                   <p>The Lamp is your second tank. Heal it every time it gutters.</p>
                 </div>
                 <div class="job" data-hero="asha">
-                  <h4><img class="job-stamp" src="/img/book/stamp-melee.svg" width="120" height="120" alt=""><img class="job-stamp" src="/img/book/stamp-ranged.svg" width="120" height="120" alt="">DPS</h4>
+                  <h4><img class="job-stamp" src="/img/book/role-dps.webp" width="192" height="192" alt="">DPS</h4>
                   <p>Kill the adds going for the Lamp, and kill Spume Crawlers close to it.</p>
                 </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </details>
       </div>
     </section>
 
@@ -156,9 +164,6 @@
   </footer>
 
   <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
-    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
-    <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
-    <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>
   </svg>
 </body>
 </html>
