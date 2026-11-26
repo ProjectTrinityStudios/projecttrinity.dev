@@ -6,8 +6,8 @@
   <title>Devlog | Project Trinity</title>
   <meta name="description" content="Notes from building Project Trinity: Shatterbound, newest first.">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ebe4f2">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1424">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c3b3ea">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#12163a">
   <link rel="canonical" href="https://projecttrinity.dev/devlog/">
 
   <!-- The link card: what a shared link shows -->
@@ -24,7 +24,7 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="/fonts/TrinityConfluence-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
   <script src="/js/site.js" defer></script>
 </head>
@@ -51,10 +51,10 @@
           </ul>
         </nav>
         <div class="header-tools">
-          <a class="button button-seal header-cta" href="/#builds">Request a build</a>
+          <a class="button button-gold header-cta" href="/#builds">Request a build</a>
           <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
             <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
-            <span>Dark</span>
+            <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
           </button>
         </div>
       </div>
@@ -64,15 +64,15 @@
   <main id="main" class="page-top">
     <header class="wrap page-head">
       <p class="eyebrow">Devlog</p>
-      <h1>Devlog</h1>
+      <h1><span class="title-mark title-star">Devlog</span></h1>
       <p class="lede">Notes from building Project Trinity: Shatterbound, newest first.</p>
     </header>
 
     <div class="wrap section">
       <ul class="posts">
         <li class="post-row">
-          <img src="/img/ledger-friends-720.jpg" srcset="/img/ledger-friends-720.jpg 720w, /img/ledger-friends-1200.jpg 1200w" sizes="(min-width: 760px) 380px, 100vw"
-            width="1200" height="675" loading="lazy" alt="The game's Ledger, an open book. The roster lists Bastion, Oracle, Reaver and Asha, each ticked fit for duty, beside a photo of the fallen boss and the words They held. At the foot of the page, Four assets is struck out and friends written above it.">
+          <span class="photo"><img src="/img/ledger-friends-720.jpg" srcset="/img/ledger-friends-720.jpg 720w, /img/ledger-friends-1200.jpg 1200w" sizes="(min-width: 760px) 380px, 100vw"
+            width="1200" height="675" loading="lazy" alt="The game's Ledger, an open book. The roster lists Bastion, Oracle, Reaver and Asha, each ticked fit for duty, beside a photo of the fallen boss and the words They held. At the foot of the page, Four assets is struck out and friends written above it."></span>
           <div>
             <p class="post-date"><time datetime="2026-11-25">25 November 2026</time></p>
             <h2><a href="/devlog/i-miss-playing-with-my-friends/">Meet Project Trinity: Shatterbound</a></h2>

@@ -6,8 +6,8 @@
   <title>Research: the AI party | Project Trinity</title>
   <meta name="description" content="How Project Trinity's AI party plays, how the research behind it is done, and how the game is built.">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ebe4f2">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1424">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c3b3ea">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#12163a">
   <link rel="canonical" href="https://projecttrinity.dev/research/">
 
   <!-- The link card: what a shared link shows -->
@@ -24,7 +24,7 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="/fonts/TrinityConfluence-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
   <script src="/js/site.js" defer></script>
 </head>
@@ -51,10 +51,10 @@
           </ul>
         </nav>
         <div class="header-tools">
-          <a class="button button-seal header-cta" href="/#builds">Request a build</a>
+          <a class="button button-gold header-cta" href="/#builds">Request a build</a>
           <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
             <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
-            <span>Dark</span>
+            <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
           </button>
         </div>
       </div>
@@ -64,7 +64,7 @@
   <main id="main" class="page-top">
     <header class="wrap page-head">
       <p class="eyebrow">Research</p>
-      <h1>Project Trinity</h1>
+      <h1><span class="title-mark title-star">Project Trinity</span></h1>
       <p class="lede">Project Trinity is the AI party: the tank, healer and DPS that run with you, made to be extremely competent, like a raid team chasing leaderboards and day-one clears.</p>
     </header>
 
@@ -104,14 +104,14 @@
           <p>Every change is checked, reviewed and watched in the game before it goes in.</p>
         </div>
         <div class="charts">
-          <figure>
+          <figure class="photo">
             <picture>
               <source media="(prefers-reduced-motion: reduce)" srcset="/img/how-the-work-grew-still.png">
               <img src="/img/how-the-work-grew.gif" width="720" height="900" loading="lazy"
                 alt="Animated chart, How our way of building grew, in four eras along a timeline. July 2026: one session building from a numbered spec. August: a backend and a frontend track, each an AI lead with helpers on its own branch, sharing a ledger of decisions, 3,409 commits and 1 pull request. September to October: a standing seat for each area. November to now: one orchestrator and a seat for each line. The first three eras are crumpled into a bin and the chart ends on today's way of working.">
             </picture>
           </figure>
-          <figure>
+          <figure class="photo tilt-right">
             <picture>
               <source media="(prefers-reduced-motion: reduce)" srcset="/img/how-the-work-runs-still.png">
               <img src="/img/how-the-work-runs.gif" width="720" height="900" loading="lazy"
@@ -121,7 +121,7 @@
         </div>
       </section>
 
-      <p class="section-lede">Deeper pieces on each of these will come as <a href="/devlog/">devlog posts</a>.</p>
+      <p class="research-foot">Deeper pieces on each of these will come as <a href="/devlog/">devlog posts</a>.</p>
     </div>
   </main>
 

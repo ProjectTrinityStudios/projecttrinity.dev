@@ -23,10 +23,10 @@ Add `?theme=dark` or `?theme=light` to force a mode; otherwise it follows the sy
 | `research/` | Three short sections: how the party plays, how the research is done, how the game is built, with the two charts. |
 | `devlog/` | The index, newest first, the email sign-up at its foot; one folder per post (`devlog/<slug>/index.html`). |
 | `contact/` | The message form (the Worker's `/contact`). |
-| `css/site.css` | All styles. Light mode is the menu's dusk sky; dark mode is the night sky; the forms are an open book in both. |
+| `css/site.css` | All styles, in the game's own look, the Wayfarers' Book: paper on a lilac sky by Day, blue paper on the night sky by Night, Caveat Brush lettering, stickers in each hero's colour, photos taped in, the gold brush for what to press. The colours are the game's tokens (`unity-b/Assets/UI/Theme/TrinityTokens.uss`). |
 | `js/site.js` | The light/dark switch, the header (solid on scroll, the phone menu), the film window, and the forms' checks. Nothing is sent or stored except what a form sends. |
-| `fonts/` | The game's UI fonts (Trinity Confluence, Source Sans 3), SIL Open Font License; licences beside them. |
-| `img/` | Stills, the share card (1200x630), the two flow charts with a still of each for people who turn motion off, `party/` (the game's round portrait stickers, 256 px WebP) and `fights/` (the game's fight cards, 16:9). |
+| `fonts/` | The game's UI fonts (Caveat Brush for names and titles, Source Sans 3 for reading), SIL Open Font License; licences beside them. |
+| `img/` | Stills, the share card (1200x630), the two flow charts with a still of each for people who turn motion off, `party/` (the game's round portrait stickers, 256 px WebP), `fights/` (the game's fight cards, 16:9) and `book/` (the Book's own plates: paper, tape, brush strokes, stamps, clouds, from `unity-b/Assets/UI/Art/Book/`). |
 
 Every page carries the same header and footer: change one, change them all. Each page has its own link card
 (`og:title`, `og:description`, `og:url`).

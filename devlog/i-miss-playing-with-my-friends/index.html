@@ -6,8 +6,8 @@
   <title>Meet Project Trinity: Shatterbound | Project Trinity</title>
   <meta name="description" content="Project Trinity: Shatterbound is a dungeon crawler built around the tank, healer and DPS of MMO raiding, with an AI party that plays to win.">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ebe4f2">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1424">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c3b3ea">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#12163a">
   <link rel="canonical" href="https://projecttrinity.dev/devlog/i-miss-playing-with-my-friends/">
 
   <!-- The link card: what a shared link shows -->
@@ -25,7 +25,7 @@
   <meta property="article:published_time" content="2026-11-25">
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="/fonts/TrinityConfluence-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
   <script src="/js/site.js" defer></script>
 </head>
@@ -52,10 +52,10 @@
           </ul>
         </nav>
         <div class="header-tools">
-          <a class="button button-seal header-cta" href="/#builds">Request a build</a>
+          <a class="button button-gold header-cta" href="/#builds">Request a build</a>
           <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
             <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
-            <span>Dark</span>
+            <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
           </button>
         </div>
       </div>
@@ -63,13 +63,14 @@
   </header>
 
   <main id="main" class="page-top">
-    <article class="wrap post" aria-labelledby="post-title">
+    <div class="wrap post">
+    <article class="paper post-sheet" aria-labelledby="post-title">
       <header class="post-head">
         <p class="post-date"><a href="/devlog/">Devlog</a> <span aria-hidden="true">·</span> <time datetime="2026-11-25">25 November 2026</time></p>
         <h1 id="post-title">Meet Project Trinity: Shatterbound</h1>
       </header>
 
-      <figure class="post-figure">
+      <figure class="post-figure photo">
         <img src="/img/ledger-friends-1200.jpg"
           srcset="/img/ledger-friends-720.jpg 720w, /img/ledger-friends-1200.jpg 1200w"
           sizes="(min-width: 840px) 760px, 100vw"
@@ -99,6 +100,7 @@
 
       <p class="post-nav"><a class="more" href="/devlog/">All devlog posts</a></p>
     </article>
+    </div>
 
     <section class="wrap list-foot" aria-labelledby="list-title">
       <div class="book book-single">

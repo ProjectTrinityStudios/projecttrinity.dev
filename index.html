@@ -6,8 +6,8 @@
   <title>Project Trinity: Shatterbound</title>
   <meta name="description" content="A dungeon crawler built around the tank, healer and DPS of MMO raiding, with an AI party that plays to win and lets you swap into any of them mid-fight. Alpha on Windows, Mac and Linux.">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ebe4f2">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1424">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c3b3ea">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#12163a">
   <link rel="canonical" href="https://projecttrinity.dev/">
 
   <!-- The link card: what a shared link shows -->
@@ -25,7 +25,7 @@
   <link rel="preload" as="image" href="/img/old-hunger-1920.jpg" imagesrcset="/img/old-hunger-800.jpg 800w, /img/old-hunger-1280.jpg 1280w, /img/old-hunger-1920.jpg 1920w" imagesizes="100vw">
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="/fonts/TrinityConfluence-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
   <script src="/js/site.js" defer></script>
 </head>
@@ -52,10 +52,10 @@
           </ul>
         </nav>
         <div class="header-tools">
-          <a class="button button-seal header-cta" href="/#builds">Request a build</a>
+          <a class="button button-gold header-cta" href="/#builds">Request a build</a>
           <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
             <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
-            <span>Dark</span>
+            <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
           </button>
         </div>
       </div>
@@ -105,19 +105,19 @@
             </li>
           </ul>
         </div>
-        <h1 id="game-title">Project Trinity: Shatterbound</h1>
+        <h1 id="game-title"><span class="title-mark title-star">Project Trinity: Shatterbound</span></h1>
         <p class="cine-line">A dungeon crawler built like an MMO raid: a tank, a healer and DPS. Your party is AI, and it plays to win.</p>
         <div class="cine-actions">
-          <a class="button button-seal" href="https://www.youtube.com/watch?v=ZfeWMM3GYU8" data-film="ZfeWMM3GYU8">
+          <a class="button button-gold" href="https://www.youtube.com/watch?v=ZfeWMM3GYU8" data-film="ZfeWMM3GYU8">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z"/></svg>
             Watch the gameplay
           </a>
-          <a class="button button-ghost" href="#builds">Request a build</a>
+          <a class="button button-slip" href="#builds">Request a build</a>
         </div>
       </div>
     </section>
 
-    <div class="wrap game">
+    <div class="wrap game-sheet"><div class="paper game">
       <div class="pitch">
         <p>A hub-based dungeon crawler built around the Holy Trinity of MMO raiding: a tank, a healer and DPS.</p>
         <p>Your party is AI, and it's never throttled. It plays like a raid team chasing day-one clears.</p>
@@ -131,38 +131,38 @@
           <li>The party AI is the game's own research. <a href="/research/">How it works</a></li>
         </ul>
       </section>
-    </div>
+    </div></div>
 
     <section class="wrap section" aria-labelledby="party-title">
       <div class="section-head">
-        <h2 id="party-title">The party</h2>
+        <h2 id="party-title"><span class="title-mark">The party</span></h2>
         <a class="more" href="/shatterbound/">The heroes and the bosses</a>
       </div>
       <ul class="party-strip">
         <li>
-          <a href="/shatterbound/#bastion">
-            <img src="/img/party/bastion.webp" width="256" height="256" loading="lazy" alt="">
+          <a href="/shatterbound/#bastion" data-hero="bastion">
+            <span class="sticker"><img src="/img/party/bastion.webp" width="256" height="256" loading="lazy" alt=""><img class="stamp" src="/img/book/stamp-tank.webp" width="110" height="110" alt=""></span>
             <strong>Bastion</strong>
             <span>Tank</span>
           </a>
         </li>
         <li>
-          <a href="/shatterbound/#oracle">
-            <img src="/img/party/oracle.webp" width="256" height="256" loading="lazy" alt="">
+          <a href="/shatterbound/#oracle" data-hero="oracle">
+            <span class="sticker"><img src="/img/party/oracle.webp" width="256" height="256" loading="lazy" alt=""><img class="stamp" src="/img/book/stamp-healer.webp" width="110" height="110" alt=""></span>
             <strong>Oracle</strong>
             <span>Healer</span>
           </a>
         </li>
         <li>
-          <a href="/shatterbound/#reaver">
-            <img src="/img/party/reaver.webp" width="256" height="256" loading="lazy" alt="">
+          <a href="/shatterbound/#reaver" data-hero="reaver">
+            <span class="sticker"><img src="/img/party/reaver.webp" width="256" height="256" loading="lazy" alt=""><img class="stamp" src="/img/book/stamp-melee.webp" width="110" height="110" alt=""></span>
             <strong>Reaver</strong>
             <span>Melee DPS</span>
           </a>
         </li>
         <li>
-          <a href="/shatterbound/#asha">
-            <img src="/img/party/asha.webp" width="256" height="256" loading="lazy" alt="">
+          <a href="/shatterbound/#asha" data-hero="asha">
+            <span class="sticker"><img src="/img/party/asha.webp" width="256" height="256" loading="lazy" alt=""><img class="stamp" src="/img/book/stamp-ranged.webp" width="110" height="110" alt=""></span>
             <strong>Asha</strong>
             <span>Ranged DPS</span>
           </a>
@@ -229,12 +229,12 @@
 
     <div class="wrap section duo">
       <article class="card" id="devlog">
-        <img class="card-image"
+        <span class="photo"><img
           src="/img/ledger-friends-720.jpg"
           srcset="/img/ledger-friends-720.jpg 720w, /img/ledger-friends-1200.jpg 1200w"
           sizes="(min-width: 760px) 520px, 100vw"
           width="1200" height="675" loading="lazy"
-          alt="The game's Ledger, an open book. The roster lists Bastion, Oracle, Reaver and Asha, each ticked fit for duty, beside a photo of the fallen boss and the words They held. At the foot of the page, Four assets is struck out and friends written above it.">
+          alt="The game's Ledger, an open book. The roster lists Bastion, Oracle, Reaver and Asha, each ticked fit for duty, beside a photo of the fallen boss and the words They held. At the foot of the page, Four assets is struck out and friends written above it."></span>
         <div class="card-body">
           <p class="card-kicker">Devlog <span aria-hidden="true">·</span> <time datetime="2026-11-25">25 November 2026</time></p>
           <h2><a href="/devlog/i-miss-playing-with-my-friends/">Meet Project Trinity: Shatterbound</a></h2>

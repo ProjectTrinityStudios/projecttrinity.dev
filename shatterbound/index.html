@@ -6,8 +6,8 @@
   <title>Shatterbound: the heroes and the bosses | Project Trinity</title>
   <meta name="description" content="The four heroes of Project Trinity: Shatterbound, their roles and key skills, and how each boss fight works.">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ebe4f2">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1424">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c3b3ea">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#12163a">
   <link rel="canonical" href="https://projecttrinity.dev/shatterbound/">
 
   <!-- The link card: what a shared link shows -->
@@ -24,7 +24,7 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="/fonts/TrinityConfluence-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
   <script src="/js/site.js" defer></script>
 </head>
@@ -51,10 +51,10 @@
           </ul>
         </nav>
         <div class="header-tools">
-          <a class="button button-seal header-cta" href="/#builds">Request a build</a>
+          <a class="button button-gold header-cta" href="/#builds">Request a build</a>
           <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
             <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
-            <span>Dark</span>
+            <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
           </button>
         </div>
       </div>
@@ -64,19 +64,19 @@
   <main id="main" class="page-top">
     <header class="wrap page-head">
       <p class="eyebrow">The game</p>
-      <h1>Shatterbound</h1>
+      <h1><span class="title-mark title-star">Shatterbound</span></h1>
       <p class="lede">Four heroes, a party AI that plays whichever ones you don't, and bosses built like raid fights. Swap into any hero mid-fight.</p>
     </header>
 
     <section class="wrap section" aria-labelledby="heroes-title">
       <div class="section-head">
-        <h2 id="heroes-title">The heroes</h2>
+        <h2 id="heroes-title"><span class="title-mark">The heroes</span></h2>
       </div>
       <div class="heroes">
-        <article class="hero-card" id="bastion" aria-labelledby="bastion-name">
+        <article class="hero-card" id="bastion" data-hero="bastion" aria-labelledby="bastion-name">
           <!-- Portrait slot: Models 101's portrait-bastion-4x5.png (web copy) replaces the sticker here. -->
           <figure class="portrait" data-portrait="bastion">
-            <img src="/img/party/bastion.webp" width="256" height="256" loading="lazy" alt="Bastion's portrait: a broad-shouldered man with a red crest of hair and a hard stare, in red and black armour.">
+            <span class="sticker"><img src="/img/party/bastion.webp" width="256" height="256" loading="lazy" alt="Bastion's portrait: a broad-shouldered man with a red crest of hair and a hard stare, in red and black armour."><img class="stamp" src="/img/book/stamp-tank.webp" width="110" height="110" alt=""></span>
           </figure>
           <div>
             <h3 id="bastion-name">Bastion</h3>
@@ -92,10 +92,10 @@
               <li><b>Clear Ground</b> <span>Bastion strikes every enemy around him with his shield's stored damage, and clears the lingering pools enemies have left on the ground near him.</span></li>
           </ul>
         </article>
-        <article class="hero-card" id="oracle" aria-labelledby="oracle-name">
+        <article class="hero-card" id="oracle" data-hero="oracle" aria-labelledby="oracle-name">
           <!-- Portrait slot: Models 101's portrait-oracle-4x5.png (web copy) replaces the sticker here. -->
           <figure class="portrait" data-portrait="oracle">
-            <img src="/img/party/oracle.webp" width="256" height="256" loading="lazy" alt="Oracle's portrait: a woman with swept-back grey hair and a high collar, against a pale blue sky.">
+            <span class="sticker"><img src="/img/party/oracle.webp" width="256" height="256" loading="lazy" alt="Oracle's portrait: a woman with swept-back grey hair and a high collar, against a pale blue sky."><img class="stamp" src="/img/book/stamp-healer.webp" width="110" height="110" alt=""></span>
           </figure>
           <div>
             <h3 id="oracle-name">Oracle</h3>
@@ -111,10 +111,10 @@
               <li><b>Aegis Chorus</b> <span>Oracle sings to the party. When the song ends, everyone heals and their Defense rises for a time.</span></li>
           </ul>
         </article>
-        <article class="hero-card" id="reaver" aria-labelledby="reaver-name">
+        <article class="hero-card" id="reaver" data-hero="reaver" aria-labelledby="reaver-name">
           <!-- Portrait slot: Models 101's portrait-reaver-4x5.png (web copy) replaces the sticker here. -->
           <figure class="portrait" data-portrait="reaver">
-            <img src="/img/party/reaver.webp" width="256" height="256" loading="lazy" alt="Reaver's portrait: a young man with tousled brown hair and a half smile, against a red sky.">
+            <span class="sticker"><img src="/img/party/reaver.webp" width="256" height="256" loading="lazy" alt="Reaver's portrait: a young man with tousled brown hair and a half smile, against a red sky."><img class="stamp" src="/img/book/stamp-melee.webp" width="110" height="110" alt=""></span>
           </figure>
           <div>
             <h3 id="reaver-name">Reaver</h3>
@@ -130,10 +130,10 @@
               <li><b>Grand Larceny</b> <span>Reaver spins through every enemy around him, cutting again and again.</span></li>
           </ul>
         </article>
-        <article class="hero-card" id="asha" aria-labelledby="asha-name">
+        <article class="hero-card" id="asha" data-hero="asha" aria-labelledby="asha-name">
           <!-- Portrait slot: Models 101's portrait-asha-4x5.png (web copy) replaces the sticker here. -->
           <figure class="portrait" data-portrait="asha">
-            <img src="/img/party/asha.webp" width="256" height="256" loading="lazy" alt="Asha's portrait: a woman with long black hair falling over one shoulder, against a pink sky.">
+            <span class="sticker"><img src="/img/party/asha.webp" width="256" height="256" loading="lazy" alt="Asha's portrait: a woman with long black hair falling over one shoulder, against a pink sky."><img class="stamp" src="/img/book/stamp-ranged.webp" width="110" height="110" alt=""></span>
           </figure>
           <div>
             <h3 id="asha-name">Asha</h3>
@@ -154,14 +154,14 @@
 
     <section class="wrap section" aria-labelledby="bosses-title">
       <div class="section-head">
-        <h2 id="bosses-title">The bosses</h2>
+        <h2 id="bosses-title"><span class="title-mark">The bosses</span></h2>
       </div>
       <p class="section-lede">In the order you meet them. Each fight is folded away until you open it.</p>
       <div class="bosses">
         <article class="boss-card" id="patchwork" aria-labelledby="patchwork-name">
           <!-- Portrait slot: Models 101's portrait-patchwork-4x5.png (web copy) replaces the sticker here. -->
           <figure class="portrait" data-portrait="patchwork">
-            <img src="/img/party/patchwork.webp" width="256" height="256" loading="lazy" alt="Patchwork's portrait: a white-bearded figure in a hood with a golden halo, stitched together from bright mismatched parts.">
+            <span class="sticker"><img src="/img/party/patchwork.webp" width="256" height="256" loading="lazy" alt="Patchwork's portrait: a white-bearded figure in a hood with a golden halo, stitched together from bright mismatched parts."></span>
           </figure>
           <div>
             <h3 id="patchwork-name">Patchwork</h3>
@@ -172,12 +172,12 @@
               <summary>How the fight works <span class="spoiler">(spoilers)</span></summary>
               <div class="walk-body">
                 <!-- Banner slot: Models 101's portrait-patchwork-16x9.png (web copy) replaces the fight card here. -->
-                <img class="walk-banner" data-banner="patchwork"
+                <span class="photo walk-photo"><img data-banner="patchwork"
                   src="/img/fights/patchwork-800.jpg"
                   srcset="/img/fights/patchwork-800.jpg 800w, /img/fights/patchwork-1280.jpg 1280w"
                   sizes="(min-width: 1100px) 860px, 100vw"
                   width="1280" height="720" loading="lazy"
-                  alt="Patchwork standing in a wrecked stone hall: a squat, bearded brawler built from mismatched parts, a red cartoon hammer in one hand and a ghostly warlock's shadow behind him.">
+                  alt="Patchwork standing in a wrecked stone hall: a squat, bearded brawler built from mismatched parts, a red cartoon hammer in one hand and a ghostly warlock's shadow behind him."></span>
                 <ul class="shard-list">
                 <li><b>Cartoon Hammer</b>: “I'll stamp you out!” A chain of slams on the party. Every slam that lands earns him another.</li>
                 <li><b>Cybernetic Tank Buster</b> comes after two <b>Cybernetic Stomp</b>s: a cone in front of him that can't be blocked. If it hits, <b>Cybernetic Firearm</b> follows on someone else.</li>
@@ -188,16 +188,16 @@
                 <div>
                   <h4>Your job</h4>
                   <div class="jobs">
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-tank"/></svg>Tank</h5>
+                <div class="job" data-hero="bastion">
+                  <h5><img src="/img/book/stamp-tank.webp" width="110" height="110" alt="">Tank</h5>
                   <p>Step out of the Tank Buster's cone; your shield won't stop it.</p>
                 </div>
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-healer"/></svg>Healer</h5>
+                <div class="job" data-hero="oracle">
+                  <h5><img src="/img/book/stamp-healer.webp" width="110" height="110" alt="">Healer</h5>
                   <p>When The Collector calls in a debt, the two heroes with Debt come first.</p>
                 </div>
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-dps"/></svg>DPS</h5>
+                <div class="job" data-hero="asha">
+                  <h5><img src="/img/book/stamp-ranged.webp" width="110" height="110" alt="">DPS</h5>
                   <p>Lead his Shadow Charge into a Crash Pillar, then hit him hard while he's Crashed.</p>
                 </div>
                   </div>
@@ -208,7 +208,7 @@
         <article class="boss-card" id="giant" aria-labelledby="giant-name">
           <!-- Portrait slot: Models 101's portrait-giant-4x5.png (web copy) replaces the sticker here. -->
           <figure class="portrait" data-portrait="giant">
-            <img src="/img/party/giant.webp" width="256" height="256" loading="lazy" alt="The Giant's portrait: a horned face of burning orange with glowing eyes.">
+            <span class="sticker"><img src="/img/party/giant.webp" width="256" height="256" loading="lazy" alt="The Giant's portrait: a horned face of burning orange with glowing eyes."></span>
           </figure>
           <div>
             <h3 id="giant-name">The Giant</h3>
@@ -219,12 +219,12 @@
               <summary>How the fight works <span class="spoiler">(spoilers)</span></summary>
               <div class="walk-body">
                 <!-- Banner slot: Models 101's portrait-giant-16x9.png (web copy) replaces the fight card here. -->
-                <img class="walk-banner" data-banner="giant"
+                <span class="photo walk-photo"><img data-banner="giant"
                   src="/img/fights/giant-800.jpg"
                   srcset="/img/fights/giant-800.jpg 800w, /img/fights/giant-1280.jpg 1280w"
                   sizes="(min-width: 1100px) 860px, 100vw"
                   width="1280" height="720" loading="lazy"
-                  alt="The Giant at the gate to the Hungry Deep: a tall, thin horned demon, black with molten orange cracks, before a huge iron-banded door.">
+                  alt="The Giant at the gate to the Hungry Deep: a tall, thin horned demon, black with molten orange cracks, before a huge iron-banded door."></span>
                 <ul class="shard-list">
                 <li><b>Swipe</b>, and <b>Swipe</b> into <b>Cleave</b>: wide arcs in front of him with no warning on the floor. Cleave is the heavy one.</li>
                 <li><b>Storm</b>, at half health and again near the end: a ring around him that hits three times and can't be blocked. Every hit leaves a burn that stacks.</li>
@@ -233,16 +233,16 @@
                 <div>
                   <h4>Your job</h4>
                   <div class="jobs">
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-tank"/></svg>Tank</h5>
+                <div class="job" data-hero="bastion">
+                  <h5><img src="/img/book/stamp-tank.webp" width="110" height="110" alt="">Tank</h5>
                   <p>Keep him facing you. Swipe and Cleave give no warning.</p>
                 </div>
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-healer"/></svg>Healer</h5>
+                <div class="job" data-hero="oracle">
+                  <h5><img src="/img/book/stamp-healer.webp" width="110" height="110" alt="">Healer</h5>
                   <p>The Storm's burn stacks with every hit. Top people up as it ends.</p>
                 </div>
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-dps"/></svg>DPS</h5>
+                <div class="job" data-hero="asha">
+                  <h5><img src="/img/book/stamp-ranged.webp" width="110" height="110" alt="">DPS</h5>
                   <p>Get out of the Storm's ring early: every hit you take adds to the burn.</p>
                 </div>
                   </div>
@@ -253,7 +253,7 @@
         <article class="boss-card" id="old-hunger" aria-labelledby="old-hunger-name">
           <!-- Portrait slot: Models 101's portrait-old-hunger-4x5.png (web copy) replaces the sticker here. -->
           <figure class="portrait" data-portrait="old-hunger">
-            <img src="/img/party/old-hunger.webp" width="256" height="256" loading="lazy" alt="Old Hunger's portrait: a gaping, fleshy maw ringed with teeth.">
+            <span class="sticker"><img src="/img/party/old-hunger.webp" width="256" height="256" loading="lazy" alt="Old Hunger's portrait: a gaping, fleshy maw ringed with teeth."></span>
           </figure>
           <div>
             <h3 id="old-hunger-name">Old Hunger</h3>
@@ -264,12 +264,12 @@
               <summary>How the fight works <span class="spoiler">(spoilers)</span></summary>
               <div class="walk-body">
                 <!-- Banner slot: Models 101's portrait-old-hunger-16x9.png (web copy) replaces the fight card here. -->
-                <img class="walk-banner" data-banner="old-hunger"
+                <span class="photo walk-photo"><img data-banner="old-hunger"
                   src="/img/fights/old-hunger-800.jpg"
                   srcset="/img/fights/old-hunger-800.jpg 800w, /img/fights/old-hunger-1280.jpg 1280w"
                   sizes="(min-width: 1100px) 860px, 100vw"
                   width="1280" height="720" loading="lazy"
-                  alt="Old Hunger in his chamber: a huge armoured grub with a split, toothed jaw, lit pale against a dark floor.">
+                  alt="Old Hunger in his chamber: a huge armoured grub with a split, toothed jaw, lit pale against a dark floor."></span>
                 <ul class="shard-list">
                 <li><b>Imps</b> crawl out of the Tears and feed him. Every <b>Fed</b> stack makes him hit harder. When “HE'S FULL”, he <b>Retch Slam</b>s around himself and a <b>Retch Shower</b> hunts the party.</li>
                 <li>The <b>Devouring Glutton</b> comes through a Tear and casts <b>Seize</b> on whoever stands farthest away, never the Tank: “THE GLUTTON HAS ONE OF US”. That hero is <b>Held</b> and can't move, cast, dodge or block. The party calls it mind control.</li>
@@ -280,16 +280,16 @@
                 <div>
                   <h4>Your job</h4>
                   <div class="jobs">
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-tank"/></svg>Tank</h5>
+                <div class="job" data-hero="bastion">
+                  <h5><img src="/img/book/stamp-tank.webp" width="110" height="110" alt="">Tank</h5>
                   <p>Hold him away from the bile. As Bastion, Clear Ground wipes the pools.</p>
                 </div>
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-healer"/></svg>Healer</h5>
+                <div class="job" data-hero="oracle">
+                  <h5><img src="/img/book/stamp-healer.webp" width="110" height="110" alt="">Healer</h5>
                   <p>Seize takes whoever stands farthest away, so stay with the party. Heal everyone up after each Retch.</p>
                 </div>
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-dps"/></svg>DPS</h5>
+                <div class="job" data-hero="asha">
+                  <h5><img src="/img/book/stamp-ranged.webp" width="110" height="110" alt="">DPS</h5>
                   <p>Kill Imps before they reach him. On “THE GLUTTON HAS ONE OF US”, switch to the Glutton and kill it.</p>
                 </div>
                   </div>
@@ -300,7 +300,7 @@
         <article class="boss-card" id="maera" aria-labelledby="maera-name">
           <!-- Portrait slot: Models 101's portrait-maera-4x5.png (web copy) replaces the sticker here. -->
           <figure class="portrait" data-portrait="maera">
-            <img src="/img/party/maera.webp" width="256" height="256" loading="lazy" alt="Maera's portrait: a stern face framed by long, swept-back hair, against sea green.">
+            <span class="sticker"><img src="/img/party/maera.webp" width="256" height="256" loading="lazy" alt="Maera's portrait: a stern face framed by long, swept-back hair, against sea green."></span>
           </figure>
           <div>
             <h3 id="maera-name">Maera</h3>
@@ -311,12 +311,12 @@
               <summary>How the fight works <span class="spoiler">(spoilers)</span></summary>
               <div class="walk-body">
                 <!-- Banner slot: Models 101's portrait-maera-16x9.png (web copy) replaces the fight card here. -->
-                <img class="walk-banner" data-banner="maera"
+                <span class="photo walk-photo"><img data-banner="maera"
                   src="/img/fights/maera-800.jpg"
                   srcset="/img/fights/maera-800.jpg 800w, /img/fights/maera-1280.jpg 1280w"
                   sizes="(min-width: 1100px) 860px, 100vw"
                   width="1280" height="720" loading="lazy"
-                  alt="Maera on her shore, lantern in hand and an anchor over her shoulder, inside a ring of pale light on dark water.">
+                  alt="Maera on her shore, lantern in hand and an anchor over her shoulder, inside a ring of pale light on dark water."></span>
                 <ul class="shard-list">
                 <li><b>The Lamp</b> is on your side. If it goes out, the pull is lost. It starts low and calls for healing: “THE LAMP CALLS FOR HEALING”.</li>
                 <li><b>Spume Crawlers</b>, <b>Catfish</b> and <b>Rakes</b> come for the Lamp. A Spume Crawler killed near it leaves <b>Lamplight</b>, a pool that heals it.</li>
@@ -327,16 +327,16 @@
                 <div>
                   <h4>Your job</h4>
                   <div class="jobs">
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-tank"/></svg>Tank</h5>
+                <div class="job" data-hero="bastion">
+                  <h5><img src="/img/book/stamp-tank.webp" width="110" height="110" alt="">Tank</h5>
                   <p>Hold her inside The Small Light as it moves.</p>
                 </div>
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-healer"/></svg>Healer</h5>
+                <div class="job" data-hero="oracle">
+                  <h5><img src="/img/book/stamp-healer.webp" width="110" height="110" alt="">Healer</h5>
                   <p>The Lamp is your second tank. Heal it every time it gutters.</p>
                 </div>
-                <div class="job">
-                  <h5><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-dps"/></svg>DPS</h5>
+                <div class="job" data-hero="asha">
+                  <h5><img src="/img/book/stamp-ranged.webp" width="110" height="110" alt="">DPS</h5>
                   <p>Kill the adds going for the Lamp, and kill Spume Crawlers close to it.</p>
                 </div>
                   </div>
@@ -345,7 +345,7 @@
           </details>
         </article>
         <article class="boss-card is-coming" id="don-fortuna" aria-labelledby="don-fortuna-name">
-          <div class="portrait" aria-hidden="true"><svg class="coming-mark" width="64" height="64" viewBox="0 0 32 32" focusable="false"><use href="#shard"/></svg></div>
+          <div class="portrait" aria-hidden="true"><span class="coming-plate"><svg class="coming-mark" width="64" height="64" viewBox="0 0 32 32" focusable="false"><use href="#shard"/></svg></span></div>
           <div>
             <h3 id="don-fortuna-name">Don Fortuna <span class="tag-coming">Coming</span></h3>
             <p class="boss-place">The High Table</p>
