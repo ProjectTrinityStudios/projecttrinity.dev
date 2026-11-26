@@ -90,6 +90,9 @@ one key at most. Each address holds one key at most (Tooling 201): a request fro
 no key; the Worker mails them their own key's link again ("You already have a ... build", at most once a day) and stores
 the request as `repeat` (`repeat-unsent` if that mail did not go, which `list` shows). His mail and its page say so, and
 the page offers **Mail their link again** instead of Send key. The platform notes are `PLATFORM_NOTES` at the top of `keys.js`.
+Both key mails (the key, and "You already have a ... build") go as HTML in the email list's Book look (`email/kit-template.html`)
+with the same words as a plain-text part for mail apps that show no HTML; one list of blocks in `keys.js` writes both.
+`node tools/preview-key-mail.mjs` (from `worker/`) renders them into `email/preview/` for a look, sending nothing.
 
 - Keys go in from `worker/` with `node tools/keys.mjs import <file>` (or a pasted list): either export of an itch.io key
   group ("Download keys", the full links, is the one to press; "Download short URLs" also works, each `itch.io/get-...`
