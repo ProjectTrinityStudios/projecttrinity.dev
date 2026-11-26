@@ -1,7 +1,9 @@
 // Project Trinity: the site's only script. No tracking, no cookies, nothing stored.
 // 1. The light/dark switch (for this visit only; the page otherwise follows the system setting).
-// 2. The film: loads YouTube's privacy-enhanced player only when play is pressed.
-// 3. The two boxes: checked here, then sent to the site's form handler (with Cloudflare's Turnstile spam check).
+// 2. The header: clear over a picture, solid once the page scrolls; a menu on a phone.
+// 3. The film: loads YouTube's privacy-enhanced player only when play is pressed.
+// 4. The boxes: checked here, then sent to the site's form handler (with Cloudflare's Turnstile spam check).
+// 5. The welcome note after confirming the email list.
 
 (function () {
   "use strict";
@@ -9,7 +11,6 @@
   // 1. Light and dark
   var root = document.documentElement;
   var toggle = document.querySelector("[data-theme-toggle]");
-  var label = document.querySelector("[data-theme-label]");
   var media = window.matchMedia("(prefers-color-scheme: dark)");
   // ?theme=dark or ?theme=light opens the page in that mode (handy for previews and screenshots)
   var asked = new URLSearchParams(window.location.search).get("theme");
@@ -20,10 +21,7 @@
     return set ? set === "dark" : media.matches;
   }
   function paintToggle() {
-    if (!toggle) return;
-    var dark = isDark();
-    toggle.setAttribute("aria-pressed", dark ? "true" : "false");
-    label.textContent = "Dark";
+    if (toggle) toggle.setAttribute("aria-pressed", isDark() ? "true" : "false");
   }
   if (toggle) {
     toggle.addEventListener("click", function () {
@@ -34,31 +32,105 @@
     paintToggle();
   }
 
-  // 2. The film: the poster stays until the visitor presses play; only then does YouTube load,
-  // from its privacy-enhanced domain (youtube-nocookie.com), so nothing of YouTube's runs before that.
-  var film = document.querySelector("[data-film]");
-  if (film) {
-    film.addEventListener("click", function () {
-      var id = film.getAttribute("data-film");
+  // 2. The header
+  var header = document.querySelector("[data-header]");
+  var menuButton = document.querySelector("[data-menu-button]");
+  if (header) {
+    var solid = function () {
+      header.classList.toggle("is-solid", window.scrollY > 24);
+    };
+    window.addEventListener("scroll", solid, { passive: true });
+    solid();
+  }
+  if (header && menuButton) {
+    var setOpen = function (open) {
+      header.classList.toggle("is-open", open);
+      menuButton.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+    menuButton.addEventListener("click", function () {
+      setOpen(menuButton.getAttribute("aria-expanded") !== "true");
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && menuButton.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+        menuButton.focus();
+      }
+    });
+    // a link inside the menu (such as Request a build on the front page) closes it
+    header.querySelector("#site-menu").addEventListener("click", function (event) {
+      if (event.target.closest("a")) setOpen(false);
+    });
+    // Only now does the phone layout fold the links behind the Menu button: if this script fails, they stay visible.
+    root.classList.add("js");
+  }
+
+  // The first screen's B-roll: silent, looping, paused whenever it is off screen, and left out altogether
+  // (the still stays) for anyone who has asked for less motion.
+  var broll = document.querySelector("[data-broll]");
+  if (broll) {
+    var still = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var seen = true;
+    var steer = function () {
+      if (still.matches || !seen || document.hidden) {
+        broll.pause();
+      } else {
+        var playing = broll.play();
+        if (playing && playing.catch) playing.catch(function () {});
+      }
+    };
+    broll.muted = true;
+    broll.addEventListener("playing", function () { broll.classList.add("is-playing"); });
+    if (still.matches) {
+      broll.removeAttribute("autoplay");
+      broll.pause();
+    }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        seen = entries[0].isIntersecting;
+        steer();
+      }, { threshold: 0.05 }).observe(broll);
+    }
+    document.addEventListener("visibilitychange", steer);
+    still.addEventListener("change", steer);
+  }
+
+  // 3. The film: nothing of YouTube's runs until the visitor presses play; then its privacy-enhanced
+  // player (youtube-nocookie.com) opens in a window over the page. Without the script, the link goes to YouTube.
+  var filmDialog = document.getElementById("film");
+  var filmSlot = filmDialog && filmDialog.querySelector("[data-film-slot]");
+  Array.prototype.forEach.call(document.querySelectorAll("[data-film]"), function (link) {
+    if (!filmDialog || typeof filmDialog.showModal !== "function") return;
+    link.addEventListener("click", function (event) {
+      event.preventDefault();
+      var id = link.getAttribute("data-film");
       var frame = document.createElement("iframe");
-      frame.className = "film-embed";
+      frame.className = "film-frame";
       frame.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?autoplay=1&rel=0&playsinline=1";
       frame.title = "Project Trinity: Shatterbound, gameplay video";
       frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
       frame.allowFullscreen = true;
       frame.referrerPolicy = "strict-origin-when-cross-origin";
-      film.parentNode.replaceChild(frame, film);
-      frame.focus();
+      filmSlot.replaceChildren(frame);
+      filmDialog.showModal();
+    });
+  });
+  if (filmDialog) {
+    // closing the window stops the video
+    filmDialog.addEventListener("close", function () { filmSlot.replaceChildren(); });
+    filmDialog.addEventListener("click", function (event) {
+      if (event.target === filmDialog) filmDialog.close();
     });
   }
 
-  // 3. The boxes: checked here, then sent to the site's form handler on Cloudflare
+  // 4. The boxes: checked here, then sent to the site's form handler on Cloudflare
   // (api.projecttrinity.dev). Cloudflare Turnstile, the spam check, loads only once someone starts filling a box.
   var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
   // On this machine the boxes talk to `wrangler dev`; on the site, to the deployed handler.
   var API = LOCAL ? "http://127.0.0.1:8787" : "https://api.projecttrinity.dev";
   // The site key is public by design. On this machine, Cloudflare's published always-pass test key.
   var TURNSTILE_SITE_KEY = LOCAL ? "1x00000000000000000000AA" : "0x4AAAAAAGTNcejv966pk7dd";
+  var FAILED = "That didn't go through. Please try again in a minute, or email hello@projecttrinity.dev.";
+  var RATE = "Too many messages for now. Try again later, or write to hello@projecttrinity.dev.";
 
   var turnstileReady = null;
   function loadTurnstile() {
@@ -101,6 +173,7 @@
       note.classList.toggle("is-error", !!isError);
       note.textContent = text;
     }
+    function field(name) { return form.querySelector('[name="' + name + '"]'); }
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -127,7 +200,14 @@
         firstBad = firstBad || platforms[0];
       }
 
-      var age = form.querySelector('input[name="age"]');
+      var message = field("message");
+      if (message && !message.value.trim()) {
+        message.setAttribute("aria-invalid", "true");
+        problems.push("Write your message.");
+        firstBad = firstBad || message;
+      }
+
+      var age = field("age");
       if (age && !age.checked) {
         age.setAttribute("aria-invalid", "true");
         problems.push("Tick the box to say you're 13 or older.");
@@ -148,15 +228,18 @@
         return;
       }
 
-      var join = form.querySelector('input[name="join_list"]');
-      var noteField = form.querySelector('textarea[name="note"]');
+      var join = field("join_list");
+      var noteField = field("note");
+      var name = field("name");
       var body = {
         email: email.value.trim(),
         age: true,
         token: token,
         platform: picked ? picked.value : undefined,
         note: noteField ? noteField.value : undefined,
-        join_list: join ? join.checked : undefined
+        join_list: join ? join.checked : undefined,
+        name: name ? name.value.trim() : undefined,
+        message: message ? message.value : undefined
       };
 
       sending = true;
@@ -168,24 +251,34 @@
         body: JSON.stringify(body),
         credentials: "omit"
       }).then(function (res) {
-        return res.json().catch(function () { return { ok: false }; });
+        return res.json().catch(function () { return { ok: false }; }).then(function (out) {
+          if (res.status === 429) out.error = "rate";
+          return out;
+        });
       }).then(function (out) {
         if (out.ok) {
           form.reset();
           say(form.getAttribute("data-thanks"), false);
+        } else if (out.error === "rate") {
+          // the draft stays in the box
+          say(RATE, true);
         } else {
-          say("That didn't go through. Please try again in a minute, or email hello@projecttrinity.dev.", true);
+          say(FAILED, true);
         }
       }).catch(function () {
-        say("That didn't go through. Please try again in a minute, or email hello@projecttrinity.dev.", true);
+        say(FAILED, true);
       }).then(function () {
         sending = false;
         button.disabled = false;
         if (window.turnstile && widgetId !== null && widgetId !== "pending") window.turnstile.reset(widgetId);
       });
     });
+
+    // Send starts disabled in the page, so a visitor without this script never sends a form to nowhere.
+    if (button) button.disabled = false;
   });
-  // 4. The welcome note: Kit sends people here (?subscribed=1) after they confirm the email list.
+
+  // 5. The welcome note: Kit sends people here (?subscribed=1) after they confirm the email list.
   var welcome = document.getElementById("welcome");
   var params = new URLSearchParams(window.location.search);
   if (welcome && params.get("subscribed") === "1") {

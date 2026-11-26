@@ -9,3 +9,14 @@ CREATE TABLE IF NOT EXISTS build_requests (
   status     TEXT    NOT NULL DEFAULT 'new'   -- 'new', 'sent', 'declined': his to set
 );
 CREATE INDEX IF NOT EXISTS build_requests_email ON build_requests (email);
+
+-- Messages from the Contact page. One row per message; nothing else is kept.
+CREATE TABLE IF NOT EXISTS messages (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+  email      TEXT    NOT NULL,
+  name       TEXT    NOT NULL DEFAULT '',
+  message    TEXT    NOT NULL,
+  status     TEXT    NOT NULL DEFAULT 'new'   -- 'new', 'answered': his to set
+);
+CREATE INDEX IF NOT EXISTS messages_email ON messages (email);

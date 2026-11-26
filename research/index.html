@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research: the AI party | Project Trinity</title>
+  <meta name="description" content="How Project Trinity's AI party plays, how the research behind it is done, and how the game is built.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c3b3ea">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#12163a">
+  <link rel="canonical" href="https://projecttrinity.dev/research/">
+
+  <!-- The link card: what a shared link shows -->
+  <meta property="og:type" content="website">
+  <meta name="author" content="Project Trinity Studios">
+  <meta property="og:site_name" content="Project Trinity Studios">
+  <meta property="og:title" content="Project Trinity: the research">
+  <meta property="og:description" content="The AI party that runs with you: how it plays, how it's tested in the cloud, and how the game is built.">
+  <meta property="og:url" content="https://projecttrinity.dev/research/">
+  <meta property="og:image" content="https://projecttrinity.dev/img/share-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Old Hunger, a huge armoured grub with a split jaw, lit pale against a dark dungeon floor, under the title Project Trinity: Shatterbound.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="/css/site.css">
+  <script src="/js/site.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the page</a>
+
+  <header class="site-header" data-header>
+    <div class="header-bar">
+      <a class="mark" href="/">
+        <svg class="mark-shard" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#shard"/></svg>
+        <span>Project Trinity</span>
+      </a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-button>
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Menu</span>
+      </button>
+      <div class="header-menu" id="site-menu">
+        <nav aria-label="Site">
+          <ul>
+          <li><a href="/shatterbound/">Shatterbound</a></li>
+          <li><a href="/research/" aria-current="page">Research</a></li>
+          <li><a href="/devlog/">Devlog</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="header-tools">
+          <a class="button button-gold header-cta" href="/request/">Request a build</a>
+          <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+            <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="page-top">
+    <header class="wrap page-head">
+      <p class="eyebrow">Research</p>
+      <h1><span class="title-mark title-star">Project Trinity</span></h1>
+      <p class="lede">Project Trinity is the AI party: the tank, healer and DPS that run with you, made to be extremely competent, like a raid team chasing leaderboards and day-one clears.</p>
+    </header>
+
+    <div class="wrap section research-sections">
+      <section class="study" aria-labelledby="study-1">
+        <div>
+          <p class="study-num" aria-hidden="true">I</p>
+          <h2 id="study-1">How the party plays</h2>
+        </div>
+        <div class="study-text">
+          <p>The arena publishes what's happening around the party: where the boss is facing, what it's winding up, who's hurt, what's on the floor. Each hero's brain reads those facts and picks one thing to do, then sends it to the game like a player's button press would.</p>
+          <p>Project Trinity's AI sees what you'd see and nothing more. It has no secret view of a fight. The only thing held back is knowledge, and only where that serves the raid leader fantasy: it's told less, never made worse.</p>
+          <p>You lead it. The Trinity Dial sets how safe or how greedy the party plays, and your orders (focus a target, focus the adds, help a teammate) outrank it.</p>
+        </div>
+      </section>
+
+      <section class="study" aria-labelledby="study-2">
+        <div>
+          <p class="study-num" aria-hidden="true">II</p>
+          <h2 id="study-2">How the research is done</h2>
+        </div>
+        <div class="study-text">
+          <p>It's half research, half game development: a machine learning project and a game built at once.</p>
+          <p>The fights run without a picture, in the cloud, over and over, each run from a different seed. Every choice each hero makes is written down with the reason it won, so a wipe can be read back step by step.</p>
+          <p>A change to how the party plays counts only when it holds up across many runs, not one lucky pull. Then each change is played and watched before it goes in.</p>
+          <p>The party doesn't rewrite itself. Its choices come from rules and tuning in the game's code, and after the runs those are changed by hand where it fell short; a change stays only if it holds up.</p>
+        </div>
+      </section>
+
+      <section class="study" aria-labelledby="study-3">
+        <div>
+          <p class="study-num" aria-hidden="true">III</p>
+          <h2 id="study-3">How the game is built</h2>
+        </div>
+        <div class="study-text">
+          <p>The way the game is built is part of the research too. It started small and kept growing into what it is now: one orchestrator and a seat for each job, each working off a sheet with a line to knock off.</p>
+          <p>Every change is checked, reviewed and watched in the game before it goes in.</p>
+        </div>
+        <div class="charts">
+          <figure class="photo">
+            <picture>
+              <source media="(prefers-reduced-motion: reduce)" srcset="/img/how-the-work-grew-still.png">
+              <img src="/img/how-the-work-grew.gif" width="720" height="900" loading="lazy"
+                alt="Animated chart, How our way of building grew, in four eras along a timeline. July 2026: one session building from a numbered spec. August: a backend and a frontend track, each an AI lead with helpers on its own branch, sharing a ledger of decisions, 3,409 commits and 1 pull request. September to October: a standing seat for each area. November to now: one orchestrator and a seat for each line. The first three eras are crumpled into a bin and the chart ends on today's way of working.">
+            </picture>
+          </figure>
+          <figure class="photo tilt-right">
+            <picture>
+              <source media="(prefers-reduced-motion: reduce)" srcset="/img/how-the-work-runs-still.png">
+              <img src="/img/how-the-work-runs.gif" width="720" height="900" loading="lazy"
+                alt="Animated chart, How Project Trinity: Shatterbound gets built. AI agents do the work; I design it, play it and decide. I sit down with Fable and the sit-down fills the sheets. The orchestrator, Claude Opus, pulls one line at a time and sends it to a seat: VFX on Claude Opus, Backend on Codex, Tooling on Claude Sonnet. Each line becomes a pull request whose checks must pass, then two AI reviews by Gemini and Codex or Opus, a film check where every frame is opened, and my eye: I watch every look before it merges into develop. Counts at the foot: 1,238 pull requests merged since July, 662 sheet lines landed, 75 orchestrators so far.">
+            </picture>
+          </figure>
+        </div>
+      </section>
+
+      <p class="research-foot">Deeper pieces on each of these will come as <a href="/devlog/">devlog posts</a>.</p>
+    </div>
+  </main>
+
+  <footer class="colophon">
+    <div class="colophon-grid">
+      <div>
+        <h2>Pages</h2>
+        <ul>
+          <li><a href="/shatterbound/">Shatterbound</a></li>
+          <li><a href="/research/">Research</a></li>
+          <li><a href="/devlog/">Devlog</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/request/">Request a build</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <ul>
+          <li><a href="/contact/">Send a message</a></li>
+          <li><a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Video</h2>
+        <p><a href="https://www.youtube.com/@ProjectTrinityStudios">YouTube: @ProjectTrinityStudios</a></p>
+      </div>
+      <div class="privacy">
+        <h2>Privacy</h2>
+        <p>This site sets no cookies and runs no trackers or ads. The gameplay video plays from YouTube's privacy-enhanced player, and only once you press play; from then, YouTube's own privacy terms apply to it. If you request a build or send a message, it goes to the project mailbox; your email joins the list only if you ask. All of it is for people 13 or older.</p>
+      </div>
+    </div>
+    <p class="colophon-foot">Disclosure: AI tools and AI-generated assets were used in making this game.</p>
+    <p class="colophon-foot">© 2026 Project Trinity Studios. Project Trinity: Shatterbound is in alpha.</p>
+  </footer>
+
+  <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
+    <symbol id="shard" viewBox="0 0 32 32">
+      <path d="M16 2 27 14 16 30 5 14Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M16 2 16 30M5 14 16 18 27 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
+    <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
+    <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>
+  </svg>
+</body>
+</html>
