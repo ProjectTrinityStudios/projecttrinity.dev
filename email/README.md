@@ -8,6 +8,7 @@ What Kit sends for projecttrinity.dev, and how hello@projecttrinity.dev becomes 
 | `words.md` | The confirm email's and the welcome email's words, and where each goes in Kit. |
 | `welcome.txt` | The welcome email as its plain-text part should read. |
 | `../tools/preview-email.py` | Renders the template with both emails into `email/preview/` (git-ignored) for a look in a browser, light and dark. |
+| `../worker/tools/preview-key-mail.mjs` | Renders the build key mails (Tooling 205), which the Worker sends through Resend in this same look (`worker/src/keys.js`, a copy of this template's frame: a change to the look is made in both), into `email/preview/`. |
 
 The template follows the reader's dark mode where the mail app lets it (Apple Mail, Outlook on Mac and iOS). Gmail's
 apps darken mail their own way and ignore the Night colours; the paper and ink are dark-on-light enough to survive

@@ -290,43 +290,144 @@ async function remindAgain(env, id, token) {
 
 // ---- the mails ----
 
-export function keyMailText(platform, keyUrl) {
+// Each key mail is one list of blocks, so its plain-text part and its HTML part carry the same words:
+// { p } a paragraph, { link } the key's link on its own line, { note } the platform's lines (a line indented four
+// spaces is a command to type), { sign } the sign-off lines.
+function mailBlocks(platform, keyUrl, again) {
   return [
-    "Hello,",
-    "",
-    "Thanks for asking to play Project Trinity: Shatterbound. Here is your build:",
-    "",
-    keyUrl,
-    "",
-    "The link opens the game's itch.io page with the Windows, Mac and Linux downloads, no itch.io account needed. It is yours alone, so please keep it to yourself. Claiming it with an itch.io account lets the itch.io app install the game and keep it updated.",
-    "",
-    ...(PLATFORM_NOTES[platform] || []),
-    "",
-    "It is an alpha: expect rough edges. To tell us what you found, reply to this mail.",
-    "",
-    "Project Trinity Studios",
-    "https://projecttrinity.dev",
-  ].join("\n");
+    { p: "Hello," },
+    { p: again
+        ? "Thanks for asking to play Project Trinity: Shatterbound again. Good news: you already have a key, so here is your build again:"
+        : "Thanks for asking to play Project Trinity: Shatterbound. Here is your build:" },
+    { link: keyUrl },
+    { p: again
+        ? "It is the same link as before and it is still yours. It opens the game's itch.io page with the Windows, Mac and Linux downloads, no itch.io account needed. Please keep it to yourself. Claiming it with an itch.io account lets the itch.io app install the game and keep it updated."
+        : "The link opens the game's itch.io page with the Windows, Mac and Linux downloads, no itch.io account needed. It is yours alone, so please keep it to yourself. Claiming it with an itch.io account lets the itch.io app install the game and keep it updated." },
+    { note: PLATFORM_NOTES[platform] || [] },
+    { p: "It is an alpha: expect rough edges. To tell us what you found, reply to this mail." },
+    { sign: ["Project Trinity Studios", "https://projecttrinity.dev"] },
+  ];
+}
+
+// The plain-text part, for mail apps that show no HTML: blocks apart by a blank line, a note's lines together.
+function mailText(blocks) {
+  return blocks.map((b) => (b.note || b.sign || [b.p ?? b.link]).join("\n")).filter(Boolean).join("\n\n");
+}
+
+export function keyMailText(platform, keyUrl) {
+  return mailText(mailBlocks(platform, keyUrl, false));
 }
 
 // The mail to an address that asks again after its key went: the same link, nothing new.
 export function againMailText(platform, keyUrl) {
-  return [
-    "Hello,",
-    "",
-    "Thanks for asking to play Project Trinity: Shatterbound again. Good news: you already have a key, so here is your build again:",
-    "",
-    keyUrl,
-    "",
-    "It is the same link as before and it is still yours. It opens the game's itch.io page with the Windows, Mac and Linux downloads, no itch.io account needed. Please keep it to yourself. Claiming it with an itch.io account lets the itch.io app install the game and keep it updated.",
-    "",
-    ...(PLATFORM_NOTES[platform] || []),
-    "",
-    "It is an alpha: expect rough edges. To tell us what you found, reply to this mail.",
-    "",
-    "Project Trinity Studios",
-    "https://projecttrinity.dev",
-  ].join("\n");
+  return mailText(mailBlocks(platform, keyUrl, true));
+}
+
+export function keyMailHtml(platform, keyUrl) {
+  return mailHtml(mailBlocks(platform, keyUrl, false), "Your Project Trinity: Shatterbound build");
+}
+
+export function againMailHtml(platform, keyUrl) {
+  return mailHtml(mailBlocks(platform, keyUrl, true), "You already have a Project Trinity: Shatterbound build");
+}
+
+// The HTML part wears the email list's look (the site's email/kit-template.html, Tooling 192): the Wayfarers' Book,
+// paper on the washed lilac by Day and blue paper on the night sky where the mail app follows the system, the coral
+// edge, Caveat Brush for the name and Source Sans 3 to read from the site's own fonts, the gold brush under the name.
+// One column, real text, no images. A change to that look is made in both. The key's link stands alone in a slip
+// edged with the gold brush, as the text part gives it its own line; a command sits in its own shaded line.
+const SANS = "'Source Sans 3','Segoe UI',Helvetica,Arial,sans-serif";
+const HAND = "'Caveat Brush','Segoe Print','Bradley Hand','Chalkboard SE',cursive";
+const MONO = "Consolas,Menlo,'Courier New',monospace";
+
+function mailHtml(blocks, title) {
+  const para = (text) => `<p style="margin:0 0 16px;">${esc(text)}</p>`;
+  const body = [];
+  let sign = [];
+  for (const b of blocks) {
+    if (b.p !== undefined) body.push(para(b.p));
+    else if (b.link !== undefined) {
+      const url = String(b.link);
+      const shown = esc(url);
+      const linked = /^https:\/\//i.test(url)
+        ? `<a href="${shown}" class="key" style="color:#5b3db0; font-weight:600; text-decoration:underline; word-wrap:break-word; overflow-wrap:anywhere;">${shown}</a>`
+        : shown;
+      body.push(`<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;"><tr><td class="keyslip" style="background:#fbf4e3; border:1px solid #ead8b6; border-left:4px solid #f2b53c; border-radius:4px; padding:12px 16px; font-family:${SANS}; font-size:16px; line-height:1.5; word-wrap:break-word; overflow-wrap:anywhere;">${linked}</td></tr></table>`);
+    } else if (b.note) {
+      // The lead-in line and its command stay together, as the note writes them.
+      for (const line of b.note) {
+        body.push(line.startsWith("    ")
+          ? `<p class="code" style="margin:-8px 0 16px; padding:8px 12px; background:#efe2c6; border-radius:4px; font-family:${MONO}; font-size:14px; line-height:1.5; color:#2b2452; word-wrap:break-word; overflow-wrap:anywhere;">${esc(line.trim())}</p>`
+          : para(line));
+      }
+    } else if (b.sign) sign = b.sign;
+  }
+  const [studio, site] = sign;
+  const siteLink = site ? ` &nbsp;&middot;&nbsp; <a href="${esc(site)}" style="color:#625a86;">${esc(site.replace(/^https?:\/\//, ""))}</a>` : "";
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<title>${esc(title)}</title>
+<style>
+  @font-face { font-family: "Caveat Brush"; src: url("https://projecttrinity.dev/fonts/CaveatBrush-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "Source Sans 3"; src: url("https://projecttrinity.dev/fonts/SourceSans3-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "Source Sans 3"; src: url("https://projecttrinity.dev/fonts/SourceSans3-Semibold.ttf") format("truetype"); font-weight: 600; font-style: normal; }
+  body { margin: 0; padding: 0; width: 100% !important; background: #e9e1f6; -webkit-text-size-adjust: 100%; }
+  table { border-collapse: collapse; }
+  @media (max-width: 620px) {
+    .page { padding: 26px 20px 22px !important; }
+    .outer { padding: 12px 8px !important; }
+    .masthead { font-size: 30px !important; }
+    .letter { font-size: 16px !important; }
+  }
+  @media (prefers-color-scheme: dark) {
+    body, .outer, .outer-table { background: #12163a !important; }
+    .page { background: #222a5a !important; border-color: #2c2960 !important; }
+    .masthead, .letter { color: #efe9f8 !important; }
+    .slip, .foot, .foot a { color: #aea8d2 !important; }
+    .key { color: #f5c768 !important; }
+    .keyslip { background: #1b2150 !important; border-color: #2c2960 !important; border-left-color: #f2b53c !important; }
+    .code { background: #1b2150 !important; color: #efe9f8 !important; }
+    .rule { border-color: rgba(239, 233, 248, 0.16) !important; }
+  }
+  [data-ogsc] .masthead, [data-ogsc] .letter { color: #efe9f8 !important; }
+  [data-ogsc] .key { color: #f5c768 !important; }
+  [data-ogsb] .page { background: #222a5a !important; }
+</style>
+</head>
+<body style="margin:0; padding:0; background:#e9e1f6;">
+<table role="presentation" class="outer-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#e9e1f6;">
+  <tr>
+    <td align="center" class="outer" style="background:#e9e1f6; padding:28px 12px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;">
+        <tr>
+          <td class="page" style="background:#f7ecd6; border:1px solid #ead8b6; border-top:4px solid #b8475b; border-radius:6px; padding:34px 40px 28px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr><td style="padding:0 0 4px;"><a href="https://projecttrinity.dev/" class="masthead" style="font-family:${HAND}; font-size:34px; line-height:1.1; color:#2b2452; text-decoration:none;">Project Trinity</a></td></tr>
+              <tr><td class="slip" style="font-family:${SANS}; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:#625a86; padding:0 0 14px;">Shatterbound</td></tr>
+              <tr><td style="padding:0 0 26px;"><div style="width:96px; height:4px; background:#f2b53c; border-radius:2px; line-height:4px; font-size:4px;">&nbsp;</div></td></tr>
+            </table>
+            <div class="letter" style="font-family:${SANS}; font-size:17px; line-height:1.6; color:#2b2452;">
+              ${body.join("\n              ")}
+            </div>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr><td class="rule" style="border-top:1px solid rgba(43,36,82,0.16); padding:18px 0 0;">
+                <p class="foot" style="margin:0; font-family:${SANS}; font-size:14px; line-height:1.5; color:#625a86;">${esc(studio || "")}${siteLink}</p>
+              </td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>`;
 }
 
 // { ok } when Resend took the mail; { refused } when it plainly did not (nothing went out); neither when unknown.
@@ -337,6 +438,7 @@ async function mailKey(env, to, platform, keyUrl, idempotencyKey, again = false)
     to: [to],
     subject: again ? "You already have a Project Trinity: Shatterbound build" : "Your Project Trinity: Shatterbound build",
     text: again ? againMailText(platform, keyUrl) : keyMailText(platform, keyUrl),
+    html: again ? againMailHtml(platform, keyUrl) : keyMailHtml(platform, keyUrl),
   };
   if (env.REPLY_TO) mail.reply_to = env.REPLY_TO;
 
