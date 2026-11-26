@@ -55,11 +55,17 @@ def _files(spec):
     return sorted(found)
 
 
+def _bytes(path):
+    """A file's bytes, text with LF line endings, so a checkout's CRLF conversion never renames a card."""
+    data = path.read_bytes()
+    return data.replace(b"\r\n", b"\n") if path.suffix in (".html", ".css", ".svg") else data
+
+
 def _hash(spec):
-    h = hashlib.sha256(TEMPLATE.read_bytes())
+    h = hashlib.sha256(_bytes(TEMPLATE))
     h.update(json.dumps(spec, sort_keys=True).encode())
     for f in _files(spec):
-        h.update((ROOT / f.lstrip("/")).read_bytes())
+        h.update(_bytes(ROOT / f.lstrip("/")))
     return h.hexdigest()[:10]
 
 
