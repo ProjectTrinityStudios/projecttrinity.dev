@@ -39,8 +39,9 @@
   --cover: #b8475b;                   /* book-cover: the book's own edge */
   --paper: #f7ecd6;                   /* book-paper */
   --paper-deep: #ead8b6;              /* book-paper-deep */
-  --paper-image: url("../img/book/paper-day.jpg");
+  --paper-image: url("../img/book/paper-day.webp");
   --paper-rgb: 247, 236, 214;
+  --paper-size: 1024px 1024px;        /* the paper is a seamless 2048 px tile, drawn at twice the screen's density */
   --ink: #2b2452;                     /* book-ink */
   --ink-soft: #625a86;                /* book-ink-soft */
   --rule: rgba(43, 36, 82, 0.16);     /* book-rule */
@@ -70,7 +71,7 @@
   --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
 
   --measure: 62ch;
-  --page: 1100px;
+  --page: 68.75rem;                   /* 1100 px at the base size; grows with the type on large screens */
   --gutter: clamp(16px, 4vw, 40px);
   --header-h: 64px;
 
@@ -86,7 +87,7 @@
     --cover: #2c2960;
     --paper: #222a5a;
     --paper-deep: #181e45;
-    --paper-image: url("../img/book/paper-night.jpg");
+    --paper-image: url("../img/book/paper-night.webp");
     --paper-rgb: 34, 42, 90;
     --ink: #efe9f8;
     --ink-soft: #aea8d2;
@@ -107,7 +108,7 @@
   --cover: #2c2960;
   --paper: #222a5a;
   --paper-deep: #181e45;
-  --paper-image: url("../img/book/paper-night.jpg");
+  --paper-image: url("../img/book/paper-night.webp");
   --paper-rgb: 34, 42, 90;
   --ink: #efe9f8;
   --ink-soft: #aea8d2;
@@ -132,19 +133,25 @@ html {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+/* Large screens: the type, and the page and post widths set in rem with it, step up so nothing reads tiny
+   (his note, 2026-11-25); a post's line stays near 70 characters. */
+@media (min-width: 1600px) { html { font-size: 106.25%; } }
+@media (min-width: 2000px) { html { font-size: 112.5%; } }
+@media (min-width: 2560px) { html { font-size: 125%; } }
 
 body {
   margin: 0;
   color: var(--on-sky);
   background-color: var(--sky-top);
   /* the Book's painted sky at the head of the page, melting into the sky's own lilac and rose below */
+  /* The sky is drawn at 4K with its lilac veil and its fade to clear built in (tools/make-textures.py), so it melts into
+     the colour beneath at any width. (A veil of fixed height laid over it ended in a hard band on wide screens.) */
   background-image:
-    linear-gradient(180deg, rgba(195, 179, 234, 0.25) 0, rgba(195, 179, 234, 0.25) 700px, var(--sky-top) 1200px),
-    url("../img/book/sky-day.jpg"),
+    url("../img/book/sky-day-3840.webp"),
     linear-gradient(180deg, var(--sky-top) 0, var(--sky-top) 1400px, var(--sky-low) 100%);
   background-repeat: no-repeat;
-  background-position: top center, top center, 0 0;
-  background-size: 100% 1400px, max(100%, 2400px) auto, 100% 100%;
+  background-position: top center, 0 0;
+  background-size: max(100%, 2400px) auto, 100% 100%;
   font-family: var(--font-body);
   font-size: 1.125rem;
   line-height: 1.6;
@@ -236,7 +243,7 @@ p { margin: 0; }
   color: var(--ink);
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
   border-radius: 4px;
   box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.18), 4px 10px 22px -6px var(--shadow);
 }
@@ -337,7 +344,7 @@ p { margin: 0; }
   color: var(--ink);
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
   box-shadow: 0 6px 18px -10px var(--shadow);
   transition: background-color 200ms ease, box-shadow 200ms ease;
 }
@@ -369,8 +376,7 @@ p { margin: 0; }
   margin-right: auto;
   white-space: nowrap;
 }
-/* The family mark (Tooling 180) swaps in here, in place of the shard. */
-.mark-shard { width: 26px; height: 26px; color: var(--stamp); }
+
 
 .header-menu {
   display: flex;
@@ -463,7 +469,6 @@ p { margin: 0; }
 .site-header.is-clear:not(.is-solid):not(.is-open) .header-menu ul a:not([aria-current]),
 .site-header.is-clear:not(.is-solid):not(.is-open) .theme-toggle,
 .site-header.is-clear:not(.is-solid):not(.is-open) .menu-button { color: var(--film-text); }
-.site-header.is-clear:not(.is-solid):not(.is-open) .mark-shard { color: var(--focus); }
 .site-header.is-clear:not(.is-solid):not(.is-open) .theme-toggle,
 .site-header.is-clear:not(.is-solid):not(.is-open) .menu-button { border-color: rgba(251, 245, 234, 0.7); background: rgba(10, 8, 30, 0.3); }
 .site-header.is-clear:not(.is-solid):not(.is-open) .header-menu ul a:hover::before { opacity: 0.6; }
@@ -883,7 +888,7 @@ p { margin: 0; }
   color: var(--ink);
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
   box-shadow:
     0 0 0 1px rgba(120, 90, 60, 0.25),
     6px 7px 0 -1px var(--paper-deep),   /* the page stack */
@@ -1266,7 +1271,7 @@ p { margin: 0; }
 .list-foot { margin-top: clamp(48px, 7vw, 88px); }
 
 /* one post: an entry on a page of the Book */
-.post { max-width: calc(800px + 2 * var(--gutter)); }
+.post { max-width: calc(50rem + 2 * var(--gutter)); }
 .post-sheet { padding: clamp(24px, 4.4vw, 56px); margin-top: clamp(32px, 5vw, 64px); }
 .post-head h1 { font-size: clamp(2.6rem, 6vw, 4rem); margin-top: 0.2rem; }
 .post-head .post-date a { color: var(--link); }
@@ -1303,12 +1308,12 @@ p { margin: 0; }
 .post-body .shard-list { font-size: 1.1rem; max-width: none; }
 .post-sign { color: var(--ink-soft); font-style: italic; }
 .post-nav { margin-top: clamp(32px, 5vw, 56px); padding-top: 1rem; border-top: 1.5px dashed var(--rule); }
-.post + .list-foot { max-width: calc(800px + 2 * var(--gutter)); }
+.post + .list-foot { max-width: calc(50rem + 2 * var(--gutter)); }
 
 /* ---- Contact -------------------------------------------------------------- */
 .contact-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
   gap: clamp(28px, 5vw, 64px);
   align-items: start;
 }
@@ -1377,7 +1382,7 @@ p { margin: 0; }
 }
 
 @media (max-width: 760px) {
-  body { font-size: 1.0625rem; }
+  body { font-size: 1.0625rem; background-image: url("../img/book/sky-day-1920.webp"), linear-gradient(180deg, var(--sky-top) 0, var(--sky-top) 1400px, var(--sky-low) 100%); }
   .duo { grid-template-columns: 1fr; }
   .party-strip, .boss-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
@@ -1420,7 +1425,7 @@ p { margin: 0; }
 .welcome-page {
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
   box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.25), 6px 7px 0 -1px var(--paper-deep), 0 22px 50px -18px rgba(18, 16, 40, 0.55);
   border-radius: 6px;
   padding: clamp(22px, 5vw, 36px);
@@ -1543,11 +1548,22 @@ p { margin: 0; }
 /* the role stamps, redrawn clean (SVG, a smooth rim in place of the perforations that read as bitten) */
 .sticker .stamp { width: 36%; }
 
-/* ---- The mark (Tooling 180): its slot in the header ------------------------------------------------------------------
-   Today the shard. When the clean family mark lands, .mark-glyph takes D's ink cut on the paper header and its chalk cut
-   over the film and by Night (img/brand/), and the tab takes A (favicon.ico, apple-touch-icon.png, 512 px). */
-.mark-glyph { display: inline-flex; align-items: center; }
-.mark-glyph img { width: 30px; height: 30px; }
+/* ---- The mark (Tooling 180) -----------------------------------------------------------------------------------------
+   D, the formation (the boss with the Tank, Healer and two DPS where the AI stands them): the ink cut on the paper header,
+   the chalk cut by Night and over the film. The tab carries A (favicon.ico and favicon.svg at the root; the game's pages
+   carry the Shatterbound cut, with the crack through the boss, from img/brand/shatterbound/). */
+.mark-glyph { display: inline-flex; align-items: center; flex: none; }
+.mark-glyph img { width: 32px; height: 32px; }
+.mark-chalk { display: none; }
+:root[data-theme="dark"] .mark-ink { display: none; }
+:root[data-theme="dark"] .mark-chalk { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .mark-ink { display: none; }
+  :root:not([data-theme="light"]) .mark-chalk { display: block; }
+}
+.site-header.is-clear:not(.is-solid):not(.is-open) .mark-glyph .mark-ink { display: none; }
+.site-header.is-clear:not(.is-solid):not(.is-open) .mark-glyph .mark-chalk { display: block; }
+.coming-plate img.coming-mark { width: 50%; height: auto; opacity: 0.8; }
 
 /* ---- The title options (front page) ----------------------------------------------------------------------------------- */
 .cine h1.game-title {
@@ -1654,7 +1670,7 @@ p { margin: 0; }
 /* ---- Swap heroes mid-fight: a note taped on the first screen ---------------------------------------------------------- */
 .cine-text {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
   column-gap: clamp(24px, 4vw, 56px);
   align-items: end;
 }
@@ -1666,7 +1682,7 @@ p { margin: 0; }
   color: var(--ink);
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
   border-radius: 4px;
   box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.18), 4px 10px 22px -6px rgba(0, 0, 0, 0.5);
   transform: rotate(1.6deg);
@@ -1774,7 +1790,7 @@ p { margin: 0; }
   text-align: center;
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
 }
 /* the rolls: a paper cylinder at the top of the strip, and one at the foot of the scroll; their ends in the hero's colour */
 .scroll-tab::before,
@@ -1825,7 +1841,7 @@ p { margin: 0; }
   padding: 0.4rem clamp(14px, 1.6vw, 22px) 1.6rem;
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
 }
 .scroll-body .one-line { font-size: 1.1rem; color: var(--ink); }
 .scroll-body .skills,
@@ -1961,7 +1977,7 @@ p { margin: 0; }
   color: var(--ink);
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
   box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.18), 4px 10px 22px -6px var(--shadow);
 }
 .char-sheet .skills.kit { display: block; columns: 2; column-gap: 2.4rem; }

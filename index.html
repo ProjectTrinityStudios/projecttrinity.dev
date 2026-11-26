@@ -24,10 +24,13 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" as="image" href="/img/old-hunger-1920.jpg" imagesrcset="/img/old-hunger-800.jpg 800w, /img/old-hunger-1280.jpg 1280w, /img/old-hunger-1920.jpg 1920w" imagesizes="100vw">
 
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="/css/site.css?v=33145fa1">
-  <script src="/js/site.js?v=c691e7d3" defer></script>
+  <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+  <link rel="stylesheet" href="/css/site.css?v=77ff5fcc">
+  <script src="/js/site.js?v=ecaaf61b" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to the page</a>
@@ -35,7 +38,7 @@
   <header class="site-header is-clear" data-header>
     <div class="header-bar">
       <a class="mark" href="/" aria-current="page">
-        <span class="mark-glyph" aria-hidden="true"><svg class="mark-shard" width="26" height="26" viewBox="0 0 32 32" focusable="false"><use href="#shard"/></svg></span>
+        <span class="mark-glyph" aria-hidden="true"><img class="mark-ink" src="/img/brand/mark-ink.svg" width="32" height="32" alt=""><img class="mark-chalk" src="/img/brand/mark-chalk.svg" width="32" height="32" alt=""></span>
         <span>Project Trinity</span>
       </a>
       <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-button>
@@ -121,7 +124,7 @@
           <span class="t-studio title-mark title-star">Project Trinity</span>
           <span class="t-game"><a href="/shatterbound/">Shatterbound</a></span>
         </h1>
-        <p class="cine-line">A dungeon crawler built like an MMO raid: a tank, a healer and DPS. Your party is AI, and it plays to win.</p>
+        <p class="cine-line">A dungeon crawler built like an MMO raid: a tank, a healer and DPS. Play alone, or with a friend on one split screen; the AI plays the rest of the party, and it plays to win.</p>
 
         <div class="cine-actions" id="join">
           <form class="join-form" aria-label="Join the email list" data-endpoint="/subscribe" data-thanks="Almost done: check your inbox and confirm to join the list." method="post" novalidate>
@@ -245,7 +248,7 @@
         </li>
         <li>
           <a href="/shatterbound/#don-fortuna" class="is-coming">
-            <span class="coming-plate" aria-hidden="true"><svg class="coming-mark" width="64" height="64" viewBox="0 0 32 32" focusable="false"><use href="#shard"/></svg></span>
+            <span class="coming-plate" aria-hidden="true"><img class="coming-mark mark-ink" src="/img/brand/shatterbound/mark-ink.svg" width="64" height="64" alt=""><img class="coming-mark mark-chalk" src="/img/brand/shatterbound/mark-chalk.svg" width="64" height="64" alt=""></span>
             <strong class="slip">Don Fortuna</strong>
             <span>Coming</span>
           </a>
@@ -333,10 +336,6 @@
     </div>
   </dialog>
   <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
-    <symbol id="shard" viewBox="0 0 32 32">
-      <path d="M16 2 27 14 16 30 5 14Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-      <path d="M16 2 16 30M5 14 16 18 27 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-    </symbol>
     <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
     <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
     <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>

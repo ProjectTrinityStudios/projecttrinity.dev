@@ -219,8 +219,11 @@ HEAD = """<!doctype html>
   <meta property="og:image:alt" content="{image_alt}">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/img/brand/shatterbound/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/img/brand/shatterbound/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/brand/shatterbound/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}}catch(e){{}}</script>
   <link rel="stylesheet" href="/css/site.css">
   <script src="/js/site.js" defer></script>
 </head>
@@ -230,7 +233,7 @@ HEAD = """<!doctype html>
   <header class="site-header" data-header>
     <div class="header-bar">
       <a class="mark" href="/">
-        <span class="mark-glyph" aria-hidden="true"><svg class="mark-shard" width="26" height="26" viewBox="0 0 32 32" focusable="false"><use href="#shard"/></svg></span>
+        <span class="mark-glyph" aria-hidden="true"><img class="mark-ink" src="/img/brand/mark-ink.svg" width="32" height="32" alt=""><img class="mark-chalk" src="/img/brand/mark-chalk.svg" width="32" height="32" alt=""></span>
         <span>Project Trinity</span>
       </a>
       <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-button>
@@ -292,12 +295,7 @@ FOOT = """
   </footer>
 
   <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
-    <!-- The family mark (Tooling 180) replaces this shard when its clean files land. -->
-    <symbol id="shard" viewBox="0 0 32 32">
-      <path d="M16 2 27 14 16 30 5 14Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-      <path d="M16 2 16 30M5 14 16 18 27 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-    </symbol>
-  </svg>
+{icons}  </svg>
 </body>
 </html>
 """
@@ -355,7 +353,7 @@ ICONS = """    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 
 
 
 def page(path, head_args, body):
-    foot = FOOT.replace("    </symbol>\n  </svg>", "    </symbol>\n" + ICONS + "  </svg>")
+    foot = FOOT.replace("{icons}", ICONS)
     html = HEAD.format(**head_args) + body + foot
     out = ROOT / path
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -469,7 +467,7 @@ def shatterbound():
     <header class="wrap page-head">
       <p class="eyebrow">The game</p>
       <h1><span class="title-mark title-star">Shatterbound</span></h1>
-      <p class="lede">Four heroes, a party AI that plays whichever ones you don't, and bosses built like raid fights. Swap into any hero mid-fight.</p>
+      <p class="lede">Four heroes and bosses built like raid fights. Play alone, or with a friend on one split screen, and the party AI plays whichever heroes you don't. Swap into any hero mid-fight.</p>
     </header>
 
     <section class="wrap section" aria-labelledby="heroes-title">
@@ -490,7 +488,7 @@ def shatterbound():
       <div class="bosses">
 {bosses}
         <article class="boss-card is-coming" id="don-fortuna" aria-labelledby="don-fortuna-name">
-          <div class="portrait" aria-hidden="true"><span class="coming-plate"><svg class="coming-mark" width="64" height="64" viewBox="0 0 32 32" focusable="false"><use href="#shard"/></svg></span></div>
+          <div class="portrait" aria-hidden="true"><span class="coming-plate"><img class="coming-mark mark-ink" src="/img/brand/shatterbound/mark-ink.svg" width="64" height="64" alt=""><img class="coming-mark mark-chalk" src="/img/brand/shatterbound/mark-chalk.svg" width="64" height="64" alt=""></span></div>
           <div>
             <h3 id="don-fortuna-name">Don Fortuna <span class="tag-coming">Coming</span></h3>
             <p class="boss-place">The High Table</p>

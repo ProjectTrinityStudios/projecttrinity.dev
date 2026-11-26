@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+<title>Project Trinity Studios, Shatterbound: the tab icon</title>
+<style>.m{fill:#2b2452}.r{stroke:#2b2452}@media (prefers-color-scheme:dark){.m{fill:#efe9f8}.r{stroke:#efe9f8}}</style>
+<defs><mask id="c" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16"><rect width="16" height="16" fill="#fff"/><path d="M4.48 5.33 L7.28 7.43 L8.5 6.45 L9.97 8.13 L12.52 8.9" fill="none" stroke="#000" stroke-width="1.15" stroke-linejoin="miter" stroke-miterlimit="10"/></mask></defs>
+<circle cx="8.5" cy="7.5" r="3.5" class="m" mask="url(#c)"/>
+<circle cx="8.5" cy="1.5" r="1.5" class="m"/>
+<circle cx="8.5" cy="13.5" r="1.5" class="m"/>
+<circle cx="1.5" cy="7.5" r="1.5" class="m"/>
+<circle cx="13.5" cy="12.5" r="1.5" class="m"/>
+</svg>

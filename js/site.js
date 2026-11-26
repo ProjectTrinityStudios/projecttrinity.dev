@@ -1,5 +1,6 @@
-// Project Trinity: the site's only script. No tracking, no cookies, nothing stored.
-// 1. The light/dark switch (for this visit only; the page otherwise follows the system setting).
+// Project Trinity: the site's only script. No tracking, no cookies; the one thing kept is the Day or Night pick, in this browser only.
+// 1. The light/dark switch: the visitor's pick is kept in this browser (localStorage, never a cookie, never sent) so it
+//    holds across pages; until they pick, the page follows the system setting. Each page's head reads it before drawing.
 // 2. The header: clear over a picture, solid once the page scrolls; a menu on a phone.
 // 3. The film: loads YouTube's privacy-enhanced player only when play is pressed.
 // 4. The boxes: checked here, then sent to the site's form handler (with Cloudflare's Turnstile spam check).
@@ -36,7 +37,9 @@
   }
   if (toggle) {
     toggle.addEventListener("click", function () {
-      root.setAttribute("data-theme", isDark() ? "light" : "dark");
+      var next = isDark() ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { window.localStorage.setItem("pt-theme", next); } catch (e) { /* storage off: this page only */ }
       paintToggle();
     });
     media.addEventListener("change", paintToggle);

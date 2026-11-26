@@ -12,7 +12,8 @@ python -m http.server 8176 --bind 127.0.0.1
 ```
 
 then open http://127.0.0.1:8176/. Links are root-relative (`/css/site.css`), so open it through a server, not as a file.
-Add `?theme=dark` or `?theme=light` to force a mode; otherwise it follows the system.
+Add `?theme=dark` or `?theme=light` to force a mode. A visitor's own Day or Night pick is kept in their browser
+(`localStorage`, never a cookie) and holds across pages; until they pick, the site follows the system setting.
 
 ## What is here
 
@@ -52,9 +53,11 @@ Every page carries the same header and footer: change one, change them all. Each
 - Each character page's link card is its 16:9 render (`img/portraits/share-<id>.jpg`).
 - **The title:** `data-title` on the front page's first screen: `a` (Shatterbound beneath, on a name slip), `b` (above, small,
   in gold) or `c` (Project Trinity alone; Shatterbound in the menu). `?title=b` previews another.
-- **The mark (Tooling 180), when its clean files land:** D's ink and chalk cuts go in `img/brand/` and into `.mark-glyph` in every
-  page's header (ink on the paper header, chalk over the film and by Night), in place of the `#shard` symbol; A becomes the tab
-  icon (`favicon.ico`, `apple-touch-icon.png`, a 512 px PNG, each linked in every page's head beside `favicon.svg`).
+- **The mark (Tooling 180):** D, the formation, sits in every page's header (`img/brand/mark-ink.svg` on the paper header,
+  `mark-chalk.svg` over the film and by Night). The tab carries A: the studio's `favicon.ico`, `favicon.svg` (it turns light
+  in a dark browser) and `apple-touch-icon.png` at the root, and the Shatterbound cut (the crack through the boss) from
+  `img/brand/shatterbound/` on the game's own pages (`shatterbound/` and each character), where its D also marks Don Fortuna's
+  "coming" plate. The files come from the game repository's `art/brand/mark/` (`studio/` and `shatterbound/`).
 
 ## The boxes and the video
 
@@ -78,6 +81,8 @@ Every page carries the same header and footer: change one, change them all. Each
 
 - `python tools/make-characters.py`: writes `shatterbound/` and every character page from the words in it.
 - `python tools/make-portraits.py <path>`: the renders' web copies.
+- `python tools/make-textures.py`: the Book's paper (a seamless 2048 px tile, Day and Night) and the 4K sky with its fade
+  built in, from the game's own plates (`img/book/sky-day.jpg` is kept as the sky's source).
 - `python tools/stamp-assets.py`: last, after any of the above or any CSS or JS change.
 
 ## Cache-busting
