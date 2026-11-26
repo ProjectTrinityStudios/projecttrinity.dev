@@ -3,13 +3,21 @@
 //                    and added to the email list only if the requester ticked that box
 //   POST /subscribe  the email list: checked by Turnstile, handed to Kit's form (Kit sends its own confirm email)
 //   POST /contact    a message from the Contact page: checked by Turnstile, kept in D1, mailed to the project mailbox
-// No cookies, nothing kept beyond the request row. Secrets (TURNSTILE_SECRET, MAILBOX, KIT_API_KEY) live in Cloudflare, never in this repo.
+//   GET|POST /approve  his Approve link from a request mail: shows the request; its button mails the requester a build key (keys.js)
+// No cookies, nothing kept beyond the request row. Secrets (TURNSTILE_SECRET, MAILBOX, KIT_API_KEY, RESEND_API_KEY) live in
+// Cloudflare, never in this repo.
+
+import { handleApprove, keysLeft, makeApproveLink } from "./keys.js";
 
 const PLATFORMS = ["windows", "mac", "linux"];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default {
   async fetch(request, env) {
+    // His Approve page is opened from his mailbox, not from the site, so it skips the site's origin check;
+    // the link's secret is what lets it act.
+    if (new URL(request.url).pathname === "/approve") return handleApprove(request, env);
+
     const origin = request.headers.get("Origin") || "";
     const allowed = (env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
     const cors = {
@@ -61,11 +69,19 @@ export default {
       ).bind(email).first();
       if (recent) return reply(200, { ok: true });
 
-      await env.DB.prepare(
-        "INSERT INTO build_requests (email, platform, note, join_list) VALUES (?, ?, ?, ?)"
-      ).bind(email, platform, note, joinList ? 1 : 0).run();
+      const row = await env.DB.prepare(
+        "INSERT INTO build_requests (email, platform, note, join_list) VALUES (?, ?, ?, ?) RETURNING id"
+      ).bind(email, platform, note, joinList ? 1 : 0).first();
 
-      await mailHim(env, email, platform, note, joinList);
+      // The mail goes even if the link cannot be made; `node tools/keys.mjs link <id>` makes one later.
+      let approve = "", left = 0;
+      try {
+        approve = await makeApproveLink(env, row.id);
+        left = await keysLeft(env);
+      } catch (err) {
+        console.log("approve link failed", err && err.message);
+      }
+      await mailHim(env, email, platform, note, joinList, approve, left, row.id);
       if (joinList) await addToKit(env, email);
       return reply(200, { ok: true });
     }
@@ -133,7 +149,8 @@ async function addToKit(env, email) {
 }
 
 // To the project mailbox, a verified Email Routing destination (the Free plan sends only to those).
-async function mailHim(env, email, platform, note, joinList) {
+// The Approve link is his alone: it opens the request, and only its Send key button mails a key.
+async function mailHim(env, email, platform, note, joinList, approve, left, id) {
   const text = [
     "A build request from projecttrinity.dev",
     "",
@@ -143,6 +160,16 @@ async function mailHim(env, email, platform, note, joinList) {
     "",
     "Note:",
     note || "(none)",
+    "",
+    ...(approve
+      ? [
+          "To send a build key, open this link and press Send key (opening it sends nothing):",
+          approve,
+          "",
+          left > 0 ? `Unused keys: ${left}` : "No unused keys left: import a batch before sending (node tools/keys.mjs import).",
+          "Keep this mail to yourself: the link lets whoever has it send this person a key.",
+        ]
+      : [`The Approve link could not be made: run node tools/keys.mjs link ${id} for one.`]),
   ].join("\n");
   try {
     await env.NOTIFY.send({
