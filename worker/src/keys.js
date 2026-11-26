@@ -187,10 +187,10 @@ async function showRequest(env, id, token, notice) {
   return page(200, `Build request ${id}`, parts);
 }
 
-// Declines a new request, or ends a 'sending' one; a key a 'sending' request holds stays bound to it, out of stock.
+// Declines a new request, or ends a 'sending' or 'repeat-unsent' one; a key a 'sending' request holds stays bound to it, out of stock.
 async function decline(env, id, token) {
   const done = await env.DB.prepare(
-    "UPDATE build_requests SET status = 'declined' WHERE id = ? AND status IN ('new', 'sending') RETURNING id"
+    "UPDATE build_requests SET status = 'declined' WHERE id = ? AND status IN ('new', 'sending', 'repeat-unsent') RETURNING id"
   ).bind(id).first();
   return showRequest(env, id, token, done ? p("Declined.", "done") : null);
 }
@@ -271,7 +271,9 @@ async function markArrived(env, id, token) {
 // request ('repeat', or 'repeat-unsent' when the mail did not go). Takes no key. Returns the mail's outcome.
 export async function remindKey(env, id, email, platform, held) {
   const sent = await mailKey(env, email, platform, held.url, `build-key-again-${id}-${held.id}`, true);
-  await env.DB.prepare("UPDATE build_requests SET status = ? WHERE id = ?").bind(sent.ok ? "repeat" : "repeat-unsent", id).run();
+  // Only from a waiting state, so a Decline pressed meanwhile in another tab stands.
+  await env.DB.prepare("UPDATE build_requests SET status = ? WHERE id = ? AND status IN ('new', 'repeat-unsent')")
+    .bind(sent.ok ? "repeat" : "repeat-unsent", id).run();
   return sent;
 }
 

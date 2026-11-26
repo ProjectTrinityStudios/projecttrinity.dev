@@ -67,13 +67,14 @@ export default {
       // at most once a day, and he gets the request mail with the Approve page saying so.
       const held = await heldKey(env, email);
       if (held && held.status === "sent") {
-        const again = await env.DB.prepare(
-          "SELECT id FROM build_requests WHERE email = ? AND status IN ('repeat', 'repeat-unsent') AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 day') LIMIT 1"
-        ).bind(email).first();
-        if (again) return reply(200, { ok: true });
+        // One statement, so two requests at once cannot both pass the once-a-day check.
         const row = await env.DB.prepare(
-          "INSERT INTO build_requests (email, platform, note, join_list, status) VALUES (?, ?, ?, ?, 'repeat-unsent') RETURNING id"
-        ).bind(email, platform, note, joinList ? 1 : 0).first();
+          `INSERT INTO build_requests (email, platform, note, join_list, status)
+           SELECT ?, ?, ?, ?, 'repeat-unsent' WHERE NOT EXISTS (SELECT 1 FROM build_requests WHERE email = ?
+             AND status IN ('repeat', 'repeat-unsent') AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 day'))
+           RETURNING id`
+        ).bind(email, platform, note, joinList ? 1 : 0, email).first();
+        if (!row) return reply(200, { ok: true });
         const sent = await remindKey(env, row.id, email, platform, held);
         let approve = "";
         try {
