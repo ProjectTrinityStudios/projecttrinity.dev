@@ -67,3 +67,7 @@ Every page carries the same header and footer: change one, change them all. Each
 - The Contact form needs the Worker's `/contact` route live, so run these from `worker/` **before** the pages that use it
   reach `main`: `npx wrangler d1 execute projecttrinity-forms --remote --file=./schema.sql` (adds the `messages` table),
   then `npx wrangler deploy`.
+
+## Cache-busting
+
+After changing any CSS or JS, run `python tools/stamp-assets.py` before committing, so returning visitors get the new files.
