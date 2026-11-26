@@ -4,16 +4,27 @@
 // 3. The film: loads YouTube's privacy-enhanced player only when play is pressed.
 // 4. The boxes: checked here, then sent to the site's form handler (with Cloudflare's Turnstile spam check).
 // 5. The welcome note after confirming the email list.
+// 6. The portraits (painted or render), the title options, the hero scrolls and the skill clips.
 
 (function () {
   "use strict";
 
-  // 1. Light and dark
   var root = document.documentElement;
+  var query = new URLSearchParams(window.location.search);
+
+  // 6a. THE PORTRAIT SETTING (Tooling 182): which portraits the site shows, everywhere at once.
+  //   "painted": the game's own painted stickers (img/party/), and the fight cards on the boss banners.
+  //   "render":  Models 101's realistic renders (img/portraits/): the 4:5 cut-outs and the 16:9 banners.
+  // ?portraits=painted or ?portraits=render previews the other one. Without this script the page shows the painted set.
+  var PORTRAITS = "painted";
+  var askedPortraits = query.get("portraits");
+  root.setAttribute("data-portraits", askedPortraits === "render" || askedPortraits === "painted" ? askedPortraits : PORTRAITS);
+
+  // 1. Light and dark
   var toggle = document.querySelector("[data-theme-toggle]");
   var media = window.matchMedia("(prefers-color-scheme: dark)");
   // ?theme=dark or ?theme=light opens the page in that mode (handy for previews and screenshots)
-  var asked = new URLSearchParams(window.location.search).get("theme");
+  var asked = query.get("theme");
   if (asked === "dark" || asked === "light") root.setAttribute("data-theme", asked);
 
   function isDark() {
@@ -70,7 +81,7 @@
     var still = window.matchMedia("(prefers-reduced-motion: reduce)");
     var seen = !("IntersectionObserver" in window);
     var steer = function () {
-      if (still.matches || !seen || document.hidden) {
+      if (still.matches || !seen || document.hidden || broll.getAttribute("data-paused") === "true") {
         broll.pause();
       } else {
         var playing = broll.play();
@@ -91,8 +102,39 @@
     }
     document.addEventListener("visibilitychange", steer);
     still.addEventListener("change", steer);
+    // a skill clip gets a Pause button (it loops for as long as it is on screen)
+    var frame = broll.closest(".skill-clip");
+    if (frame && !still.matches) {
+      var hold = document.createElement("button");
+      hold.type = "button";
+      hold.className = "clip-hold";
+      hold.setAttribute("aria-pressed", "false");
+      hold.textContent = "Pause";
+      hold.addEventListener("click", function () {
+        var paused = broll.getAttribute("data-paused") !== "true";
+        broll.setAttribute("data-paused", paused ? "true" : "false");
+        hold.setAttribute("aria-pressed", paused ? "true" : "false");
+        hold.textContent = paused ? "Play" : "Pause";
+        steer();
+      });
+      frame.appendChild(hold);
+    }
     steer();
   });
+
+  // 6b. The title options on the front page: ?title=a, b or c shows that one (the page's own pick is in data-title).
+  var cine = document.querySelector("[data-cine]");
+  var askedTitle = query.get("title");
+  if (cine && /^[abc]$/.test(askedTitle || "")) cine.setAttribute("data-title", askedTitle);
+
+  // 6c. A link to a hero (/shatterbound/#bastion) opens that hero's scroll.
+  function openFromHash() {
+    var id = window.location.hash.slice(1);
+    var target = id && document.getElementById(id);
+    if (target && target.matches("details.scroll")) target.open = true;
+  }
+  openFromHash();
+  window.addEventListener("hashchange", openFromHash);
 
   // 3. The film: nothing of YouTube's runs until the visitor presses play; then its privacy-enhanced
   // player (youtube-nocookie.com) opens in a window over the page. Without the script, the link goes to YouTube.
@@ -280,7 +322,7 @@
 
   // 5. The welcome note: Kit sends people here (?subscribed=1) after they confirm the email list.
   var welcome = document.getElementById("welcome");
-  var params = new URLSearchParams(window.location.search);
+  var params = query;
   if (welcome && params.get("subscribed") === "1") {
     params.delete("subscribed");
     var rest = params.toString();
