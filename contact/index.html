@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact | Project Trinity</title>
+  <meta name="description" content="Send Project Trinity Studios a message.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ebe4f2">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1424">
+  <link rel="canonical" href="https://projecttrinity.dev/contact/">
+
+  <!-- The link card: what a shared link shows -->
+  <meta property="og:type" content="website">
+  <meta name="author" content="Project Trinity Studios">
+  <meta property="og:site_name" content="Project Trinity Studios">
+  <meta property="og:title" content="Contact Project Trinity Studios">
+  <meta property="og:description" content="A question, a bug, an idea, or just hello: send a message to Project Trinity Studios.">
+  <meta property="og:url" content="https://projecttrinity.dev/contact/">
+  <meta property="og:image" content="https://projecttrinity.dev/img/share-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Old Hunger, a huge armoured grub with a split jaw, lit pale against a dark dungeon floor, under the title Project Trinity: Shatterbound.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/TrinityConfluence-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="/css/site.css">
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="/js/site.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the page</a>
+
+  <header class="site-header" data-header>
+    <div class="header-bar">
+      <a class="mark" href="/">
+        <svg class="mark-shard" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#shard"/></svg>
+        <span>Project Trinity</span>
+      </a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-button>
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Menu</span>
+      </button>
+      <div class="header-menu" id="site-menu">
+        <nav aria-label="Site">
+          <ul>
+          <li><a href="/shatterbound/">Shatterbound</a></li>
+          <li><a href="/research/">Research</a></li>
+          <li><a href="/devlog/">Devlog</a></li>
+          <li><a href="/contact/" aria-current="page">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="header-tools">
+          <a class="button button-seal header-cta" href="/#builds">Request a build</a>
+          <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+            <span>Dark</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="page-top">
+    <header class="wrap page-head">
+      <p class="eyebrow">Contact</p>
+      <h1>Send a message</h1>
+      <p class="lede">A question, a bug, an idea, or just hello. It comes straight to me.</p>
+    </header>
+
+    <div class="wrap section contact-grid">
+      <div class="book book-single">
+        <div class="page">
+          <h2 id="contact-title">Your message</h2>
+          <form class="ledger-form" aria-labelledby="contact-title" data-endpoint="/contact" data-thanks="Thanks! Your message is in. I'll reply to the email you gave." novalidate>
+            <div class="field">
+              <label for="msg-name">Name <span class="optional">(optional)</span></label>
+              <input id="msg-name" name="name" type="text" autocomplete="name" maxlength="100">
+            </div>
+            <div class="field">
+              <label for="msg-email">Email</label>
+              <input id="msg-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="msg-text">Message</label>
+              <textarea id="msg-text" name="message" rows="6" maxlength="2000" required></textarea>
+            </div>
+            <div class="ticks">
+              <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
+            </div>
+            <div class="turnstile" data-turnstile></div>
+            <button class="seal" type="submit">Send</button>
+            <p class="form-note" role="status" aria-live="polite" data-form-note></p>
+          </form>
+        </div>
+      </div>
+      <aside class="contact-aside" aria-label="Other ways to reach us">
+        <div>
+          <h2>Email</h2>
+          <p><a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a></p>
+        </div>
+        <div>
+          <h2>Want to play?</h2>
+          <p><a href="/#builds">Request a build</a> on the front page.</p>
+        </div>
+        <div>
+          <h2>Video</h2>
+          <p><a href="https://www.youtube.com/@ProjectTrinityStudios">YouTube: @ProjectTrinityStudios</a></p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="colophon">
+    <div class="colophon-grid">
+      <div>
+        <h2>Pages</h2>
+        <ul>
+          <li><a href="/shatterbound/">Shatterbound</a></li>
+          <li><a href="/research/">Research</a></li>
+          <li><a href="/devlog/">Devlog</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <ul>
+          <li><a href="/contact/">Send a message</a></li>
+          <li><a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Video</h2>
+        <p><a href="https://www.youtube.com/@ProjectTrinityStudios">YouTube: @ProjectTrinityStudios</a></p>
+      </div>
+      <div class="privacy">
+        <h2>Privacy</h2>
+        <p>This site sets no cookies and runs no trackers or ads. The gameplay video plays from YouTube's privacy-enhanced player, and only once you press play; from then, YouTube's own privacy terms apply to it. If you request a build or send a message, it goes to the project mailbox; your email joins the list only if you ask. All of it is for people 13 or older.</p>
+      </div>
+    </div>
+    <p class="colophon-foot">Disclosure: AI tools and AI-generated assets were used in making this game.</p>
+    <p class="colophon-foot">© 2026 Project Trinity Studios. Project Trinity: Shatterbound is in alpha.</p>
+  </footer>
+
+  <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
+    <symbol id="shard" viewBox="0 0 32 32">
+      <path d="M16 2 27 14 16 30 5 14Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M16 2 16 30M5 14 16 18 27 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
+    <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
+    <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>
+  </svg>
+</body>
+</html>

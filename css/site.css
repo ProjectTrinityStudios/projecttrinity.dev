@@ -1,5 +1,5 @@
 /* Project Trinity: the site's one stylesheet.
-   The look is the game's: a night sky and an old book (parchment, ink, brass).
+   The look is the game's: a night sky and an old book (parchment, ink, brass), cinematic on the front page.
    Fonts are the game's own UI fonts, self-hosted (SIL OFL; licences in /fonts). */
 
 @font-face {
@@ -27,14 +27,17 @@
 /* ---- Tokens ------------------------------------------------------------
    Light: the menu's dusk sky, pale lavender, with ink in deep indigo.
    Dark: the night sky the game opens on, with parchment text and brass.
-   The book (the two forms) is parchment in both. */
+   The book (the forms) is parchment in both. Text laid over a picture is always light. */
 :root {
   --sky: #ebe4f2;
   --sky-deep: #ddd3ea;
+  --sky-rgb: 235, 228, 242;
+  --panel: #f6f1fa;
+  --panel-edge: #cbbfdc;
   --text: #241d3a;
   --text-soft: #4b4466;
   --brass: #7d5e22;        /* lines and small marks on the sky */
-  --brass-bright: #9a7531;
+  --brass-bright: #8a6727;
   --link: #5a2f8a;
   --plate-edge: #b49a63;
   --focus: #5a2f8a;
@@ -49,7 +52,13 @@
   --spine: #7c1f22;
   --spine-light: #a33a32;
   --seal: #7c1f22;
+  --seal-hover: #5f1518;
   --seal-text: #fbf1d8;
+
+  /* over a picture: the same in both modes */
+  --film-text: #f3ead6;
+  --film-soft: #d8cfbd;
+  --film-brass: #e2c784;
 
   --font-display: "Trinity Confluence", "Marcellus", "Trajan Pro", Georgia, serif;
   --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
@@ -57,6 +66,7 @@
   --measure: 62ch;
   --page: 1100px;
   --gutter: clamp(16px, 4vw, 40px);
+  --header-h: 64px;
 
   color-scheme: light;
 }
@@ -65,6 +75,9 @@
   :root:not([data-theme="light"]) {
     --sky: #0c1424;
     --sky-deep: #070b15;
+    --sky-rgb: 12, 20, 36;
+    --panel: #121c31;
+    --panel-edge: #2c3a58;
     --text: #eee5cf;
     --text-soft: #b8c8d1;
     --brass: #c6a45c;
@@ -79,6 +92,9 @@
 :root[data-theme="dark"] {
   --sky: #0c1424;
   --sky-deep: #070b15;
+  --sky-rgb: 12, 20, 36;
+  --panel: #121c31;
+  --panel-edge: #2c3a58;
   --text: #eee5cf;
   --text-soft: #b8c8d1;
   --brass: #c6a45c;
@@ -96,6 +112,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 16px);
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -133,7 +150,7 @@ a:hover { text-decoration-thickness: 2px; }
   border-radius: 2px;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 400;
   line-height: 1.15;
@@ -149,6 +166,7 @@ p { margin: 0; }
   margin: -1px; padding: 0; border: 0;
   overflow: hidden;
   clip: rect(0 0 0 0);
+  clip-path: inset(50%);
   white-space: nowrap;
 }
 
@@ -156,7 +174,7 @@ p { margin: 0; }
   position: absolute;
   left: var(--gutter);
   top: -100px;
-  z-index: 10;
+  z-index: 60;
   padding: 0.5rem 1rem;
   background: var(--parchment);
   color: var(--ink);
@@ -164,14 +182,94 @@ p { margin: 0; }
 }
 .skip:focus { top: 12px; }
 
-/* ---- Masthead ----------------------------------------------------------- */
-.masthead {
+.wrap {
   max-width: calc(var(--page) + 2 * var(--gutter));
   margin: 0 auto;
-  padding: 18px var(--gutter);
+  padding: 0 var(--gutter);
+}
+
+/* ---- Buttons ------------------------------------------------------------ */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 0.6rem 1.35rem 0.55rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-decoration: none;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.button svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
+.button-seal {
+  color: var(--seal-text);
+  background: var(--seal);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25);
+}
+.button-seal:hover { background: var(--seal-hover); }
+.button-ghost {
+  color: var(--text);
+  background: transparent;
+  border-color: var(--plate-edge);
+}
+.button-ghost:hover { border-color: var(--brass-bright); text-decoration: underline; }
+/* on a picture */
+.on-film .button-ghost {
+  color: var(--film-text);
+  border-color: rgba(226, 199, 132, 0.75);
+  background: rgba(8, 11, 18, 0.35);
+}
+.on-film .button-ghost:hover { border-color: var(--film-brass); background: rgba(8, 11, 18, 0.55); }
+.on-film :focus-visible { outline-color: var(--film-brass); }
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.more::after { content: "\2192"; transition: transform 160ms ease; }
+.more:hover { text-decoration: underline; }
+.more:hover::after { transform: translateX(3px); }
+@media (prefers-reduced-motion: reduce) {
+  .more::after { transition: none; }
+}
+
+/* ---- The header: one for every page, staying at the top ------------------
+   Clear over a picture, solid once the page scrolls (site.js sets .is-solid). */
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  transition: background-color 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  background: rgba(var(--sky-rgb), 0.94);
+  border-bottom: 1px solid var(--panel-edge);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.site-header.is-clear:not(.is-solid):not(.is-open) {
+  background: linear-gradient(180deg, rgba(5, 7, 12, 0.72), rgba(5, 7, 12, 0));
+  border-bottom-color: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header { transition: none; }
+}
+.header-bar {
+  max-width: calc(var(--page) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  min-height: var(--header-h);
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 .mark {
   display: inline-flex;
@@ -180,23 +278,36 @@ p { margin: 0; }
   color: var(--text);
   text-decoration: none;
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   margin-right: auto;
+  white-space: nowrap;
 }
+/* The family mark (Tooling 180) swaps in here, in place of the shard. */
 .mark-shard { width: 26px; height: 26px; color: var(--brass-bright); }
 
-.masthead nav ul {
+.header-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+.header-menu ul {
   list-style: none;
   margin: 0; padding: 0;
   display: flex;
-  gap: 1.25rem;
+  gap: 1.15rem;
 }
-.masthead nav a {
+.header-menu ul a {
+  display: inline-block;
+  padding: 0.35rem 0;
   color: var(--text-soft);
   text-decoration: none;
   font-size: 1rem;
+  border-bottom: 2px solid transparent;
 }
-.masthead nav a:hover { color: var(--text); text-decoration: underline; }
+.header-menu ul a:hover { color: var(--text); border-bottom-color: var(--plate-edge); }
+.header-menu ul a[aria-current="page"] { color: var(--text); border-bottom-color: var(--brass-bright); }
+.header-tools { display: flex; align-items: center; gap: 0.7rem; }
+.header-cta { min-height: 40px; padding: 0.4rem 1rem 0.35rem; font-size: 1rem; }
 
 .theme-toggle {
   display: inline-flex;
@@ -220,119 +331,202 @@ p { margin: 0; }
   color: #0c1424;
 }
 
-/* ---- Hero: title, the film, status, the three lines ---------------------- */
-.hero {
-  max-width: calc(var(--page) + 2 * var(--gutter));
-  margin: 0 auto;
-  padding: clamp(12px, 3vw, 36px) var(--gutter) 0;
-}
-.hero h1 {
-  font-size: clamp(2.1rem, 6.4vw, 4.6rem);
-  margin-bottom: clamp(18px, 3vw, 30px);
-  max-width: 18ch;
-}
-
-.film { margin: 0; }
-.film-play {
-  position: relative;
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  background: #05070c;
+.menu-button {
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 42px;
+  padding: 0.3rem 0.85rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--plate-edge);
+  border-radius: 3px;
   cursor: pointer;
-  /* the game's brass rail round a card */
-  outline: 1px solid var(--plate-edge);
-  outline-offset: 6px;
 }
-.film-play:focus-visible { outline: 3px solid var(--focus); outline-offset: 6px; }
-.film-play img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
-.film-embed {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border: 0;
+.menu-button svg { width: 18px; height: 18px; stroke: currentColor; fill: none; }
+
+/* the header's words over a picture */
+.site-header.is-clear:not(.is-solid):not(.is-open) .mark,
+.site-header.is-clear:not(.is-solid):not(.is-open) .header-menu ul a,
+.site-header.is-clear:not(.is-solid):not(.is-open) .theme-toggle,
+.site-header.is-clear:not(.is-solid):not(.is-open) .menu-button { color: var(--film-text); }
+.site-header.is-clear:not(.is-solid):not(.is-open) .header-menu ul a:hover { color: #fff; }
+.site-header.is-clear:not(.is-solid):not(.is-open) .mark-shard { color: var(--film-brass); }
+.site-header.is-clear:not(.is-solid):not(.is-open) .theme-toggle,
+.site-header.is-clear:not(.is-solid):not(.is-open) .menu-button { border-color: rgba(226, 199, 132, 0.7); }
+.site-header.is-clear:not(.is-solid):not(.is-open) .theme-toggle[aria-pressed="true"] { color: #0c1424; }
+.site-header.is-clear:not(.is-solid):not(.is-open) :focus-visible { outline-color: var(--film-brass); }
+
+/* a page without a picture at the top starts below the header */
+.page-top { padding-top: var(--header-h); }
+
+/* ---- Front page: the cinematic first screen ----------------------------- */
+.cine {
+  position: relative;
+  min-height: min(100svh, 980px);
+  min-height: min(100vh, 980px);
+  display: flex;
+  align-items: flex-end;
+  color: var(--film-text);
   background: #05070c;
-  outline: 1px solid var(--plate-edge);
-  outline-offset: 6px;
+  isolation: isolate;
 }
-/* brass corners, after the game's card corners */
-.film-play::before,
-.film-play::after {
+@supports (min-height: 100svh) {
+  .cine { min-height: min(100svh, 980px); }
+}
+.cine-picture,
+.cine-picture img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.cine-picture { z-index: -2; }
+.cine-picture img { object-fit: cover; object-position: 55% 42%; }
+.cine::after {
   content: "";
   position: absolute;
-  width: 34px; height: 34px;
-  border: 2px solid var(--brass-bright);
-  pointer-events: none;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(0deg, var(--sky) 0, rgba(var(--sky-rgb), 0) 9%),
+    linear-gradient(0deg, rgba(5, 7, 12, 0.88) 8%, rgba(5, 7, 12, 0.35) 48%, rgba(5, 7, 12, 0.05) 70%, rgba(5, 7, 12, 0.45) 100%),
+    linear-gradient(90deg, rgba(5, 7, 12, 0.55) 0, rgba(5, 7, 12, 0) 60%);
 }
-.film-play::before { top: -10px; left: -10px; border-right: 0; border-bottom: 0; }
-.film-play::after { bottom: -10px; right: -10px; border-left: 0; border-top: 0; }
-
-.film-mark {
-  position: absolute;
-  left: 50%; top: 50%;
-  width: clamp(64px, 9vw, 96px);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: rgba(8, 11, 15, 0.62);
-  border: 2px solid #e2c784;
-  display: grid;
-  place-items: center;
-  transition: background-color 160ms ease, transform 160ms ease;
+.cine-text {
+  width: 100%;
+  max-width: calc(var(--page) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: calc(var(--header-h) + 40px) var(--gutter) clamp(72px, 12vh, 132px);
 }
-.film-mark svg { width: 60%; fill: #eee5cf; }
-.film-play:hover .film-mark,
-.film-play:focus-visible .film-mark { background: rgba(124, 31, 34, 0.85); }
-@media (prefers-reduced-motion: reduce) {
-  .film-mark { transition: none; }
-}
-
-.film figcaption {
-  margin-top: 18px;
-  font-size: 0.95rem;
-  color: var(--text-soft);
+.cine-status {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 1rem;
-}
-.film-note:not(:empty) {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.about {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: clamp(28px, 5vw, 64px);
-  align-items: start;
-  margin-top: clamp(28px, 4vw, 44px);
-}
-.status {
-  display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
 }
 .status-stage {
   font-family: var(--font-display);
-  font-size: 1.35rem;
-  letter-spacing: 0.04em;
-  padding: 0.1rem 0.9rem 0.05rem;
-  border: 1px solid var(--brass);
-  color: var(--brass-bright);
-  line-height: 1.5;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  padding: 0.05rem 0.8rem 0;
+  border: 1px solid var(--film-brass);
+  color: var(--film-brass);
+  line-height: 1.6;
 }
 .platforms {
   list-style: none;
   margin: 0; padding: 0;
   display: flex;
-  gap: 0.9rem;
-  color: var(--text);
+  gap: 0.8rem;
 }
-.platforms svg { width: 26px; height: 26px; fill: currentColor; }
-
-.pitch {
+.platforms svg { width: 22px; height: 22px; fill: currentColor; }
+.cine h1 {
+  font-size: clamp(2.3rem, 7vw, 5.2rem);
+  max-width: 14ch;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55);
+}
+.cine-line {
+  margin-top: 1rem;
+  max-width: 44ch;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  line-height: 1.45;
+  color: var(--film-text);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
+}
+.cine-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
   margin-top: clamp(22px, 3vw, 32px);
+}
+.cine-note { margin-top: 0.9rem; font-size: 0.92rem; color: var(--film-soft); }
+.cine-note a { color: var(--film-brass); }
+
+/* ---- The film, in a window over the page --------------------------------- */
+.film-dialog {
+  width: min(1100px, calc(100vw - 32px));
+  max-width: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--film-text);
+}
+.film-dialog::backdrop { background: rgba(3, 4, 8, 0.86); }
+.film-dialog-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 10px;
+}
+.film-dialog-bar p { font-size: 0.95rem; color: var(--film-soft); }
+.film-close {
+  min-height: 40px;
+  padding: 0.3rem 0.9rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--film-text);
+  background: transparent;
+  border: 1px solid rgba(226, 199, 132, 0.7);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.film-close:focus-visible { outline: 3px solid var(--film-brass); }
+.film-frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: #05070c;
+  outline: 1px solid #af9364;
+  outline-offset: 6px;
+}
+
+/* ---- Sections ------------------------------------------------------------ */
+.section { margin-top: clamp(64px, 9vw, 112px); }
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--plate-edge);
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+.section-head h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
+.section-lede { max-width: var(--measure); color: var(--text-soft); margin-bottom: 1.6rem; }
+
+/* page heads, for pages without a picture */
+.page-head { padding-top: clamp(40px, 7vw, 88px); }
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: var(--brass-bright);
+  margin-bottom: 0.5rem;
+}
+.page-head h1 { font-size: clamp(2.3rem, 6vw, 4.2rem); max-width: 18ch; }
+.page-head .lede {
+  margin-top: 1rem;
+  max-width: 56ch;
+  font-size: clamp(1.15rem, 1.8vw, 1.32rem);
+  color: var(--text-soft);
+}
+
+/* ---- Front page: the game ------------------------------------------------ */
+.game {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+  padding-top: clamp(24px, 4vw, 44px);
+}
+.pitch {
   max-width: var(--measure);
   display: grid;
   gap: 0.55rem;
@@ -340,13 +534,103 @@ p { margin: 0; }
   line-height: 1.5;
 }
 .pitch p:first-child { font-size: 1.12em; }
+.made {
+  padding-left: clamp(20px, 3vw, 40px);
+  border-left: 1px solid var(--plate-edge);
+}
+.made h2 {
+  font-size: 1.45rem;
+  color: var(--brass-bright);
+  margin-bottom: 0.9rem;
+}
+.shard-list {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  gap: 0.8rem;
+  max-width: 46ch;
+  font-size: 1.02rem;
+  color: var(--text-soft);
+}
+.shard-list li { padding-left: 1.4rem; position: relative; }
+/* a small brass shard as the bullet */
+.shard-list li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.62em;
+  width: 8px; height: 8px;
+  background: var(--brass-bright);
+  transform: rotate(45deg);
+}
+
+/* the party, a strip of four */
+.party-strip {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 24px);
+}
+.party-strip a {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: 1.2rem 0.75rem 1.1rem;
+  text-align: center;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+.party-strip a:hover { border-color: var(--brass-bright); transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) {
+  .party-strip a, .party-strip a:hover { transition: none; transform: none; }
+}
+.party-strip img { width: clamp(84px, 11vw, 128px); }
+.party-strip strong { font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; line-height: 1.1; }
+.party-strip span { font-size: 0.95rem; color: var(--text-soft); }
+
+/* two cards side by side: the newest post and the research teaser */
+.duo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 3vw, 32px);
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.card-body { padding: clamp(18px, 2.4vw, 28px); display: grid; gap: 0.7rem; align-content: start; flex: 1; }
+.card h2, .card h3 { font-size: clamp(1.35rem, 2.2vw, 1.7rem); }
+.card h2 a, .card h3 a { color: var(--text); text-decoration-color: var(--brass); }
+.card h2 a:hover, .card h3 a:hover { color: var(--link); }
+.card-kicker { font-family: var(--font-display); color: var(--brass-bright); letter-spacing: 0.05em; font-size: 0.98rem; }
+.card p { color: var(--text-soft); }
+.card .more { margin-top: auto; padding-top: 0.4rem; }
+.card-links { list-style: none; margin: 0.4rem 0 0; padding: 0; border-top: 1px solid var(--panel-edge); }
+.card-links a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0.1rem;
+  border-bottom: 1px solid var(--panel-edge);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+.card-links a::after { content: "\2192"; color: var(--brass-bright); font-family: var(--font-body); }
+.card-links a:hover { color: var(--link); text-decoration: underline; }
+.card-image { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-bottom: 1px solid var(--panel-edge); }
 
 /* ---- The book: request a build and join the list ------------------------ */
-.builds {
-  max-width: calc(var(--page) + 2 * var(--gutter));
-  margin: clamp(56px, 8vw, 104px) auto 0;
-  padding: 0 var(--gutter);
-}
 .book {
   display: grid;
   grid-template-columns: 1fr 18px 1fr;
@@ -358,6 +642,7 @@ p { margin: 0; }
     0 22px 50px -18px rgba(5, 4, 20, 0.55);
   border-radius: 4px;
 }
+.book-single { grid-template-columns: 1fr; max-width: 720px; }
 .page {
   position: relative;
   padding: clamp(24px, 4vw, 52px) clamp(20px, 4vw, 52px) clamp(28px, 4vw, 48px);
@@ -373,13 +658,14 @@ p { margin: 0; }
 .spine {
   background: linear-gradient(90deg, #4e1214, var(--spine) 30%, var(--spine-light) 50%, var(--spine) 70%, #4e1214);
 }
+.page h2,
 .page h3 {
   font-size: clamp(1.7rem, 3vw, 2.25rem);
   color: var(--ink);
 }
 .page-lede {
   margin-top: 0.6rem;
-  max-width: 42ch;
+  max-width: 46ch;
   color: var(--ink-soft);
   font-size: 1.02rem;
 }
@@ -388,6 +674,8 @@ p { margin: 0; }
   font-size: 0.95rem;
   color: var(--ink-soft);
 }
+.page a { color: var(--seal); }
+.page :focus-visible { outline-color: var(--ink); }
 
 .ledger-form { margin-top: 1.4rem; display: grid; gap: 1.15rem; }
 .field { margin: 0; padding: 0; border: 0; min-width: 0; }
@@ -404,6 +692,7 @@ p { margin: 0; }
 
 /* writing on the ledger's ruled line */
 .ledger-form input[type="email"],
+.ledger-form input[type="text"],
 .ledger-form textarea {
   width: 100%;
   font: inherit;
@@ -417,6 +706,7 @@ p { margin: 0; }
 }
 .ledger-form textarea { resize: vertical; min-height: 3.2rem; line-height: 1.5; }
 .ledger-form input[type="email"]:focus-visible,
+.ledger-form input[type="text"]:focus-visible,
 .ledger-form textarea:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 1px;
@@ -479,88 +769,207 @@ p { margin: 0; }
   cursor: pointer;
   box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25);
 }
-.seal:hover { background: #5f1518; }
+.seal:hover { background: var(--seal-hover); }
 .seal:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 
 .form-note { font-size: 0.98rem; color: var(--ink); min-height: 1.5em; }
 .form-note.is-error { color: var(--seal); font-weight: 600; }
 
-/* ---- How it was made: beside the game's three lines --------------------- */
-.made {
-  padding-left: clamp(20px, 3vw, 40px);
-  border-left: 1px solid var(--plate-edge);
-}
-.made h2 {
-  font-size: 1.45rem;
-  color: var(--brass-bright);
-  margin-bottom: 0.9rem;
-}
-.made-lines {
-  list-style: none;
-  margin: 0; padding: 0;
+/* ---- Shatterbound: the heroes ------------------------------------------- */
+.heroes {
   display: grid;
-  gap: 0.8rem;
-  max-width: 46ch;
-  font-size: 1.02rem;
-  color: var(--text-soft);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2.6vw, 28px);
 }
-
-/* ---- The sections below the book ---------------------------------------- */
-.devlog,
-.research {
-  max-width: calc(var(--page) + 2 * var(--gutter));
-  margin: clamp(64px, 9vw, 120px) auto 0;
-  padding: 0 var(--gutter);
-}
-.devlog h2,
-.research h2 {
-  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
-  padding-bottom: 0.7rem;
-  border-bottom: 1px solid var(--plate-edge);
-  margin-bottom: clamp(20px, 3vw, 32px);
-}
-.made-lines li {
-  padding-left: 1.4rem;
-  position: relative;
-}
-/* a small brass shard as the bullet */
-.made-lines li::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 0.62em;
-  width: 8px; height: 8px;
-  background: var(--brass-bright);
-  transform: rotate(45deg);
-}
-
-/* ---- Devlog ------------------------------------------------------------- */
-.entry {
+.hero-card {
   display: grid;
-  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
-  gap: clamp(20px, 3vw, 40px);
+  grid-template-columns: minmax(0, 150px) minmax(0, 1fr);
+  align-content: start;
+  gap: clamp(14px, 2vw, 22px);
   align-items: start;
+  padding: clamp(16px, 2.2vw, 24px);
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
 }
-.entry-image {
+/* The portrait slot is 4:5, ready for Models 101's cut-outs (portrait-<id>-4x5.png).
+   Today it holds the game's round sticker on a plate of night sky. */
+.portrait {
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(226, 199, 132, 0.22), transparent 62%),
+    linear-gradient(180deg, #16203a, #0a0f1d);
+  border: 1px solid var(--plate-edge);
+  overflow: hidden;
+}
+.portrait img { width: 86%; }
+.portrait img.is-cutout { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.hero-card h3 { font-size: clamp(1.6rem, 2.6vw, 2rem); }
+.role-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  margin: 0.45rem 0 0.7rem;
+}
+.role {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.05rem 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--brass);
+  color: var(--brass-bright);
+  border-radius: 999px;
+}
+.role svg { width: 14px; height: 14px; fill: currentColor; }
+.resource { font-size: 0.88rem; color: var(--text-soft); align-self: center; }
+.hero-card .one-line { color: var(--text); font-size: 1.04rem; }
+.skills {
+  grid-column: 2;
+  list-style: none;
+  margin: 0;
+  padding: 0.9rem 0 0;
+  border-top: 1px solid var(--panel-edge);
+  display: grid;
+  gap: 0.65rem;
+  font-size: 0.98rem;
+}
+.skills b {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.08rem;
+  color: var(--brass-bright);
+  line-height: 1.25;
+}
+.skills span { color: var(--text-soft); }
+
+/* ---- Shatterbound: the bosses -------------------------------------------- */
+.bosses { display: grid; gap: clamp(16px, 2.4vw, 24px); }
+.boss-card {
+  display: grid;
+  grid-template-columns: minmax(0, 150px) minmax(0, 1fr);
+  gap: clamp(14px, 2vw, 24px);
+  align-items: start;
+  padding: clamp(16px, 2.2vw, 24px);
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+}
+.boss-card h3 { font-size: clamp(1.6rem, 2.6vw, 2rem); }
+.boss-place { margin: 0.35rem 0 0.7rem; font-size: 0.95rem; color: var(--brass-bright); letter-spacing: 0.02em; }
+.boss-card .about { color: var(--text); max-width: var(--measure); }
+.boss-card.is-coming .portrait { background: linear-gradient(180deg, #1d1428, #0d0a14); }
+.coming-mark { width: 44%; color: var(--film-brass); opacity: 0.7; }
+.tag-coming {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.05rem 0.55rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+  color: var(--seal-text);
+  background: var(--seal);
+  border-radius: 999px;
+}
+
+/* the walkthrough, folded behind a click */
+.walk { grid-column: 2; border-top: 1px solid var(--panel-edge); }
+.walk summary {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0.7rem 0 0.4rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--link);
+  list-style: none;
+}
+.walk summary::-webkit-details-marker { display: none; }
+.walk summary::before {
+  content: "";
+  width: 9px; height: 9px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(-45deg);
+  transition: transform 160ms ease;
+  flex: none;
+}
+.walk[open] summary::before { transform: rotate(45deg) translate(-2px, -2px); }
+@media (prefers-reduced-motion: reduce) {
+  .walk summary::before { transition: none; }
+}
+.walk summary:hover { text-decoration: underline; }
+.walk summary .spoiler { font-weight: 400; color: var(--text-soft); font-size: 0.92rem; }
+.walk-body { display: grid; gap: 1.2rem; padding: 0.6rem 0 0.4rem; }
+/* The banner slot is 16:9, ready for Models 101's portrait-<id>-16x9.png; today, the game's own fight card. */
+.walk-banner {
   width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 4px;
   border: 1px solid var(--plate-edge);
 }
-.entry-date { color: var(--text-soft); font-size: 0.95rem; }
-.entry h3 { font-size: clamp(1.4rem, 2.4vw, 1.85rem); margin: 0.3rem 0 0.8rem; }
-.entry h3 a { color: var(--text); text-decoration-color: var(--brass); }
-.entry h3 a:hover { color: var(--link); }
-.entry-text > p:last-child { max-width: var(--measure); color: var(--text); }
-
-/* ---- Research ----------------------------------------------------------- */
-.research-text {
+.walk h4 { font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem; }
+.walk .shard-list { max-width: var(--measure); color: var(--text); font-size: 1rem; }
+.jobs {
   display: grid;
-  gap: 1rem;
-  max-width: var(--measure);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
 }
+.job {
+  padding: 0.85rem 1rem 0.95rem;
+  border: 1px solid var(--panel-edge);
+  border-top: 3px solid var(--brass-bright);
+  border-radius: 4px;
+  background: rgba(var(--sky-rgb), 0.5);
+  font-size: 0.98rem;
+}
+.job h5 {
+  margin: 0 0 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.12rem;
+  color: var(--brass-bright);
+}
+.job h5 svg { width: 16px; height: 16px; fill: currentColor; }
+.walk .walk-note { font-size: 0.92rem; color: var(--text-soft); max-width: var(--measure); }
+
+/* ---- Research ------------------------------------------------------------ */
+.research-sections { display: grid; gap: clamp(48px, 7vw, 88px); }
+.study {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  gap: clamp(16px, 4vw, 56px);
+  align-items: start;
+}
+.study-num {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  line-height: 1;
+  color: var(--brass-bright);
+}
+.study h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-top: 0.5rem; }
+.study-text { display: grid; gap: 1rem; max-width: var(--measure); }
+.study-text .more { margin-top: 0.3rem; }
 .charts {
+  grid-column: 1 / -1;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(16px, 3vw, 36px);
-  margin-top: clamp(28px, 4vw, 44px);
+  margin-top: clamp(8px, 2vw, 16px);
 }
 .charts figure { margin: 0; }
 .charts img {
@@ -570,7 +979,49 @@ p { margin: 0; }
 }
 .charts figcaption { margin-top: 0.6rem; font-size: 0.95rem; color: var(--text-soft); }
 
-/* ---- Footer ------------------------------------------------------------- */
+/* ---- Devlog -------------------------------------------------------------- */
+.posts { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(20px, 3vw, 32px); }
+.post-row {
+  display: grid;
+  grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 36px);
+  align-items: start;
+  padding-bottom: clamp(20px, 3vw, 32px);
+  border-bottom: 1px solid var(--panel-edge);
+}
+.post-row img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border: 1px solid var(--plate-edge); border-radius: 4px; }
+.post-date { color: var(--text-soft); font-size: 0.95rem; }
+.post-row h2 { font-size: clamp(1.4rem, 2.4vw, 1.85rem); margin: 0.3rem 0 0.7rem; }
+.post-row h2 a { color: var(--text); text-decoration-color: var(--brass); }
+.post-row h2 a:hover { color: var(--link); }
+.post-row p:not(.post-date) { max-width: var(--measure); color: var(--text-soft); }
+.list-foot { margin-top: clamp(48px, 7vw, 88px); }
+
+/* one post */
+.post { max-width: calc(760px + 2 * var(--gutter)); }
+.post-head { padding-top: clamp(40px, 7vw, 80px); }
+.post-head h1 { font-size: clamp(2rem, 5vw, 3.2rem); margin-top: 0.4rem; }
+.post-figure { margin: clamp(24px, 4vw, 40px) 0 0; }
+.post-figure img { width: 100%; border: 1px solid var(--plate-edge); border-radius: 4px; }
+.post-figure figcaption { margin-top: 0.6rem; font-size: 0.95rem; color: var(--text-soft); }
+.post-body { margin-top: clamp(24px, 4vw, 40px); display: grid; gap: 1.15rem; font-size: 1.15rem; }
+.post-body h2 { font-size: clamp(1.4rem, 2.6vw, 1.8rem); margin-top: 1rem; }
+.post-body .shard-list { font-size: 1.1rem; color: var(--text); max-width: none; }
+.post-sign { color: var(--text-soft); font-style: italic; }
+.post-nav { margin-top: clamp(32px, 5vw, 56px); padding-top: 1rem; border-top: 1px solid var(--plate-edge); }
+
+/* ---- Contact -------------------------------------------------------------- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 280px);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+}
+.contact-aside { display: grid; gap: 1.4rem; }
+.contact-aside h2 { font-size: 1.3rem; color: var(--brass-bright); margin-bottom: 0.3rem; }
+.contact-aside p { color: var(--text-soft); }
+
+/* ---- Footer --------------------------------------------------------------- */
 .colophon {
   max-width: calc(var(--page) + 2 * var(--gutter));
   margin: clamp(72px, 10vw, 130px) auto 0;
@@ -581,7 +1032,7 @@ p { margin: 0; }
   padding-top: 28px;
   border-top: 1px solid var(--plate-edge);
   display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
+  grid-template-columns: 1fr 1fr 1fr 2fr;
   gap: 1.5rem 2.5rem;
 }
 .colophon h2 {
@@ -590,27 +1041,54 @@ p { margin: 0; }
   color: var(--brass-bright);
 }
 .colophon p { color: var(--text-soft); max-width: 52ch; }
+.colophon ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; }
 .colophon a { color: var(--link); }
 .colophon-foot { margin-top: 2rem; font-size: 0.92rem; color: var(--text-soft); }
 .colophon-foot + .colophon-foot { margin-top: 0.4rem; }
 .colophon .colophon-foot { max-width: 90ch; }
 
-/* ---- Phone and narrow widths -------------------------------------------- */
+/* ---- Wide-to-narrow -------------------------------------------------------- */
+@media (max-width: 980px) {
+  .heroes { grid-template-columns: 1fr; }
+  .colophon-grid { grid-template-columns: 1fr 1fr 1fr; }
+  .privacy { grid-column: 1 / -1; }
+}
+
+/* the header folds into a menu */
 @media (max-width: 900px) {
-  .about { grid-template-columns: 1fr; }
+  .menu-button { display: none; }
+  .js .menu-button { display: inline-flex; }
+  .header-bar { flex-wrap: wrap; }
+  .header-menu { width: 100%; flex-wrap: wrap; padding-bottom: 0.6rem; }
+  .js .header-menu {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+    padding: 0.4rem 0 1.1rem;
+  }
+  .js .site-header.is-open .header-menu { display: flex; }
+  .js .header-menu ul { flex-direction: column; gap: 0; }
+  .js .header-menu ul a {
+    display: block;
+    padding: 0.7rem 0.2rem;
+    font-size: 1.15rem;
+    border-bottom: 1px solid var(--panel-edge);
+  }
+  .js .header-menu ul a[aria-current="page"] { border-bottom-color: var(--brass-bright); }
+  .header-tools { justify-content: space-between; }
+  .site-header.is-open { box-shadow: 0 18px 40px -20px rgba(5, 4, 20, 0.6); }
+
+  .game { grid-template-columns: 1fr; }
   .made { padding-left: 0; border-left: 0; padding-top: 1.4rem; border-top: 1px solid var(--plate-edge); }
+  .study { grid-template-columns: 1fr; gap: 0.6rem; }
+  .contact-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 760px) {
   body { font-size: 1.0625rem; }
-  .masthead { flex-wrap: wrap; gap: 0.6rem 1rem; padding-top: 14px; padding-bottom: 10px; }
-  .masthead nav { order: 3; width: 100%; }
-  .masthead nav ul { gap: 1.1rem; }
-  .masthead nav a { display: inline-block; padding: 0.35rem 0; }
-
-  .film-play { outline-offset: 4px; }
-  .film-play::before { top: -8px; left: -8px; width: 24px; height: 24px; }
-  .film-play::after { bottom: -8px; right: -8px; width: 24px; height: 24px; }
+  .duo { grid-template-columns: 1fr; }
+  .party-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   .book { grid-template-columns: 1fr; box-shadow: 0 0 0 4px #3d2a1c, 0 18px 40px -18px rgba(5, 4, 20, 0.55); }
   .spine {
@@ -618,14 +1096,18 @@ p { margin: 0; }
     background: linear-gradient(180deg, #4e1214, var(--spine) 30%, var(--spine-light) 50%, var(--spine) 70%, #4e1214);
   }
 
-  .entry { grid-template-columns: 1fr; }
+  .hero-card, .boss-card { grid-template-columns: minmax(0, 96px) minmax(0, 1fr); }
+  .jobs { grid-template-columns: 1fr; }
+  .walk, .skills { grid-column: 1 / -1; }
+  .cine-picture img { object-position: 66% 42%; }
+  .post-row { grid-template-columns: 1fr; }
   .charts { grid-template-columns: 1fr; }
   .colophon-grid { grid-template-columns: 1fr 1fr; }
-  .privacy { grid-column: 1 / -1; }
 }
 
 @media (max-width: 420px) {
   .colophon-grid { grid-template-columns: 1fr; }
+  .cine-actions .button { flex: 1 1 100%; }
 }
 
 @media (forced-colors: active) {
