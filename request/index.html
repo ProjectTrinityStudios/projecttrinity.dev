@@ -23,12 +23,36 @@
   <meta property="og:image:alt" content="Old Hunger, a huge armoured grub with a split jaw, lit pale against a dark dungeon floor, under the title Project Trinity: Shatterbound.">
   <meta name="twitter:card" content="summary_large_image">
 
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Request a build",
+  "description": "Ask for an alpha build of Project Trinity: Shatterbound, for Windows, Mac or Linux.",
+  "url": "https://projecttrinity.dev/request/",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Project Trinity",
+    "url": "https://projecttrinity.dev/"
+  },
+  "about": {
+    "@type": "VideoGame",
+    "name": "Project Trinity: Shatterbound",
+    "url": "https://projecttrinity.dev/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Project Trinity Studios",
+    "url": "https://projecttrinity.dev/"
+  }
+}
+  </script>
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-  <link rel="stylesheet" href="/css/site.css?v=06fca8b8">
+  <link rel="stylesheet" href="/css/site.css?v=f6e995c3">
   <script src="/js/site.js?v=67492294" defer></script>
 </head>
 <body>
@@ -55,6 +79,7 @@
         </nav>
         <div class="header-tools">
           <a class="button button-gold header-cta" href="/request/" aria-current="page">Request a build</a>
+          <a class="button header-list" href="/#join">Join the list</a>
           <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
             <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
             <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
@@ -105,9 +130,21 @@
         </div>
       </div>
       <aside class="contact-aside" aria-label="More">
-        <div>
-          <h2>News</h2>
-          <p><a href="/devlog/#list-title">Join the email list</a> for a note when there's a new devlog or build.</p>
+        <div class="aside-join">
+          <h2 id="news-title">Join the email list</h2>
+          <p>A note when there's a new devlog or build. Not often, and you can leave any time.</p>
+          <form class="ledger-form" aria-labelledby="news-title" data-endpoint="/subscribe" data-thanks="Almost done: check your inbox and confirm to join the list." method="post" novalidate>
+            <div class="field">
+              <label for="news-email">Email</label>
+              <input id="news-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="ticks">
+              <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
+            </div>
+            <div class="turnstile" data-turnstile></div>
+            <button class="seal" type="submit" disabled>Join the list</button>
+            <p class="form-note" role="status" aria-live="polite" data-form-note></p>
+          </form>
         </div>
         <div>
           <h2>See it first</h2>
@@ -131,6 +168,7 @@
           <li><a href="/devlog/">Devlog</a></li>
           <li><a href="/contact/">Contact</a></li>
           <li><a href="/request/">Request a build</a></li>
+          <li><a href="/#join">Join the email list</a></li>
         </ul>
       </div>
       <div>

@@ -1,0 +1,37 @@
+# Project Trinity: Shatterbound
+
+> Project Trinity: Shatterbound is a dungeon crawler built around the Holy Trinity of MMO raiding: a tank, a healer and DPS. The player swaps into any hero of a four-hero party mid-fight, and the AI plays the rest, playing to win like a raid team chasing day-one clears. It is made by Project Trinity Studios and is in alpha, with builds for Windows, Mac and Linux.
+
+- Genre: a hub-based dungeon crawler with MMO-style boss fights.
+- Play: alone, or with a friend on one split screen. Online co-op is a goal, not yet in the game.
+- The party: Bastion (Tank), Oracle (Healer), Reaver (melee DPS) and Asha (ranged DPS). More characters and more dungeons are planned.
+- The bosses: Patchwork (Patchwork's Hunt), the Giant (the Giant's Gate), Old Hunger (the Feeding Pit) and Maera (the Lightless Shoal). Don Fortuna is coming.
+- Made in Unity, with every dungeon and set piece made in Blender. The animations, music and sound effects are licensed packs. AI tools and AI-generated assets were used in making the game.
+- Project Trinity is also the name of the research behind the game: the AI party itself, how it plays, and how the research is done (fights simulated in the cloud).
+- Studio: Project Trinity Studios. Contact: hello@projecttrinity.dev. Video: https://www.youtube.com/@ProjectTrinityStudios
+
+## The game
+
+- [Project Trinity: Shatterbound](https://projecttrinity.dev/): the front page, the game in three lines, the party, the bosses and the newest post
+- [The heroes and the bosses](https://projecttrinity.dev/shatterbound/): the heroes by role with their key skills, and how each boss fight works
+- [Bastion, the Tank](https://projecttrinity.dev/shatterbound/bastion/)
+- [Oracle, the Healer](https://projecttrinity.dev/shatterbound/oracle/)
+- [Reaver, the Melee DPS](https://projecttrinity.dev/shatterbound/reaver/)
+- [Asha, the Ranged DPS](https://projecttrinity.dev/shatterbound/asha/)
+- [Patchwork](https://projecttrinity.dev/shatterbound/patchwork/)
+- [The Giant](https://projecttrinity.dev/shatterbound/giant/)
+- [Old Hunger](https://projecttrinity.dev/shatterbound/old-hunger/)
+- [Maera](https://projecttrinity.dev/shatterbound/maera/)
+
+## The research
+
+- [Research: the AI party](https://projecttrinity.dev/research/): how the party plays, how the research is done, and how the game is built
+
+## Devlog
+
+- [Devlog](https://projecttrinity.dev/devlog/): notes from building the game, newest first, including a monthly recap of each month from July to November 2026
+
+## Playing it
+
+- [Request a build](https://projecttrinity.dev/request/): builds of the alpha go out by hand, a few at a time
+- [Contact](https://projecttrinity.dev/contact/): a message to the studio

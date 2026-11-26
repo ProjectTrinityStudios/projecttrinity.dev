@@ -1,0 +1,5 @@
+# projecttrinity.dev: every page is open to search engines and to AI search.
+User-agent: *
+Allow: /
+
+Sitemap: https://projecttrinity.dev/sitemap.xml

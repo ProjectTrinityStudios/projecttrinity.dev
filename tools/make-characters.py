@@ -8,7 +8,8 @@ The header and footer below are the same as every other page's: change one, chan
 
 Usage: python tools/make-characters.py   (then python tools/stamp-assets.py)
 """
-from html import escape
+import json
+from html import escape, unescape
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -131,12 +132,12 @@ BOSSES = [
         walk="""<li><b>Cartoon Hammer</b>: “I'll stamp you out!” A chain of slams on the party. Every slam that lands earns him another.</li>
 <li><b>Cybernetic Tank Buster</b> comes after two <b>Cybernetic Stomp</b>s: a cone in front of him that can't be blocked. If it hits, <b>Cybernetic Firearm</b> follows on someone else.</li>
 <li><b>Stone Wizard Channel</b>: stun him and he staggers; let it finish and <b>Meteor Shower</b> falls.</li>
-<li><b>Warlock Shadow</b>: “Who stole my shadow?” He marks a hero and <b>Shadow Charge</b>s at them. Charging into a <b>Crash Pillar</b> leaves him <b>Crash</b>ed: he can't attack and takes more damage.</li>
+<li><b>Warlock Shadow</b>: “Who stole my shadow?” He marks a hero and <b>Shadow Charge</b>s at them. Charging into a <b>Crash Pillar</b> leaves him <b>Vulnerable</b>: he can't attack and takes more damage.</li>
 <li><b>The Collector</b> puts <b>Debt</b>, a growing damage over time, on two heroes.</li>""",
         jobs=dict(
             tank="Step out of the Tank Buster's cone; your shield won't stop it.",
             healer="When The Collector calls in a debt, the two heroes with Debt come first.",
-            dps="Lead his Shadow Charge into a Crash Pillar, then hit him hard while he's Crashed.",
+            dps="Lead his Shadow Charge into a Crash Pillar, then hit him hard while he's Vulnerable.",
         ),
     ),
     dict(
@@ -148,7 +149,7 @@ BOSSES = [
         banner_alt="The Giant in a dim stone hall, black with ribs of molten orange, a burning ring behind his horned head.",
         walk="""<li><b>Swipe</b>, and <b>Swipe</b> into <b>Cleave</b>: wide arcs in front of him with no warning on the floor. Cleave is the heavy one.</li>
 <li><b>Storm</b>, at half health and again near the end: a ring around him that hits three times and can't be blocked. Every hit leaves a burn that stacks.</li>
-<li>No adds and no phases: it's you and him.</li>""",
+<li>No extra enemies and no phases: it's you and him.</li>""",
         jobs=dict(
             tank="Keep him facing you. Swipe and Cleave give no warning.",
             healer="The Storm's burn stacks with every hit. Top people up as it ends.",
@@ -180,15 +181,15 @@ BOSSES = [
         render_alt="Maera: a grey-haired woman with a stern face, in a dark hooded cloak, a huge anchor over her shoulder.",
         card_alt="Maera on her shore, lantern in hand and an anchor over her shoulder, inside a ring of pale light on dark water.",
         banner_alt="Maera on a dark, rain-wet shore at night, a huge anchor over her shoulder, her grey hair lit cold blue.",
-        walk="""<li><b>The Lamp</b> is on your side. If it goes out, the pull is lost. It starts low and calls for healing: “THE LAMP CALLS FOR HEALING”.</li>
+        walk="""<li><b>The Lamp</b> is on your side. If it goes out, the fight is lost. It starts low and calls for healing: “THE LAMP CALLS FOR HEALING”.</li>
 <li><b>Spume Crawlers</b>, <b>Catfish</b> and <b>Rakes</b> come for the Lamp. A Spume Crawler killed near it leaves <b>Lamplight</b>, a pool that heals it.</li>
 <li><b>The Dark</b>: your damage to her is cut to a tenth.</li>
 <li><b>The Dark Ring</b> follows her. Heroes in <b>The Small Light</b> are safe from it, and while she stands in it her <b>Deep Hunger</b> can't grow.</li>
 <li>When she <b>Sink</b>s, dodge <b>Lantern Rain</b>, <b>The Dark Wheel</b>, <b>Drowning Chains</b> and <b>The Chasing Tide</b>. Between those: <b>Anchor Slam</b>, which can't be blocked, and <b>Anchor Throw</b>, which hooks a hero in for <b>Anchor Spin</b>.</li>""",
         jobs=dict(
             tank="Hold her inside The Small Light as it moves.",
-            healer="The Lamp is your second tank. Heal it every time it gutters.",
-            dps="Kill the adds going for the Lamp, and kill Spume Crawlers close to it.",
+            healer="The Lamp is your second tank. Heal it every time it flickers.",
+            dps="Kill the enemies going for the Lamp, and kill Spume Crawlers close to it.",
         ),
     ),
 ]
@@ -218,7 +219,7 @@ HEAD = """<!doctype html>
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="{image_alt}">
   <meta name="twitter:card" content="summary_large_image">
-
+{structured}
   <link rel="icon" href="/img/brand/shatterbound/favicon.ico" sizes="48x48">
   <link rel="icon" href="/img/brand/shatterbound/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/brand/shatterbound/apple-touch-icon.png">
@@ -251,6 +252,7 @@ HEAD = """<!doctype html>
         </nav>
         <div class="header-tools">
           <a class="button button-gold header-cta" href="/request/">Request a build</a>
+          <a class="button header-list" href="/#join">Join the list</a>
           <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
             <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
             <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
@@ -272,6 +274,7 @@ FOOT = """
           <li><a href="/devlog/">Devlog</a></li>
           <li><a href="/contact/">Contact</a></li>
           <li><a href="/request/">Request a build</a></li>
+          <li><a href="/#join">Join the email list</a></li>
         </ul>
       </div>
       <div>
@@ -353,9 +356,41 @@ def role_pill(h):
 ICONS = ""
 
 
+def structured(head_args):
+    """The page's structured data (JSON-LD) for search engines and AI search (Tooling 187): what the page is, that
+    it is about the game, and where it sits on the site (Home, Shatterbound, the character)."""
+    url, name = head_args["url"], unescape(head_args["og_title"])
+    crumbs = [("Project Trinity", f"{SITE}/"), ("Shatterbound", f"{SITE}/shatterbound/")]
+    if url != f"{SITE}/shatterbound/":
+        crumbs.append((name, url))
+    data = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "CollectionPage" if len(crumbs) == 2 else "WebPage",
+                "name": name,
+                "description": unescape(head_args["description"]),
+                "url": url,
+                "image": head_args["image"],
+                "isPartOf": {"@type": "WebSite", "name": "Project Trinity", "url": f"{SITE}/"},
+                "about": {"@type": "VideoGame", "name": "Project Trinity: Shatterbound", "url": f"{SITE}/"},
+                "publisher": {"@type": "Organization", "name": "Project Trinity Studios", "url": f"{SITE}/"},
+            },
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate(crumbs)
+                ],
+            },
+        ],
+    }
+    text = json.dumps(data, indent=2, ensure_ascii=False).replace("</", "<\\/")
+    return '  <script type="application/ld+json">\n' + text + "\n  </script>"
+
+
 def page(path, head_args, body):
     foot = FOOT.replace("{icons}", ICONS)
-    html = HEAD.format(**head_args) + body + foot
+    html = HEAD.format(structured=structured(head_args), **head_args) + body + foot
     out = ROOT / path
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8", newline="\n")

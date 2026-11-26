@@ -22,13 +22,58 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Old Hunger, a huge armoured grub with a split jaw, lit pale against a dark dungeon floor, under the title Project Trinity: Shatterbound.">
   <meta name="twitter:card" content="summary_large_image">
-
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "name": "Shatterbound: the heroes and the bosses",
+      "description": "The heroes of Project Trinity: Shatterbound by role, Tank, Healer and DPS, with their key skills, and how each boss fight works.",
+      "url": "https://projecttrinity.dev/shatterbound/",
+      "image": "https://projecttrinity.dev/img/share-card.jpg",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Project Trinity",
+        "url": "https://projecttrinity.dev/"
+      },
+      "about": {
+        "@type": "VideoGame",
+        "name": "Project Trinity: Shatterbound",
+        "url": "https://projecttrinity.dev/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Project Trinity Studios",
+        "url": "https://projecttrinity.dev/"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Project Trinity",
+          "item": "https://projecttrinity.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Shatterbound",
+          "item": "https://projecttrinity.dev/shatterbound/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
   <link rel="icon" href="/img/brand/shatterbound/favicon.ico" sizes="48x48">
   <link rel="icon" href="/img/brand/shatterbound/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/brand/shatterbound/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-  <link rel="stylesheet" href="/css/site.css?v=06fca8b8">
+  <link rel="stylesheet" href="/css/site.css?v=f6e995c3">
   <script src="/js/site.js?v=67492294" defer></script>
 </head>
 <body>
@@ -55,6 +100,7 @@
         </nav>
         <div class="header-tools">
           <a class="button button-gold header-cta" href="/request/">Request a build</a>
+          <a class="button header-list" href="/#join">Join the list</a>
           <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
             <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
             <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
@@ -220,7 +266,7 @@
 <li><b>Cartoon Hammer</b>: “I'll stamp you out!” A chain of slams on the party. Every slam that lands earns him another.</li>
 <li><b>Cybernetic Tank Buster</b> comes after two <b>Cybernetic Stomp</b>s: a cone in front of him that can't be blocked. If it hits, <b>Cybernetic Firearm</b> follows on someone else.</li>
 <li><b>Stone Wizard Channel</b>: stun him and he staggers; let it finish and <b>Meteor Shower</b> falls.</li>
-<li><b>Warlock Shadow</b>: “Who stole my shadow?” He marks a hero and <b>Shadow Charge</b>s at them. Charging into a <b>Crash Pillar</b> leaves him <b>Crash</b>ed: he can't attack and takes more damage.</li>
+<li><b>Warlock Shadow</b>: “Who stole my shadow?” He marks a hero and <b>Shadow Charge</b>s at them. Charging into a <b>Crash Pillar</b> leaves him <b>Vulnerable</b>: he can't attack and takes more damage.</li>
 <li><b>The Collector</b> puts <b>Debt</b>, a growing damage over time, on two heroes.</li>
                 </ul>
                 <div>
@@ -236,7 +282,7 @@
                 </div>
                 <div class="job" data-hero="asha">
                   <h5><img class="job-stamp" src="/img/book/role-dps.webp" width="192" height="192" alt="">DPS</h5>
-                  <p>Lead his Shadow Charge into a Crash Pillar, then hit him hard while he's Crashed.</p>
+                  <p>Lead his Shadow Charge into a Crash Pillar, then hit him hard while he's Vulnerable.</p>
                 </div>
                   </div>
                 </div>
@@ -260,7 +306,7 @@
                 <ul class="shard-list">
 <li><b>Swipe</b>, and <b>Swipe</b> into <b>Cleave</b>: wide arcs in front of him with no warning on the floor. Cleave is the heavy one.</li>
 <li><b>Storm</b>, at half health and again near the end: a ring around him that hits three times and can't be blocked. Every hit leaves a burn that stacks.</li>
-<li>No adds and no phases: it's you and him.</li>
+<li>No extra enemies and no phases: it's you and him.</li>
                 </ul>
                 <div>
                   <h4>Your job</h4>
@@ -338,7 +384,7 @@
               <div class="walk-body">
                 <span class="photo banner" data-banner="maera"><img class="pt-painted" src="/img/fights/maera-800.jpg" srcset="/img/fights/maera-800.jpg 800w, /img/fights/maera-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Maera on her shore, lantern in hand and an anchor over her shoulder, inside a ring of pale light on dark water."><img class="pt-render" src="/img/portraits/maera-16x9-800.jpg" srcset="/img/portraits/maera-16x9-800.jpg 800w, /img/portraits/maera-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Maera on a dark, rain-wet shore at night, a huge anchor over her shoulder, her grey hair lit cold blue."></span>
                 <ul class="shard-list">
-<li><b>The Lamp</b> is on your side. If it goes out, the pull is lost. It starts low and calls for healing: “THE LAMP CALLS FOR HEALING”.</li>
+<li><b>The Lamp</b> is on your side. If it goes out, the fight is lost. It starts low and calls for healing: “THE LAMP CALLS FOR HEALING”.</li>
 <li><b>Spume Crawlers</b>, <b>Catfish</b> and <b>Rakes</b> come for the Lamp. A Spume Crawler killed near it leaves <b>Lamplight</b>, a pool that heals it.</li>
 <li><b>The Dark</b>: your damage to her is cut to a tenth.</li>
 <li><b>The Dark Ring</b> follows her. Heroes in <b>The Small Light</b> are safe from it, and while she stands in it her <b>Deep Hunger</b> can't grow.</li>
@@ -353,11 +399,11 @@
                 </div>
                 <div class="job" data-hero="oracle">
                   <h5><img class="job-stamp" src="/img/book/role-healer.webp" width="192" height="192" alt="">Healer</h5>
-                  <p>The Lamp is your second tank. Heal it every time it gutters.</p>
+                  <p>The Lamp is your second tank. Heal it every time it flickers.</p>
                 </div>
                 <div class="job" data-hero="asha">
                   <h5><img class="job-stamp" src="/img/book/role-dps.webp" width="192" height="192" alt="">DPS</h5>
-                  <p>Kill the adds going for the Lamp, and kill Spume Crawlers close to it.</p>
+                  <p>Kill the enemies going for the Lamp, and kill Spume Crawlers close to it.</p>
                 </div>
                   </div>
                 </div>
@@ -387,6 +433,7 @@
           <li><a href="/devlog/">Devlog</a></li>
           <li><a href="/contact/">Contact</a></li>
           <li><a href="/request/">Request a build</a></li>
+          <li><a href="/#join">Join the email list</a></li>
         </ul>
       </div>
       <div>

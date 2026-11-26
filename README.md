@@ -19,8 +19,9 @@ Add `?theme=dark` or `?theme=light` to force a mode. A visitor's own Day or Nigh
 
 | Path | What |
 |---|---|
-| `index.html` | The front page, a short scroll: the cinematic first screen (the B-roll over the Old Hunger still, the title, Project Trinity with Shatterbound on a name slip beneath, a taped strip under it saying heroes swap mid-fight, and the email list as the main call with Watch the gameplay beside it), the game in three lines and how it's made, the party, the bosses, the newest post and the Research teaser. Request a build is only in the header (on a phone, in the menu). |
-| `request/` | The Request a build form (the header's button comes here). |
+| `index.html` | The front page, a short scroll: the cinematic first screen (the B-roll over the Old Hunger still, the title, Project Trinity with Shatterbound on a name slip beneath, a taped strip under it saying heroes swap mid-fight, and the email list as the main call with Watch the gameplay beside it), the game in three lines and how it's made, the party, the bosses, the newest post and the Research teaser. Request a build is only in the header, with Join the list beside it (on a phone, both in the menu, which opens over the page without moving the header's first row). |
+| `request/` | The Request a build form (the header's button comes here), with the email list's own sign-up beside it. |
+| `robots.txt`, `sitemap.xml`, `llms.txt` | Search and AI search: every crawler welcome, the page list (written by `tools/make-sitemap.py`), and a plain account of the game and studio for AI readers (Tooling 187). |
 | `video/skills/` | Silent skill loops (960x540, a few seconds), cut from films that already existed on his desk, with a poster each; only skills with a film have one (none for Reaver yet). |
 | `video/` | A devlog clip (`healer-steps-out-s8-139.mp4`, side by side, and a `-stacked` copy, before above after, for phones; CSS shows one) and the first screen's silent B-roll loop (19.9 s; 1080p MP4 and WebM, a 720p MP4 for phones), cut from existing films. It plays muted, pauses off screen, and gives way to the still when motion is turned off. |
 | `shatterbound/` | The heroes by role (Tank, Healer, DPS), each a sticker holding down a scroll that opens on a click (key skills, clips), with a question-mark slot in each role; the bosses, each walkthrough folded behind a click; Don Fortuna is a "coming" card. One page per character, `shatterbound/<id>/` (every skill, the clips, the job in each fight; a boss's page is its fight). All of it is written by `tools/make-characters.py`: edit the words there and rerun it, never the pages. |
@@ -38,10 +39,13 @@ Every page carries the same header and footer: change one, change them all. Each
 ## Adding a devlog post
 
 1. Copy `devlog/i-miss-playing-with-my-friends/` to `devlog/<new-slug>/` and replace its title, date, picture, text and
-   link-card tags (`og:*`, `canonical`, `article:published_time`).
+   link-card tags (`og:*`, `canonical`, `article:published_time`) and its structured data (the `application/ld+json`
+   block in the head: `headline`, `description`, `url`, `mainEntityOfPage`, `image`, `datePublished`).
    A picture in the text is `<figure class="post-photo"><span class="photo"><img ...></span><figcaption>...</figcaption></figure>`: taped in at its own shape, at most 540 px tall, with a hand-written line under it (add `tilt-right` to the span to lean it the other way). A silent loop is a `<video data-loop muted loop playsinline preload="none" poster=...>`: it plays only on screen and never for anyone who asked for less motion.
 2. Add a `<li class="post-row">` at the top of the list in `devlog/index.html` (newest first): picture, date, title, two lines.
 3. On the front page, point the Devlog card at the newest post.
+4. Run `python tools/make-sitemap.py` (the new post joins `sitemap.xml`, and the page is checked), add it to `llms.txt`'s
+   Devlog section if it is worth an AI reader's time, then `python tools/stamp-assets.py`.
 
 ## The portraits and the mark (Tooling 182)
 
@@ -84,7 +88,39 @@ Every page carries the same header and footer: change one, change them all. Each
 - `python tools/make-portraits.py <path>`: the renders' web copies.
 - `python tools/make-textures.py`: the Book's paper (a seamless 2048 px tile, Day and Night) and the 4K sky with its fade
   built in, from the game's own plates (`img/book/sky-day.jpg` is kept as the sky's source).
+- `python tools/make-sitemap.py`: writes `sitemap.xml` from every page's canonical, and stops with a list if a page lacks
+  its title, description, canonical, link card, alt text on an image, one `<h1>` or structured data. Run it after adding
+  or changing a page.
 - `python tools/stamp-assets.py`: last, after any of the above or any CSS or JS change.
+
+## Search and AI search (Tooling 187)
+
+- `robots.txt` opens every page to every crawler, search engines and AI search alike, and names `sitemap.xml`.
+  Cloudflare sits in front of the site and serves its own managed robots.txt text ahead of this file (content-signal
+  comments, no rules today); what it adds is set in the Cloudflare dashboard, not here.
+- `llms.txt` says plainly, for AI readers, what the game and the studio are, with the pages worth reading. Keep it true
+  when the facts change (a new hero or boss, a new platform, a new kind of page).
+- Every page carries structured data (JSON-LD, schema.org): the front page names the studio (`Organization`), the site
+  (`WebSite`) and the game (`VideoGame`); posts are `BlogPosting`; character pages are a `WebPage` about the game with a
+  breadcrumb (written by `make-characters.py`); the other pages are a `WebPage` (the devlog index a `Blog`). Check a
+  change at https://validator.schema.org (paste the page or its URL once live).
+
+### His sign-ups (his accounts; done once)
+
+Google Search Console:
+1. Go to https://search.google.com/search-console and sign in with the Google account that should own the site.
+2. Add property, choose **Domain**, enter `projecttrinity.dev`.
+3. Google shows a TXT record. In Cloudflare, open projecttrinity.dev, DNS, Records, Add record: type TXT, name `@`,
+   content the value Google gave, then Save. Back in Search Console press Verify (it can take a few minutes).
+4. In Search Console, Sitemaps: submit `https://projecttrinity.dev/sitemap.xml`.
+5. URL inspection: paste `https://projecttrinity.dev/` and press Request indexing (once is enough).
+
+Bing Webmaster Tools (it also feeds Copilot and DuckDuckGo):
+1. Go to https://www.bing.com/webmasters and sign in.
+2. Choose **Import from Google Search Console** and pick projecttrinity.dev (it brings the verification and sitemap
+   across); or add the site by hand and verify it with the TXT record Bing shows, the same way as above.
+3. Sitemaps: check `https://projecttrinity.dev/sitemap.xml` is listed; submit it if not.
+4. Optional: Settings, IndexNow, turn it on so changes reach Bing sooner.
 
 ## Cache-busting
 
