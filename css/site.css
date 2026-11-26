@@ -1082,6 +1082,7 @@ p { margin: 0; }
 }
 .role svg { width: 14px; height: 14px; fill: currentColor; }
 [data-hero="oracle"] .role { color: #12305a; }
+[data-hero="asha"] .role { color: #2b2452; }
 .resource { font-size: 0.92rem; color: var(--ink-soft); }
 .hero-card .one-line { font-size: 1.05rem; }
 .skills {
@@ -1451,18 +1452,26 @@ p { margin: 0; }
   .party-strip strong.slip { font-size: 1.5rem; margin-top: -1rem; }
 }
 
-/* skill and fight text straight on the sky: full ink, a little larger, on a soft wash of paper with no edge */
+/* The words beside a sticker sit on a soft backing of the paper's colour (the sticker itself has none):
+   no edge, no shadow. Body text there is never under 16 px, in full ink. */
+.hero-card > div,
+.boss-card > div:not(.portrait),
 .skills,
-.walk-body {
-  padding: 1rem 1.2rem 1.1rem;
+.walk {
+  padding: 1rem 1.3rem 1.15rem;
   border-radius: 14px;
-  background: rgba(var(--paper-rgb), 0.5);
+  background: rgba(var(--paper-rgb), 0.86);
 }
-.skills { font-size: 1.04rem; }
-.skills span { color: var(--on-sky); }
-.walk .shard-list { font-size: 1.04rem; }
-.job { font-size: 1.02rem; }
+.hero-card, .boss-card { row-gap: 10px; }
+.walk-body { padding: 0.6rem 0 0.2rem; }
+.walk summary { padding: 0; min-height: 40px; }
+.hero-card .one-line, .boss-card .about { font-size: 1.15rem; color: var(--ink); }
+.skills { font-size: 1.06rem; }
+.skills span { color: var(--ink); }
+.resource { font-size: 1rem; color: var(--ink); }
+.walk .shard-list, .job { font-size: 1.06rem; color: var(--ink); }
+.walk summary .spoiler { font-size: 1rem; color: var(--ink); }
 @media (max-width: 760px) {
-  .skills, .walk-body { padding: 0.9rem 0.9rem 1rem; }
-  .skills, .walk .shard-list { font-size: 1.06rem; }
+  .hero-card > div, .boss-card > div:not(.portrait), .skills, .walk { padding: 0.9rem 1rem 1rem; }
+  .hero-card > div, .boss-card > div:not(.portrait), .skills, .walk { width: 100%; }
 }
