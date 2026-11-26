@@ -1,5 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#0c1424"/>
-  <path d="M16 3 26.5 14 16 29 5.5 14Z" fill="none" stroke="#e2c784" stroke-width="2" stroke-linejoin="round"/>
-  <path d="M16 3V29M5.5 14 16 18 26.5 14" fill="none" stroke="#e2c784" stroke-width="1.4" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+<title>Project Trinity Studios: the tab icon</title>
+<style>.m{fill:#2b2452}.r{stroke:#2b2452}@media (prefers-color-scheme:dark){.m{fill:#efe9f8}.r{stroke:#efe9f8}}</style>
+<circle cx="8.5" cy="7.5" r="3.5" class="m"/>
+<circle cx="8.5" cy="1.5" r="1.5" class="m"/>
+<circle cx="8.5" cy="13.5" r="1.5" class="m"/>
+<circle cx="1.5" cy="7.5" r="1.5" class="m"/>
+<circle cx="13.5" cy="12.5" r="1.5" class="m"/>
 </svg>

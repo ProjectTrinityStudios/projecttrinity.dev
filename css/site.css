@@ -39,8 +39,9 @@
   --cover: #b8475b;                   /* book-cover: the book's own edge */
   --paper: #f7ecd6;                   /* book-paper */
   --paper-deep: #ead8b6;              /* book-paper-deep */
-  --paper-image: url("../img/book/paper-day.jpg");
+  --paper-image: url("../img/book/paper-day.webp");
   --paper-rgb: 247, 236, 214;
+  --paper-size: 1024px 1024px;        /* the paper is a seamless 2048 px tile, drawn at twice the screen's density */
   --ink: #2b2452;                     /* book-ink */
   --ink-soft: #625a86;                /* book-ink-soft */
   --rule: rgba(43, 36, 82, 0.16);     /* book-rule */
@@ -70,7 +71,7 @@
   --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
 
   --measure: 62ch;
-  --page: 1100px;
+  --page: 68.75rem;                   /* 1100 px at the base size; grows with the type on large screens */
   --gutter: clamp(16px, 4vw, 40px);
   --header-h: 64px;
 
@@ -86,7 +87,7 @@
     --cover: #2c2960;
     --paper: #222a5a;
     --paper-deep: #181e45;
-    --paper-image: url("../img/book/paper-night.jpg");
+    --paper-image: url("../img/book/paper-night.webp");
     --paper-rgb: 34, 42, 90;
     --ink: #efe9f8;
     --ink-soft: #aea8d2;
@@ -107,7 +108,7 @@
   --cover: #2c2960;
   --paper: #222a5a;
   --paper-deep: #181e45;
-  --paper-image: url("../img/book/paper-night.jpg");
+  --paper-image: url("../img/book/paper-night.webp");
   --paper-rgb: 34, 42, 90;
   --ink: #efe9f8;
   --ink-soft: #aea8d2;
@@ -132,19 +133,25 @@ html {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+/* Large screens: the type, and the page and post widths set in rem with it, step up so nothing reads tiny
+   (his note, 2026-11-25); a post's line stays near 70 characters. */
+@media (min-width: 1600px) { html { font-size: 106.25%; } }
+@media (min-width: 2000px) { html { font-size: 112.5%; } }
+@media (min-width: 2560px) { html { font-size: 125%; } }
 
 body {
   margin: 0;
   color: var(--on-sky);
   background-color: var(--sky-top);
   /* the Book's painted sky at the head of the page, melting into the sky's own lilac and rose below */
+  /* The sky is drawn at 4K with its lilac veil and its fade to clear built in (tools/make-textures.py), so it melts into
+     the colour beneath at any width. (A veil of fixed height laid over it ended in a hard band on wide screens.) */
   background-image:
-    linear-gradient(180deg, rgba(195, 179, 234, 0.25) 0, rgba(195, 179, 234, 0.25) 700px, var(--sky-top) 1200px),
-    url("../img/book/sky-day.jpg"),
+    url("../img/book/sky-day-3840.webp"),
     linear-gradient(180deg, var(--sky-top) 0, var(--sky-top) 1400px, var(--sky-low) 100%);
   background-repeat: no-repeat;
-  background-position: top center, top center, 0 0;
-  background-size: 100% 1400px, max(100%, 2400px) auto, 100% 100%;
+  background-position: top center, 0 0;
+  background-size: max(100%, 2400px) auto, 100% 100%;
   font-family: var(--font-body);
   font-size: 1.125rem;
   line-height: 1.6;
@@ -236,7 +243,7 @@ p { margin: 0; }
   color: var(--ink);
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
   border-radius: 4px;
   box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.18), 4px 10px 22px -6px var(--shadow);
 }
@@ -337,7 +344,7 @@ p { margin: 0; }
   color: var(--ink);
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
   box-shadow: 0 6px 18px -10px var(--shadow);
   transition: background-color 200ms ease, box-shadow 200ms ease;
 }
@@ -369,8 +376,7 @@ p { margin: 0; }
   margin-right: auto;
   white-space: nowrap;
 }
-/* The family mark (Tooling 180) swaps in here, in place of the shard. */
-.mark-shard { width: 26px; height: 26px; color: var(--stamp); }
+
 
 .header-menu {
   display: flex;
@@ -463,7 +469,6 @@ p { margin: 0; }
 .site-header.is-clear:not(.is-solid):not(.is-open) .header-menu ul a:not([aria-current]),
 .site-header.is-clear:not(.is-solid):not(.is-open) .theme-toggle,
 .site-header.is-clear:not(.is-solid):not(.is-open) .menu-button { color: var(--film-text); }
-.site-header.is-clear:not(.is-solid):not(.is-open) .mark-shard { color: var(--focus); }
 .site-header.is-clear:not(.is-solid):not(.is-open) .theme-toggle,
 .site-header.is-clear:not(.is-solid):not(.is-open) .menu-button { border-color: rgba(251, 245, 234, 0.7); background: rgba(10, 8, 30, 0.3); }
 .site-header.is-clear:not(.is-solid):not(.is-open) .header-menu ul a:hover::before { opacity: 0.6; }
@@ -760,6 +765,7 @@ p { margin: 0; }
 /* A round die-cut sticker: the white rim and its shadow, the painted face, a ring of the hero's colour */
 .sticker {
   position: relative;
+  display: block;
   aspect-ratio: 1;
   border-radius: 50%;
   padding: 6px;
@@ -882,7 +888,7 @@ p { margin: 0; }
   color: var(--ink);
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
   box-shadow:
     0 0 0 1px rgba(120, 90, 60, 0.25),
     6px 7px 0 -1px var(--paper-deep),   /* the page stack */
@@ -1265,7 +1271,7 @@ p { margin: 0; }
 .list-foot { margin-top: clamp(48px, 7vw, 88px); }
 
 /* one post: an entry on a page of the Book */
-.post { max-width: calc(800px + 2 * var(--gutter)); }
+.post { max-width: calc(50rem + 2 * var(--gutter)); }
 .post-sheet { padding: clamp(24px, 4.4vw, 56px); margin-top: clamp(32px, 5vw, 64px); }
 .post-head h1 { font-size: clamp(2.6rem, 6vw, 4rem); margin-top: 0.2rem; }
 .post-head .post-date a { color: var(--link); }
@@ -1302,12 +1308,12 @@ p { margin: 0; }
 .post-body .shard-list { font-size: 1.1rem; max-width: none; }
 .post-sign { color: var(--ink-soft); font-style: italic; }
 .post-nav { margin-top: clamp(32px, 5vw, 56px); padding-top: 1rem; border-top: 1.5px dashed var(--rule); }
-.post + .list-foot { max-width: calc(800px + 2 * var(--gutter)); }
+.post + .list-foot { max-width: calc(50rem + 2 * var(--gutter)); }
 
 /* ---- Contact -------------------------------------------------------------- */
 .contact-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
   gap: clamp(28px, 5vw, 64px);
   align-items: start;
 }
@@ -1376,7 +1382,7 @@ p { margin: 0; }
 }
 
 @media (max-width: 760px) {
-  body { font-size: 1.0625rem; }
+  body { font-size: 1.0625rem; background-image: url("../img/book/sky-day-1920.webp"), linear-gradient(180deg, var(--sky-top) 0, var(--sky-top) 1400px, var(--sky-low) 100%); }
   .duo { grid-template-columns: 1fr; }
   .party-strip, .boss-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
@@ -1419,7 +1425,7 @@ p { margin: 0; }
 .welcome-page {
   background-color: var(--paper);
   background-image: var(--paper-image);
-  background-size: cover;
+  background-size: var(--paper-size);
   box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.25), 6px 7px 0 -1px var(--paper-deep), 0 22px 50px -18px rgba(18, 16, 40, 0.55);
   border-radius: 6px;
   padding: clamp(22px, 5vw, 36px);
@@ -1502,3 +1508,486 @@ p { margin: 0; }
   .hero-card > div, .boss-card > div:not(.portrait), .skills, .walk { padding: 0.9rem 1rem 1rem; }
   .hero-card > div, .boss-card > div:not(.portrait), .skills, .walk { width: 100%; }
 }
+
+/* =====================================================================================================================
+   Tooling 182 and 183: the portraits, the title, the email list up front, the swap note, heroes by role on scrolls,
+   and a page per character.
+   ===================================================================================================================== */
+
+/* ---- The portrait swap (Tooling 182) ---------------------------------------------------------------------------------
+   Every portrait slot holds the painted sticker and the render cut-out; the one setting in js/site.js (PORTRAITS) puts
+   data-portraits on the page and only that set is shown (the other, display none and lazy, is never fetched). */
+.pt-render,
+.pt-render-only { display: none; }
+:root[data-portraits="render"] .pt-painted { display: none; }
+:root[data-portraits="render"] .pt-render { display: block; }
+:root[data-portraits="render"] .pt-render-only { display: block; }
+
+/* the render as a die-cut sticker: the cut-out itself, a white edge cut round it, its shadow; no round backing */
+:root[data-portraits="render"] .sticker[data-portrait] {
+  aspect-ratio: 4 / 5;
+  border-radius: 0;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  transform: rotate(-2deg);
+}
+:root[data-portraits="render"] .sticker[data-portrait] > .pt-render {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  object-fit: contain;
+  object-position: 50% 100%;
+  filter:
+    drop-shadow(3px 0 0 #fffdf8) drop-shadow(-3px 0 0 #fffdf8)
+    drop-shadow(0 3px 0 #fffdf8) drop-shadow(0 -3px 0 #fffdf8)
+    drop-shadow(3px 7px 7px rgba(30, 20, 60, 0.45));
+}
+:root[data-portraits="render"] .sticker[data-portrait] .stamp { right: -8%; bottom: 2%; }
+
+/* the role tags: the game's own role glyph in ink on its round blank stamp (img/book/role-*.webp), as the HUD shows a role */
+.sticker .stamp { width: 34%; right: -6%; bottom: -4%; border-radius: 50%; }
+.role-glyph {
+  display: inline-block;
+  width: 1em; height: 1em;
+  background: currentColor;
+  -webkit-mask: var(--glyph) center / contain no-repeat;
+  mask: var(--glyph) center / contain no-repeat;
+}
+.role-glyph-tank { --glyph: url("../img/book/glyph-tank.webp"); }
+.role-glyph-healer { --glyph: url("../img/book/glyph-healer.webp"); }
+.role-glyph-dps { --glyph: url("../img/book/glyph-dps.webp"); }
+
+/* ---- The mark (Tooling 180) -----------------------------------------------------------------------------------------
+   D, the formation (the boss with the Tank, Healer and two DPS where the AI stands them): the ink cut on the paper header,
+   the chalk cut by Night and over the film. The tab carries A (favicon.ico and favicon.svg at the root; the game's pages
+   carry the Shatterbound cut, with the crack through the boss, from img/brand/shatterbound/). */
+.mark-glyph { display: inline-flex; align-items: center; flex: none; }
+.mark-glyph img { width: 32px; height: 32px; }
+.mark-chalk { display: none; }
+:root[data-theme="dark"] .mark-ink { display: none; }
+:root[data-theme="dark"] .mark-chalk { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .mark-ink { display: none; }
+  :root:not([data-theme="light"]) .mark-chalk { display: block; }
+}
+.site-header.is-clear:not(.is-solid):not(.is-open) .mark-glyph .mark-ink { display: none; }
+.site-header.is-clear:not(.is-solid):not(.is-open) .mark-glyph .mark-chalk { display: block; }
+.coming-plate img.coming-mark { width: 50%; height: auto; opacity: 0.8; }
+
+/* ---- The title (front page; his pick A): Project Trinity, with Shatterbound on a name slip beneath ------------------- */
+.cine h1.game-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.12em;
+  max-width: none;
+  font-size: clamp(3.1rem, 8.6vw, 6.4rem);
+}
+.game-title .t-studio { white-space: nowrap; }
+.game-title .t-game a { color: inherit; text-decoration: none; }
+.game-title .t-game a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+.cine .t-game {
+  margin-top: 0.12em;
+  font-size: 0.42em;
+  line-height: 1.15;
+  padding: 0.08em 0.9em 0.16em;
+  position: relative;
+  isolation: isolate;
+  color: #2b2452;
+  text-shadow: none;
+  transform: rotate(-2deg);
+}
+/* the slip's paper and shadow sit behind the word (a filter over the word itself can drop it in Chrome) */
+.cine .t-game::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("../img/book/slip-mid.webp") center / 100% 100% no-repeat;
+  filter: drop-shadow(1px 3px 3px rgba(0, 0, 0, 0.35));
+}
+/* ---- The email list, the first screen's main call; Watch the gameplay beside it --------------------------------------- */
+.cine-actions { align-items: flex-start; gap: 1.1rem 1.8rem; }
+.join-form { display: grid; gap: 0.5rem; flex: 0 1 28rem; min-width: 0; }
+.join-label {
+  font-family: var(--font-hand);
+  font-size: 1.6rem;
+  line-height: 1.15;
+  color: var(--film-text);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
+}
+.join-hint { font-size: 1.02rem; line-height: 1.4; color: var(--film-text); text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7); }
+.join-row { display: flex; flex-wrap: wrap; gap: 0.8rem 1.4rem; align-items: center; }
+.join-row input {
+  flex: 1 1 13rem;
+  min-width: 0;
+  min-height: 48px;
+  font: inherit;
+  font-size: 1.05rem;
+  color: #2b2452;
+  background: #fbf5ea;
+  border: 0;
+  border-bottom: 3px solid var(--focus);
+  border-radius: 4px 4px 0 0;
+  padding: 0.5rem 0.8rem;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3);
+}
+.join-row input::placeholder { color: #6b6390; }
+.join-row input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.join-row input[aria-invalid="true"] { border-bottom-color: var(--stamp); background: #fde8e6; }
+.join-age {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 32px;
+  width: fit-content;
+  font-size: 1rem;
+  color: var(--film-text);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+}
+.join-age input { width: 20px; height: 20px; margin: 0; accent-color: var(--focus); cursor: pointer; }
+.join-age input[aria-invalid="true"] { outline: 2px solid #ffb3ae; outline-offset: 2px; }
+.join-form .form-note { color: var(--film-text); text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7); min-height: 0; }
+.join-form .form-note:empty { display: none; }
+.join-form .form-note.is-error { color: #ffd2cc; }
+.join-form .form-note a { color: var(--focus); }
+.join-form .turnstile:empty { display: none; }
+/* Watch the gameplay lines up with the email box */
+.cine-actions > .button-slip { margin-top: calc(1.6rem * 1.15 + 0.5rem); }
+@media (forced-colors: active) { .join-row input { border: 2px solid CanvasText; } }
+
+/* ---- Swap heroes mid-fight: a strip taped under the Shatterbound slip (his pick) ------------------------------------ */
+.swap-note { grid-column: 2; grid-row: 1 / span 4; align-self: end; }
+.swap-note {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: "faces title" "faces line";
+  align-items: center;
+  column-gap: 1.1rem;
+  width: fit-content;
+  max-width: min(100%, 36rem);
+  margin-top: 1.2rem;
+  padding: 0.75rem 1.1rem 0.8rem;
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: var(--paper-image);
+  background-size: var(--paper-size);
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.18), 4px 10px 22px -6px rgba(0, 0, 0, 0.5);
+  transform: rotate(-0.8deg);
+}
+.swap-note::before {
+  content: "";
+  position: absolute;
+  left: -26px; top: -10px;
+  width: 84px; height: 28px;
+  background: url("../img/book/tape-2.webp") 0 0 / 100% 100% no-repeat;
+  transform: rotate(-30deg);
+  filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
+}
+.swap-note h2 { grid-area: title; font-size: 1.7rem; line-height: 1.05; }
+.swap-row {
+  grid-area: faces;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.swap-row li { position: relative; flex: none; }
+.swap-row img {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 3px solid #fffdf8;
+  box-shadow: 0 0 0 3px var(--hero), 2px 3px 5px rgba(30, 20, 60, 0.35);
+}
+/* the swap arrows between them */
+.swap-row li + li { margin-left: 26px; }
+.swap-row li + li::before {
+  content: "";
+  position: absolute;
+  left: -24px; top: 50%;
+  width: 22px; height: 16px;
+  margin-top: -8px;
+  background: url("../img/book/swap-arrows.svg") center / 100% 100% no-repeat;
+}
+.swap-note p { grid-area: line; font-size: 1.02rem; line-height: 1.35; color: var(--ink); }
+.cine .cine-line { margin-top: 1.2rem; }
+.cine .cine-actions { margin-top: clamp(26px, 3.4vw, 40px); }
+
+@media (max-width: 560px) {
+  .swap-note { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "faces" "line"; row-gap: 0.5rem; }
+}
+@media (max-width: 560px) {
+  .cine-actions > .button-slip { margin-top: 0; }
+  .join-row .button { flex: 1 1 100%; }
+}
+
+/* ---- Shatterbound: the heroes by role, each a sticker holding down a scroll ----------------------------------------- */
+:root { interpolate-size: allow-keywords; }
+.roles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 44px);
+  align-items: start;
+}
+.role-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+  font-size: clamp(2.3rem, 3.4vw, 2.9rem);
+  color: var(--on-sky);
+}
+.group-stamp { width: 50px; height: auto; transform: rotate(-6deg); filter: drop-shadow(1px 2px 2px rgba(30, 20, 60, 0.3)); }
+.hero-slots {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  gap: clamp(30px, 4vw, 48px);
+}
+
+.scroll { --roll: 20px; position: relative; color: var(--ink); margin-bottom: 16px; }
+.scroll > summary {
+  display: grid;
+  justify-items: center;
+  list-style: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.scroll > summary::-webkit-details-marker { display: none; }
+.scroll > summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 6px; }
+/* the sticker holds the scroll down: it sits over the top roll */
+.scroll .sticker {
+  position: relative;
+  z-index: 3;
+  width: min(72%, 220px);
+  margin-bottom: -38px;
+  transition: transform 180ms ease;
+}
+.scroll > summary:hover .sticker { transform: rotate(0deg) translateY(-3px); }
+/* the paper strip of a rolled scroll, the hero's name on it */
+.scroll-tab {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  width: 100%;
+  min-height: 84px;
+  padding: calc(var(--roll) + 30px) 1rem 0.9rem;
+  text-align: center;
+  background-color: var(--paper);
+  background-image: var(--paper-image);
+  background-size: var(--paper-size);
+}
+/* the rolls: a paper cylinder at the top of the strip, and one at the foot of the scroll; their ends in the hero's colour */
+.scroll-tab::before,
+.scroll::after {
+  content: "";
+  position: absolute;
+  left: -10px; right: -10px;
+  height: var(--roll);
+  border-radius: 10px;
+  background:
+    linear-gradient(90deg, var(--hero, var(--ink-soft)) 0 9px, transparent 9px calc(100% - 9px), var(--hero, var(--ink-soft)) calc(100% - 9px)),
+    linear-gradient(180deg, rgba(30, 20, 60, 0.28), rgba(255, 255, 255, 0.4) 42%, rgba(255, 255, 255, 0.1) 58%, rgba(30, 20, 60, 0.32)),
+    var(--paper-deep);
+  box-shadow: 0 4px 8px -2px var(--shadow);
+}
+.scroll-tab::before { top: 0; }
+.scroll::after { bottom: -16px; z-index: 2; }
+.scroll-name { font-family: var(--font-hand); font-size: 2.3rem; line-height: 1; }
+.scroll-sub { font-size: 1rem; color: var(--ink); }
+.scroll-pull {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.3rem;
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  line-height: 1.1;
+  color: var(--link);
+}
+.scroll-pull::before {
+  content: "";
+  width: 9px; height: 9px;
+  border: solid currentColor;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform 180ms ease;
+}
+.scroll[open] .scroll-pull::before { transform: rotate(-135deg) translate(-2px, -2px); }
+.scroll > summary:hover .scroll-pull { text-decoration: underline; }
+.scroll .on-open,
+.scroll[open] .on-shut { display: none; }
+.scroll[open] .on-open { display: inline; }
+
+/* the scroll, pulled open: its paper runs down to the foot roll */
+.scroll-body {
+  display: grid;
+  gap: 1rem;
+  padding: 0.4rem clamp(14px, 1.6vw, 22px) 1.6rem;
+  background-color: var(--paper);
+  background-image: var(--paper-image);
+  background-size: var(--paper-size);
+}
+.scroll-body .one-line { font-size: 1.1rem; color: var(--ink); }
+.scroll-body .skills,
+.char-sheet .skills {
+  grid-column: auto;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  width: auto;
+  font-size: 1.04rem;
+}
+.scroll-body .more { font-size: 1.25rem; }
+/* pulling open is a slow unroll where the browser can draw it; otherwise it opens at once */
+.scroll::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition: block-size 650ms ease, content-visibility 650ms allow-discrete;
+}
+.scroll[open]::details-content { block-size: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .scroll::details-content, .scroll .sticker, .scroll-pull::before { transition: none; }
+}
+
+/* a hero not yet shown: a plain question mark on a sealed scroll */
+.sticker-unknown {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: rgba(var(--paper-rgb), 0.55);
+  border: 3px dashed var(--ink-soft);
+  box-shadow: none;
+  font-family: var(--font-hand);
+  font-size: clamp(4rem, 7vw, 5.4rem);
+  line-height: 1;
+  color: var(--ink);
+}
+.is-sealed .scroll-tab { min-height: 0; padding: calc(var(--roll) + 18px) 0 0; }
+.is-sealed { opacity: 0.85; }
+
+.skills .skill-tag,
+.skill-tag {
+  display: inline-block;
+  margin-left: 0.2rem;
+  padding: 0 0.5rem 0.05rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  vertical-align: 0.25em;
+  color: var(--ink);
+  border: 1.5px solid var(--ink-soft);
+  border-radius: 999px;
+}
+
+/* a skill's clip: a silent loop, cut from existing films, taped in (only where a film already exists) */
+.skill-clip { position: relative; margin: 0.65rem 0 0.2rem; }
+.skill-clip .photo { padding: 6px 6px 9px; transform: rotate(-0.8deg); }
+.skill-clip .photo::before,
+.skill-clip .photo::after { width: 58px; height: 22px; }
+.skill-clip .photo::before { left: -18px; top: -6px; }
+.skill-clip .photo::after { right: -18px; top: -6px; }
+.skill-clip video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #0e1230; }
+.clip-hold {
+  position: absolute;
+  right: 12px; bottom: 16px;
+  z-index: 3;
+  min-height: 32px;
+  padding: 0.05rem 0.8rem 0.1rem;
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+  color: var(--film-text);
+  background: rgba(10, 8, 30, 0.66);
+  border: 1.5px solid rgba(251, 245, 234, 0.7);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+@media (max-width: 980px) {
+  .roles { grid-template-columns: minmax(0, 1fr); }
+  .hero-slots { grid-template-columns: repeat(auto-fill, minmax(min(100%, 165px), 1fr)); column-gap: clamp(18px, 4vw, 34px); }
+  .hero-slot:has(> details[open]) { grid-column: 1 / -1; }
+  .hero-slot:has(> details[open]) .sticker { width: min(52%, 220px); }
+}
+@media (max-width: 420px) {
+  .scroll .sticker { margin-bottom: -28px; }
+  .scroll-name { font-size: 2rem; }
+  .scroll-tab { padding-left: 0.5rem; padding-right: 0.5rem; }
+}
+
+/* the bosses' banners swap with the portraits */
+.walk .banner { max-width: 640px; margin: 0.4rem 0 0.2rem 0.6rem; }
+.boss-card h3 a { color: inherit; text-decoration: none; }
+.boss-card h3 a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+.job h4 {
+  margin: 0 0 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 1.55rem;
+}
+.job-stamp { width: 34px; height: auto; transform: rotate(-6deg); }
+
+/* ---- A page per character ------------------------------------------------------------------------------------------- */
+.char-head {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 64px);
+  align-items: center;
+  padding-top: clamp(36px, 6vw, 80px);
+}
+.char-portrait { margin: 0; }
+.char-portrait .sticker { width: 100%; padding: 10px; box-shadow: 0 0 0 7px var(--hero, var(--cold)), 4px 8px 14px rgba(30, 20, 60, 0.4); }
+.char-portrait.is-boss { --hero: var(--cold); }
+.char-words {
+  padding: clamp(18px, 2.4vw, 28px) clamp(18px, 2.6vw, 32px);
+  border-radius: 14px;
+  color: var(--ink);
+  background: rgba(var(--paper-rgb), 0.86);
+}
+.char-words .eyebrow { color: var(--ink); }
+.char-words .eyebrow a { color: var(--link); }
+.char-words h1 { font-size: clamp(3.2rem, 8vw, 5.4rem); color: var(--ink); margin-top: 0.1rem; }
+.char-words .role-line { margin: 0.7rem 0 0.9rem; }
+.char-words .lede { font-size: clamp(1.15rem, 1.8vw, 1.32rem); max-width: 56ch; color: var(--ink); }
+.char-note { margin-top: 0.8rem; max-width: 60ch; color: var(--ink); }
+.char-swap { margin-top: 0.9rem; font-family: var(--font-hand); font-size: 1.5rem; line-height: 1.2; color: var(--ink); }
+.char-banner { margin-top: clamp(28px, 4vw, 52px); }
+.char-banner .photo { max-width: 1000px; margin: 0 auto; }
+.char-sheet {
+  padding: clamp(20px, 3vw, 36px);
+  border-radius: 6px;
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: var(--paper-image);
+  background-size: var(--paper-size);
+  box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.18), 4px 10px 22px -6px var(--shadow);
+}
+.char-sheet .skills.kit { display: block; columns: 2; column-gap: 2.4rem; }
+.char-sheet .skills.kit > li { break-inside: avoid; margin-bottom: 1.4rem; }
+.fight-jobs { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; max-width: var(--measure); }
+.fight-jobs a { font-family: var(--font-hand); font-size: 1.7rem; line-height: 1.1; }
+.fight-jobs span { display: block; font-size: 1.06rem; color: var(--ink); }
+.walk-open { display: grid; gap: 1.5rem; }
+.walk-open .banner { max-width: 760px; margin: 0.3rem 0 0.4rem 0.6rem; }
+.walk-open .shard-list { max-width: var(--measure); font-size: 1.06rem; }
+.jobs-title { font-size: 1.9rem; margin-bottom: 0.5rem; }
+.char-others,
+.boss-strip.char-others { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 820px; }
+.char-others .sticker { width: clamp(110px, 14vw, 170px); }
+@media (max-width: 760px) {
+  .char-head { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .char-portrait { width: min(70%, 280px); }
+  .char-words { width: 100%; }
+  .char-sheet .skills.kit { columns: 1; }
+  .char-others .sticker { width: min(26vw, 120px); }
+}
+.role .role-glyph { width: 15px; height: 15px; }

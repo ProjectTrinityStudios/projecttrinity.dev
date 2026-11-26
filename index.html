@@ -24,10 +24,13 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" as="image" href="/img/old-hunger-1920.jpg" imagesrcset="/img/old-hunger-800.jpg 800w, /img/old-hunger-1280.jpg 1280w, /img/old-hunger-1920.jpg 1920w" imagesizes="100vw">
 
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="/css/site.css?v=4b2be6d6">
-  <script src="/js/site.js?v=d4095415" defer></script>
+  <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+  <link rel="stylesheet" href="/css/site.css?v=06fca8b8">
+  <script src="/js/site.js?v=67492294" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to the page</a>
@@ -35,7 +38,7 @@
   <header class="site-header is-clear" data-header>
     <div class="header-bar">
       <a class="mark" href="/" aria-current="page">
-        <svg class="mark-shard" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#shard"/></svg>
+        <span class="mark-glyph" aria-hidden="true"><img class="mark-ink" src="/img/brand/mark-ink.svg" width="32" height="32" alt=""><img class="mark-chalk" src="/img/brand/mark-chalk.svg" width="32" height="32" alt=""></span>
         <span>Project Trinity</span>
       </a>
       <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-button>
@@ -115,15 +118,44 @@
             </li>
           </ul>
         </div>
-        <h1 id="game-title"><span class="title-mark title-star">Project Trinity: Shatterbound</span></h1>
-        <p class="cine-line">A dungeon crawler built like an MMO raid: a tank, a healer and DPS. Your party is AI, and it plays to win.</p>
-        <div class="cine-actions">
-          <a class="button button-gold" href="https://www.youtube.com/watch?v=ZfeWMM3GYU8" data-film="ZfeWMM3GYU8">
+        <!-- The title (Tooling 183, his pick A): Project Trinity is the line, Shatterbound on a name slip beneath it. -->
+        <h1 id="game-title" class="game-title">
+          <span class="t-studio title-mark title-star">Project Trinity</span>
+          <span class="t-game"><a href="/shatterbound/">Shatterbound</a></span>
+        </h1>
+        <!-- Swapping heroes mid-fight, made plain (players don't expect it) -->
+        <aside class="swap-note" aria-labelledby="swap-title">
+          <h2 id="swap-title">Swap heroes mid-fight</h2>
+          <ol class="swap-row" aria-label="The four heroes you can swap between">
+            <li data-hero="bastion"><img src="/img/party/bastion.webp" width="256" height="256" alt="Bastion, the Tank"></li>
+            <li data-hero="oracle"><img src="/img/party/oracle.webp" width="256" height="256" alt="Oracle, the Healer"></li>
+            <li data-hero="reaver"><img src="/img/party/reaver.webp" width="256" height="256" alt="Reaver, the melee DPS"></li>
+            <li data-hero="asha"><img src="/img/party/asha.webp" width="256" height="256" alt="Asha, the ranged DPS"></li>
+          </ol>
+          <p>Tank one second, heal the next. Whoever you leave, the party AI plays.</p>
+        </aside>
+
+        <p class="cine-line">A dungeon crawler built like an MMO raid: a tank, a healer and DPS. Play alone, or with a friend on one split screen; the AI plays the rest of the party, and it plays to win.</p>
+
+        <div class="cine-actions" id="join">
+          <form class="join-form" aria-label="Join the email list" data-endpoint="/subscribe" data-thanks="Almost done: check your inbox and confirm to join the list." method="post" novalidate>
+            <label class="join-label" for="join-email">Join the email list</label>
+            <div class="join-row">
+              <input id="join-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" aria-describedby="join-hint" required>
+              <button class="button button-gold" type="submit" disabled>Join the list</button>
+            </div>
+            <p class="join-hint" id="join-hint">A note when there's a new devlog or build. Not often, and you can leave any time.</p>
+            <label class="join-age"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
+            <div class="turnstile" data-turnstile></div>
+            <p class="form-note" role="status" aria-live="polite" data-form-note></p>
+            <noscript><p class="form-note is-error">This form needs JavaScript. Write to <a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a> instead.</p></noscript>
+          </form>
+          <a class="button button-slip" href="https://www.youtube.com/watch?v=ZfeWMM3GYU8" data-film="ZfeWMM3GYU8">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z"/></svg>
             Watch the gameplay
           </a>
-          <a class="button button-slip" href="/request/">Request a build</a>
         </div>
+
       </div>
     </section>
 
@@ -151,28 +183,28 @@
       <ul class="party-strip">
         <li>
           <a href="/shatterbound/#bastion" data-hero="bastion">
-            <span class="sticker"><img src="/img/party/bastion.webp" width="256" height="256" loading="lazy" alt=""><img class="stamp" src="/img/book/stamp-tank.webp" width="110" height="110" alt=""></span>
+            <span class="sticker" data-portrait="bastion"><img class="pt-painted" src="/img/party/bastion.webp" width="256" height="256" loading="lazy" alt="Bastion's portrait: a broad-shouldered man with a red crest of hair and a hard stare, in red and black armour."><img class="pt-render" src="/img/portraits/bastion-480.webp" width="480" height="600" loading="lazy" alt="Bastion: a broad man with a red crest of hair, arms crossed over spiked red and black plate, a tall shield at his back."><img class="stamp" src="/img/book/role-tank.webp" width="192" height="192" alt=""></span>
             <strong class="slip">Bastion</strong>
             <span>Tank</span>
           </a>
         </li>
         <li>
           <a href="/shatterbound/#oracle" data-hero="oracle">
-            <span class="sticker"><img src="/img/party/oracle.webp" width="256" height="256" loading="lazy" alt=""><img class="stamp" src="/img/book/stamp-healer.webp" width="110" height="110" alt=""></span>
+            <span class="sticker" data-portrait="oracle"><img class="pt-painted" src="/img/party/oracle.webp" width="256" height="256" loading="lazy" alt="Oracle's portrait: a woman with swept-back grey hair and a high collar, against a pale blue sky."><img class="pt-render" src="/img/portraits/oracle-480.webp" width="480" height="600" loading="lazy" alt="Oracle: a woman with swept-back grey hair, hands clasped, in a navy coat with a high white and gold collar."><img class="stamp" src="/img/book/role-healer.webp" width="192" height="192" alt=""></span>
             <strong class="slip">Oracle</strong>
             <span>Healer</span>
           </a>
         </li>
         <li>
           <a href="/shatterbound/#reaver" data-hero="reaver">
-            <span class="sticker"><img src="/img/party/reaver.webp" width="256" height="256" loading="lazy" alt=""><img class="stamp" src="/img/book/stamp-melee.webp" width="110" height="110" alt=""></span>
+            <span class="sticker" data-portrait="reaver"><img class="pt-painted" src="/img/party/reaver.webp" width="256" height="256" loading="lazy" alt="Reaver's portrait: a young man with tousled brown hair and a half smile, against a red sky."><img class="pt-render" src="/img/portraits/reaver-480.webp" width="480" height="600" loading="lazy" alt="Reaver: a young man with tousled brown hair, sitting on the floor with one knee up, in a dark coat over an open white shirt."><img class="stamp" src="/img/book/role-dps.webp" width="192" height="192" alt=""></span>
             <strong class="slip">Reaver</strong>
             <span>Melee DPS</span>
           </a>
         </li>
         <li>
           <a href="/shatterbound/#asha" data-hero="asha">
-            <span class="sticker"><img src="/img/party/asha.webp" width="256" height="256" loading="lazy" alt=""><img class="stamp" src="/img/book/stamp-ranged.webp" width="110" height="110" alt=""></span>
+            <span class="sticker" data-portrait="asha"><img class="pt-painted" src="/img/party/asha.webp" width="256" height="256" loading="lazy" alt="Asha's portrait: a woman with long black hair falling over one shoulder, against a pink sky."><img class="pt-render" src="/img/portraits/asha-480.webp" width="480" height="600" loading="lazy" alt="Asha: a woman with long black hair, one hand on her hip, in a pink cropped jacket."><img class="stamp" src="/img/book/role-dps.webp" width="192" height="192" alt=""></span>
             <strong class="slip">Asha</strong>
             <span>Ranged DPS</span>
           </a>
@@ -188,35 +220,35 @@
       <ul class="party-strip boss-strip">
         <li>
           <a href="/shatterbound/#patchwork">
-            <span class="sticker"><img src="/img/party/patchwork.webp" width="256" height="256" loading="lazy" alt=""></span>
+            <span class="sticker" data-portrait="patchwork"><img class="pt-painted" src="/img/party/patchwork.webp" width="256" height="256" loading="lazy" alt="Patchwork's portrait: a white-bearded figure in a hood with a golden halo, stitched together from bright mismatched parts."><img class="pt-render" src="/img/portraits/patchwork-480.webp" width="480" height="600" loading="lazy" alt="Patchwork: a white-bearded figure in a pointed white hood under a golden ring of orbs, one arm red with a white star, the other grey machinery."></span>
             <strong class="slip">Patchwork</strong>
             <span>Patchwork's Hunt</span>
           </a>
         </li>
         <li>
           <a href="/shatterbound/#giant">
-            <span class="sticker"><img src="/img/party/giant.webp" width="256" height="256" loading="lazy" alt=""></span>
+            <span class="sticker" data-portrait="giant"><img class="pt-painted" src="/img/party/giant.webp" width="256" height="256" loading="lazy" alt="The Giant's portrait: a horned face of burning orange with glowing eyes."><img class="pt-render" src="/img/portraits/giant-480.webp" width="480" height="600" loading="lazy" alt="The Giant: a tall horned demon, black with ribs of molten orange, a burning ring behind his head and an iron-banded club in one hand."></span>
             <strong class="slip">The Giant</strong>
             <span>The Giant's Gate</span>
           </a>
         </li>
         <li>
           <a href="/shatterbound/#old-hunger">
-            <span class="sticker"><img src="/img/party/old-hunger.webp" width="256" height="256" loading="lazy" alt=""></span>
+            <span class="sticker" data-portrait="old-hunger"><img class="pt-painted" src="/img/party/old-hunger.webp" width="256" height="256" loading="lazy" alt="Old Hunger's portrait: a gaping, fleshy maw ringed with teeth."><img class="pt-render" src="/img/portraits/old-hunger-480.webp" width="480" height="600" loading="lazy" alt="Old Hunger: a huge armoured grub with a spiked shell and a split, toothed jaw, crouched on curled claws."></span>
             <strong class="slip">Old Hunger</strong>
             <span>The Feeding Pit</span>
           </a>
         </li>
         <li>
           <a href="/shatterbound/#maera">
-            <span class="sticker"><img src="/img/party/maera.webp" width="256" height="256" loading="lazy" alt=""></span>
+            <span class="sticker" data-portrait="maera"><img class="pt-painted" src="/img/party/maera.webp" width="256" height="256" loading="lazy" alt="Maera's portrait: a stern face framed by long, swept-back hair, against sea green."><img class="pt-render" src="/img/portraits/maera-480.webp" width="480" height="600" loading="lazy" alt="Maera: a grey-haired woman with a stern face, in a dark hooded cloak, a huge anchor over her shoulder."></span>
             <strong class="slip">Maera</strong>
             <span>The Lightless Shoal</span>
           </a>
         </li>
         <li>
           <a href="/shatterbound/#don-fortuna" class="is-coming">
-            <span class="coming-plate" aria-hidden="true"><svg class="coming-mark" width="64" height="64" viewBox="0 0 32 32" focusable="false"><use href="#shard"/></svg></span>
+            <span class="coming-plate" aria-hidden="true"><img class="coming-mark mark-ink" src="/img/brand/shatterbound/mark-ink.svg" width="64" height="64" alt=""><img class="coming-mark mark-chalk" src="/img/brand/shatterbound/mark-chalk.svg" width="64" height="64" alt=""></span>
             <strong class="slip">Don Fortuna</strong>
             <span>Coming</span>
           </a>
@@ -254,7 +286,7 @@
       </section>
     </div>
 
-    <p class="wrap foot-line" id="builds">Want to play? <a href="/request/">Request a build</a>. For a note when there's a new devlog or build, <a href="/devlog/#list-title">join the email list</a>.</p>
+    <p class="wrap foot-line">For a note when there's a new devlog or build, <a href="#join">join the email list</a>.</p>
   </main>
 
   <footer class="colophon">
@@ -304,13 +336,6 @@
     </div>
   </dialog>
   <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
-    <symbol id="shard" viewBox="0 0 32 32">
-      <path d="M16 2 27 14 16 30 5 14Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-      <path d="M16 2 16 30M5 14 16 18 27 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-    </symbol>
-    <symbol id="i-tank" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"/></symbol>
-    <symbol id="i-healer" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
-    <symbol id="i-dps" viewBox="0 0 24 24"><path d="M21 3v4L10 18l-4-4L17 3Z"/><path d="M4 13l7 7-1.4 1.4-7-7Z"/><path d="M6.5 18.9 3.9 21.5 2.5 20.1 5.1 17.5Z"/></symbol>
   </svg>
 </body>
 </html>

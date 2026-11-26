@@ -1,19 +1,31 @@
-// Project Trinity: the site's only script. No tracking, no cookies, nothing stored.
-// 1. The light/dark switch (for this visit only; the page otherwise follows the system setting).
+// Project Trinity: the site's only script. No tracking, no cookies; the one thing kept is the Day or Night pick, in this browser only.
+// 1. The light/dark switch: the visitor's pick is kept in this browser (localStorage, never a cookie, never sent) so it
+//    holds across pages; until they pick, the page follows the system setting. Each page's head reads it before drawing.
 // 2. The header: clear over a picture, solid once the page scrolls; a menu on a phone.
 // 3. The film: loads YouTube's privacy-enhanced player only when play is pressed.
 // 4. The boxes: checked here, then sent to the site's form handler (with Cloudflare's Turnstile spam check).
 // 5. The welcome note after confirming the email list.
+// 6. The portraits (painted or render), the hero scrolls and the skill clips.
 
 (function () {
   "use strict";
 
-  // 1. Light and dark
   var root = document.documentElement;
+  var query = new URLSearchParams(window.location.search);
+
+  // 6a. THE PORTRAIT SETTING (Tooling 182): which portraits the site shows, everywhere at once.
+  //   "painted": the game's own painted stickers (img/party/), and the fight cards on the boss banners.
+  //   "render":  Models 101's realistic renders (img/portraits/): the 4:5 cut-outs and the 16:9 banners.
+  // ?portraits=painted or ?portraits=render previews the other one. Without this script the page shows the painted set.
+  var PORTRAITS = "painted";
+  var askedPortraits = query.get("portraits");
+  root.setAttribute("data-portraits", askedPortraits === "render" || askedPortraits === "painted" ? askedPortraits : PORTRAITS);
+
+  // 1. Light and dark
   var toggle = document.querySelector("[data-theme-toggle]");
   var media = window.matchMedia("(prefers-color-scheme: dark)");
   // ?theme=dark or ?theme=light opens the page in that mode (handy for previews and screenshots)
-  var asked = new URLSearchParams(window.location.search).get("theme");
+  var asked = query.get("theme");
   if (asked === "dark" || asked === "light") root.setAttribute("data-theme", asked);
 
   function isDark() {
@@ -25,7 +37,9 @@
   }
   if (toggle) {
     toggle.addEventListener("click", function () {
-      root.setAttribute("data-theme", isDark() ? "light" : "dark");
+      var next = isDark() ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { window.localStorage.setItem("pt-theme", next); } catch (e) { /* storage off: this page only */ }
       paintToggle();
     });
     media.addEventListener("change", paintToggle);
@@ -70,7 +84,7 @@
     var still = window.matchMedia("(prefers-reduced-motion: reduce)");
     var seen = !("IntersectionObserver" in window);
     var steer = function () {
-      if (still.matches || !seen || document.hidden) {
+      if (still.matches || !seen || document.hidden || broll.getAttribute("data-paused") === "true") {
         broll.pause();
       } else {
         var playing = broll.play();
@@ -91,8 +105,34 @@
     }
     document.addEventListener("visibilitychange", steer);
     still.addEventListener("change", steer);
+    // a skill clip gets a Pause button (it loops for as long as it is on screen)
+    var frame = broll.closest(".skill-clip");
+    if (frame && !still.matches) {
+      var hold = document.createElement("button");
+      hold.type = "button";
+      hold.className = "clip-hold";
+      hold.setAttribute("aria-pressed", "false");
+      hold.textContent = "Pause";
+      hold.addEventListener("click", function () {
+        var paused = broll.getAttribute("data-paused") !== "true";
+        broll.setAttribute("data-paused", paused ? "true" : "false");
+        hold.setAttribute("aria-pressed", paused ? "true" : "false");
+        hold.textContent = paused ? "Play" : "Pause";
+        steer();
+      });
+      frame.appendChild(hold);
+    }
     steer();
   });
+
+  // 6b. A link to a hero (/shatterbound/#bastion) opens that hero's scroll.
+  function openFromHash() {
+    var id = window.location.hash.slice(1);
+    var target = id && document.getElementById(id);
+    if (target && target.matches("details.scroll")) target.open = true;
+  }
+  openFromHash();
+  window.addEventListener("hashchange", openFromHash);
 
   // 3. The film: nothing of YouTube's runs until the visitor presses play; then its privacy-enhanced
   // player (youtube-nocookie.com) opens in a window over the page. Without the script, the link goes to YouTube.
@@ -280,7 +320,7 @@
 
   // 5. The welcome note: Kit sends people here (?subscribed=1) after they confirm the email list.
   var welcome = document.getElementById("welcome");
-  var params = new URLSearchParams(window.location.search);
+  var params = query;
   if (welcome && params.get("subscribed") === "1") {
     params.delete("subscribed");
     var rest = params.toString();

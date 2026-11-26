@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Old Hunger | Shatterbound | Project Trinity</title>
+  <meta name="description" content="Old Hunger, a boss of Project Trinity: Shatterbound (The Hungry Deep: The Feeding Pit), and how the fight works.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c3b3ea">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#12163a">
+  <link rel="canonical" href="https://projecttrinity.dev/shatterbound/old-hunger/">
+
+  <!-- The link card: what a shared link shows -->
+  <meta property="og:type" content="website">
+  <meta name="author" content="Project Trinity Studios">
+  <meta property="og:site_name" content="Project Trinity Studios">
+  <meta property="og:title" content="Old Hunger: how the fight works">
+  <meta property="og:description" content="Something is eating its way up from below the Crossroads. The Chanters call it Old Hunger and keep it fed. It is small for now, and they mean to change that.">
+  <meta property="og:url" content="https://projecttrinity.dev/shatterbound/old-hunger/">
+  <meta property="og:image" content="https://projecttrinity.dev/img/portraits/share-old-hunger.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Old Hunger on the tiled floor of his dark chamber, his split, toothed jaw open, his shell bristling with spikes.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="/img/brand/shatterbound/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/img/brand/shatterbound/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/brand/shatterbound/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+  <link rel="stylesheet" href="/css/site.css?v=06fca8b8">
+  <script src="/js/site.js?v=67492294" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the page</a>
+
+  <header class="site-header" data-header>
+    <div class="header-bar">
+      <a class="mark" href="/">
+        <span class="mark-glyph" aria-hidden="true"><img class="mark-ink" src="/img/brand/mark-ink.svg" width="32" height="32" alt=""><img class="mark-chalk" src="/img/brand/mark-chalk.svg" width="32" height="32" alt=""></span>
+        <span>Project Trinity</span>
+      </a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-button>
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Menu</span>
+      </button>
+      <div class="header-menu" id="site-menu">
+        <nav aria-label="Site">
+          <ul>
+          <li><a href="/shatterbound/">Shatterbound</a></li>
+          <li><a href="/research/">Research</a></li>
+          <li><a href="/devlog/">Devlog</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="header-tools">
+          <a class="button button-gold header-cta" href="/request/">Request a build</a>
+          <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+            <span class="on-day">Day</span><span class="on-night">Night</span><span class="visually-hidden"> pages (switch to Night)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="page-top">
+    <div class="wrap char-banner">
+      <span class="photo banner"><img src="/img/portraits/old-hunger-16x9-800.jpg" srcset="/img/portraits/old-hunger-16x9-800.jpg 800w, /img/portraits/old-hunger-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 1000px, 100vw" width="1280" height="720" fetchpriority="high" alt="Old Hunger on the tiled floor of his dark chamber, his split, toothed jaw open, his shell bristling with spikes."></span>
+    </div>
+
+    <header class="wrap char-head">
+      <figure class="char-portrait is-boss">
+        <span class="sticker" data-portrait="old-hunger"><img class="pt-painted" src="/img/party/old-hunger.webp" width="256" height="256" loading="eager" alt="Old Hunger&#x27;s portrait: a gaping, fleshy maw ringed with teeth."><img class="pt-render" src="/img/portraits/old-hunger-480.webp" srcset="/img/portraits/old-hunger-480.webp 480w, /img/portraits/old-hunger-800.webp 800w" sizes="(max-width: 760px) 70vw, 340px" width="480" height="600" loading="eager" alt="Old Hunger: a huge armoured grub with a spiked shell and a split, toothed jaw, crouched on curled claws."></span>
+      </figure>
+      <div class="char-words">
+        <p class="eyebrow"><a href="/shatterbound/#old-hunger">The bosses</a> <span aria-hidden="true">/</span> The Hungry Deep: The Feeding Pit</p>
+        <h1><span class="title-mark">Old Hunger</span></h1>
+        <p class="lede">Something is eating its way up from below the Crossroads. The Chanters call it Old Hunger and keep it fed. It is small for now, and they mean to change that.</p>
+      </div>
+    </header>
+
+    <section class="wrap section" aria-labelledby="fight-title">
+      <div class="section-head">
+        <h2 id="fight-title"><span class="title-mark">How the fight works</span></h2>
+      </div>
+      <div class="char-sheet">
+        <details class="walk">
+          <summary>Open the walkthrough <span class="spoiler">(spoilers)</span></summary>
+          <div class="walk-body">
+            <span class="photo banner" data-banner="old-hunger"><img class="pt-painted" src="/img/fights/old-hunger-800.jpg" srcset="/img/fights/old-hunger-800.jpg 800w, /img/fights/old-hunger-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Old Hunger in his chamber: a huge armoured grub with a split, toothed jaw, lit pale against a dark floor."><img class="pt-render" src="/img/portraits/old-hunger-16x9-800.jpg" srcset="/img/portraits/old-hunger-16x9-800.jpg 800w, /img/portraits/old-hunger-16x9-1280.jpg 1280w" sizes="(min-width: 1100px) 860px, 100vw" width="1280" height="720" loading="lazy" alt="Old Hunger on the tiled floor of his dark chamber, his split, toothed jaw open, his shell bristling with spikes."></span>
+            <ul class="shard-list">
+<li><b>Imps</b> crawl out of the Tears and feed him. Every <b>Fed</b> stack makes him hit harder. When “HE'S FULL”, he <b>Retch Slam</b>s around himself and a <b>Retch Shower</b> hunts the party.</li>
+<li>The <b>Devouring Glutton</b> comes through a Tear and casts <b>Seize</b> on whoever stands farthest away, never the Tank: “THE GLUTTON HAS ONE OF US”. That hero is <b>Held</b> and can't move, cast, dodge or block. The party calls it mind control.</li>
+<li>The Glutton drags its catch to Old Hunger. If it reaches him, he takes them both and hits far harder. Kill the Glutton first and the hero goes free.</li>
+<li><b>Bile Spit</b> leaves pools of bile that stay, and every pool makes him stronger (<b>Pooled Bile</b>). Bastion's <b>Clear Ground</b> clears them.</li>
+<li><b>Burrow</b>: he tunnels to the farthest hero and comes up with <b>Erupt</b>. Up close: <b>Snap Bite</b> and <b>Head Rake</b> in front, a <b>Tail Sweep</b> behind.</li>
+            </ul>
+            <div>
+              <h3 class="jobs-title">Your job</h3>
+              <div class="jobs">
+                <div class="job" data-hero="bastion">
+                  <h4><img class="job-stamp" src="/img/book/role-tank.webp" width="192" height="192" alt="">Tank</h4>
+                  <p>Hold him away from the bile. As Bastion, Clear Ground wipes the pools.</p>
+                </div>
+                <div class="job" data-hero="oracle">
+                  <h4><img class="job-stamp" src="/img/book/role-healer.webp" width="192" height="192" alt="">Healer</h4>
+                  <p>Seize takes whoever stands farthest away, so stay with the party. Heal everyone up after each Retch.</p>
+                </div>
+                <div class="job" data-hero="asha">
+                  <h4><img class="job-stamp" src="/img/book/role-dps.webp" width="192" height="192" alt="">DPS</h4>
+                  <p>Kill Imps before they reach him. On “THE GLUTTON HAS ONE OF US”, switch to the Glutton and kill it.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <nav class="wrap section" aria-labelledby="others-title">
+      <div class="section-head">
+        <h2 id="others-title"><span class="title-mark">The other bosses</span></h2>
+        <a class="more" href="/shatterbound/">All the heroes and bosses</a>
+      </div>
+      <ul class="party-strip boss-strip char-others">
+          <li><a href="/shatterbound/patchwork/" data-hero="patchwork"><span class="sticker" data-portrait="patchwork"><img class="pt-painted" src="/img/party/patchwork.webp" width="256" height="256" loading="lazy" alt="Patchwork&#x27;s portrait: a white-bearded figure in a hood with a golden halo, stitched together from bright mismatched parts."><img class="pt-render" src="/img/portraits/patchwork-480.webp" srcset="/img/portraits/patchwork-480.webp 480w, /img/portraits/patchwork-800.webp 800w" sizes="120px" width="480" height="600" loading="lazy" alt="Patchwork: a white-bearded figure in a pointed white hood under a golden ring of orbs, one arm red with a white star, the other grey machinery."></span><strong class="slip">Patchwork</strong></a></li>
+          <li><a href="/shatterbound/giant/" data-hero="giant"><span class="sticker" data-portrait="giant"><img class="pt-painted" src="/img/party/giant.webp" width="256" height="256" loading="lazy" alt="The Giant&#x27;s portrait: a horned face of burning orange with glowing eyes."><img class="pt-render" src="/img/portraits/giant-480.webp" srcset="/img/portraits/giant-480.webp 480w, /img/portraits/giant-800.webp 800w" sizes="120px" width="480" height="600" loading="lazy" alt="The Giant: a tall horned demon, black with ribs of molten orange, a burning ring behind his head and an iron-banded club in one hand."></span><strong class="slip">The Giant</strong></a></li>
+          <li><a href="/shatterbound/maera/" data-hero="maera"><span class="sticker" data-portrait="maera"><img class="pt-painted" src="/img/party/maera.webp" width="256" height="256" loading="lazy" alt="Maera&#x27;s portrait: a stern face framed by long, swept-back hair, against sea green."><img class="pt-render" src="/img/portraits/maera-480.webp" srcset="/img/portraits/maera-480.webp 480w, /img/portraits/maera-800.webp 800w" sizes="120px" width="480" height="600" loading="lazy" alt="Maera: a grey-haired woman with a stern face, in a dark hooded cloak, a huge anchor over her shoulder."></span><strong class="slip">Maera</strong></a></li>
+      </ul>
+    </nav>
+  </main>
+
+  <footer class="colophon">
+    <div class="colophon-grid">
+      <div>
+        <h2>Pages</h2>
+        <ul>
+          <li><a href="/shatterbound/">Shatterbound</a></li>
+          <li><a href="/research/">Research</a></li>
+          <li><a href="/devlog/">Devlog</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/request/">Request a build</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <ul>
+          <li><a href="/contact/">Send a message</a></li>
+          <li><a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Video</h2>
+        <p><a href="https://www.youtube.com/@ProjectTrinityStudios">YouTube: @ProjectTrinityStudios</a></p>
+      </div>
+      <div class="privacy">
+        <h2>Privacy</h2>
+        <p>This site sets no cookies and runs no trackers or ads. The gameplay video plays from YouTube's privacy-enhanced player, and only once you press play; from then, YouTube's own privacy terms apply to it. If you request a build or send a message, it goes to the project mailbox; your email joins the list only if you ask. All of it is for people 13 or older.</p>
+      </div>
+    </div>
+    <p class="colophon-foot">Disclosure: AI tools and AI-generated assets were used in making this game.</p>
+    <p class="colophon-foot">© 2026 Project Trinity Studios. Project Trinity: Shatterbound is in alpha.</p>
+  </footer>
+
+  <svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
+  </svg>
+</body>
+</html>
