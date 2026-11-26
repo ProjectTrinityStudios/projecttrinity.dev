@@ -86,7 +86,10 @@ A build request's mail to him carries an Approve link (`worker/src/keys.js`). Op
 nothing; its **Send key** button takes the next unused itch.io key link from D1 (`build_keys`), mails it to the requester
 through Resend with their platform's note, and marks the key and the request used (the page never shows a sent key: `keys.mjs sent` does; a send with an unclear answer keeps its key held for that request); at `KEYS_LOW` unused keys or fewer
 each send also mails him a warning. The link's secret is stored only as its SHA-256 (`approvals`), and each request sends
-one key at most. The platform notes are `PLATFORM_NOTES` at the top of `keys.js`.
+one key at most. Each address holds one key at most (Tooling 201): a request from an address whose key already went takes
+no key; the Worker mails them their own key's link again ("You already have a ... build", at most once a day) and stores
+the request as `repeat` (`repeat-unsent` if that mail did not go, which `list` shows). His mail and its page say so, and
+the page offers **Mail their link again** instead of Send key. The platform notes are `PLATFORM_NOTES` at the top of `keys.js`.
 
 - Keys go in from `worker/` with `node tools/keys.mjs import <file>` (or a pasted list): either export of an itch.io key
   group ("Download keys", the full links, is the one to press; "Download short URLs" also works, each `itch.io/get-...`

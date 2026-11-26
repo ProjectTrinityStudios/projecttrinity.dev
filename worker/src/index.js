@@ -7,7 +7,7 @@
 // No cookies, nothing kept beyond the request row. Secrets (TURNSTILE_SECRET, MAILBOX, KIT_API_KEY, RESEND_API_KEY) live in
 // Cloudflare, never in this repo.
 
-import { handleApprove, keysLeft, makeApproveLink } from "./keys.js";
+import { handleApprove, heldKey, keysLeft, makeApproveLink, remindKey } from "./keys.js";
 
 const PLATFORMS = ["windows", "mac", "linux"];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -62,6 +62,30 @@ export default {
       if (!PLATFORMS.includes(platform)) return reply(400, { ok: false, error: "platform" });
       const note = String(data.note || "").slice(0, 500);
       const joinList = data.join_list === true;
+
+      // An address that already has a build takes no second key (Tooling 201): it is mailed its own key's link again,
+      // at most once a day, and he gets the request mail with the Approve page saying so.
+      const held = await heldKey(env, email);
+      if (held && held.status === "sent") {
+        // One statement, so two requests at once cannot both pass the once-a-day check.
+        const row = await env.DB.prepare(
+          `INSERT INTO build_requests (email, platform, note, join_list, status)
+           SELECT ?, ?, ?, ?, 'repeat-unsent' WHERE NOT EXISTS (SELECT 1 FROM build_requests WHERE email = ?
+             AND status IN ('repeat', 'repeat-unsent') AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 day'))
+           RETURNING id`
+        ).bind(email, platform, note, joinList ? 1 : 0, email).first();
+        if (!row) return reply(200, { ok: true });
+        const sent = await remindKey(env, row.id, email, platform, held);
+        let approve = "";
+        try {
+          approve = await makeApproveLink(env, row.id);
+        } catch (err) {
+          console.log("approve link failed", err && err.message);
+        }
+        await mailHim(env, email, platform, note, joinList, approve, null, row.id, { held, sent });
+        if (joinList) await addToKit(env, email);
+        return reply(200, { ok: true });
+      }
 
       // One request per email per day is plenty; a repeat is thanked but not stored or mailed again.
       const recent = await env.DB.prepare(
@@ -150,9 +174,10 @@ async function addToKit(env, email) {
 
 // To the project mailbox, a verified Email Routing destination (the Free plan sends only to those).
 // The Approve link is his alone: it opens the request, and only its Send key button mails a key.
-async function mailHim(env, email, platform, note, joinList, approve, left, id) {
+// repeat: { held, sent } for an address that already has a build, whose own key's link was mailed again.
+async function mailHim(env, email, platform, note, joinList, approve, left, id, repeat) {
   const text = [
-    "A build request from projecttrinity.dev",
+    repeat ? "A build request from projecttrinity.dev, from an address that already has a build" : "A build request from projecttrinity.dev",
     "",
     `Email:    ${email}`,
     `Platform: ${platform}`,
@@ -161,7 +186,16 @@ async function mailHim(env, email, platform, note, joinList, approve, left, id) 
     "Note:",
     note || "(none)",
     "",
-    ...(approve
+    ...(repeat
+      ? [
+          `This address already has a build: its key went on ${repeat.held.used_at} (request ${repeat.held.request_id}). No new key was taken.`,
+          repeat.sent.ok
+            ? "They were mailed their own key's link again, from builds@projecttrinity.dev."
+            : `The mail with their own key's link did not go out (${repeat.sent.error}): the link below can send it again.`,
+          "",
+          ...(approve ? ["The request's page:", approve] : [`The Approve link could not be made: run node tools/keys.mjs link ${id} for one.`]),
+        ]
+      : approve
       ? [
           "To send a build key, open this link and press Send key (opening it sends nothing):",
           approve,
@@ -175,7 +209,7 @@ async function mailHim(env, email, platform, note, joinList, approve, left, id) 
     await env.NOTIFY.send({
       to: env.MAILBOX,
       from: env.MAIL_FROM,
-      subject: `Build request: ${platform}, ${email}`,
+      subject: `${repeat ? "Build request again" : "Build request"}: ${platform}, ${email}`,
       text,
     });
   } catch (err) {

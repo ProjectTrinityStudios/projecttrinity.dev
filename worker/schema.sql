@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS build_requests (
   platform   TEXT    NOT NULL CHECK (platform IN ('windows', 'mac', 'linux')),
   note       TEXT    NOT NULL DEFAULT '',
   join_list  INTEGER NOT NULL DEFAULT 0,
-  status     TEXT    NOT NULL DEFAULT 'new'   -- 'new', 'sending' (his click in progress), 'sent', 'declined'
+  status     TEXT    NOT NULL DEFAULT 'new'   -- 'new', 'sending' (his click in progress), 'sent', 'declined';
+                                               -- 'repeat' or 'repeat-unsent': the address already had a key, its link mailed again
 );
 CREATE INDEX IF NOT EXISTS build_requests_email ON build_requests (email);
 
