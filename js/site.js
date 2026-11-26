@@ -185,4 +185,13 @@
       });
     });
   });
+  // 4. The welcome note: Kit sends people here (?subscribed=1) after they confirm the email list.
+  var welcome = document.getElementById("welcome");
+  var params = new URLSearchParams(window.location.search);
+  if (welcome && params.get("subscribed") === "1") {
+    params.delete("subscribed");
+    var rest = params.toString();
+    window.history.replaceState(null, "", window.location.pathname + (rest ? "?" + rest : "") + window.location.hash);
+    if (typeof welcome.showModal === "function") welcome.showModal();
+  }
 })();
