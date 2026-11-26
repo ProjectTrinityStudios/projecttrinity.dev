@@ -71,7 +71,8 @@ export default {
     }
 
     if (path === "/contact") {
-      const name = String(data.name || "").trim().slice(0, 100);
+      // The name goes into the mail's subject line: no line breaks or other control characters in it.
+      const name = String(data.name || "").replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 100);
       const message = String(data.message || "").trim().slice(0, 2000);
       if (!message) return reply(400, { ok: false, error: "message" });
 
