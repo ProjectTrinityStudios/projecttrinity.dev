@@ -8,7 +8,8 @@ The header and footer below are the same as every other page's: change one, chan
 
 Usage: python tools/make-characters.py   (then python tools/stamp-assets.py)
 """
-from html import escape
+import json
+from html import escape, unescape
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -218,7 +219,7 @@ HEAD = """<!doctype html>
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="{image_alt}">
   <meta name="twitter:card" content="summary_large_image">
-
+{structured}
   <link rel="icon" href="/img/brand/shatterbound/favicon.ico" sizes="48x48">
   <link rel="icon" href="/img/brand/shatterbound/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/brand/shatterbound/apple-touch-icon.png">
@@ -355,9 +356,41 @@ def role_pill(h):
 ICONS = ""
 
 
+def structured(head_args):
+    """The page's structured data (JSON-LD) for search engines and AI search (Tooling 187): what the page is, that
+    it is about the game, and where it sits on the site (Home, Shatterbound, the character)."""
+    url, name = head_args["url"], unescape(head_args["og_title"])
+    crumbs = [("Project Trinity", f"{SITE}/"), ("Shatterbound", f"{SITE}/shatterbound/")]
+    if url != f"{SITE}/shatterbound/":
+        crumbs.append((name, url))
+    data = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "CollectionPage" if len(crumbs) == 2 else "WebPage",
+                "name": name,
+                "description": unescape(head_args["description"]),
+                "url": url,
+                "image": head_args["image"],
+                "isPartOf": {"@type": "WebSite", "name": "Project Trinity", "url": f"{SITE}/"},
+                "about": {"@type": "VideoGame", "name": "Project Trinity: Shatterbound", "url": f"{SITE}/"},
+                "publisher": {"@type": "Organization", "name": "Project Trinity Studios", "url": f"{SITE}/"},
+            },
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate(crumbs)
+                ],
+            },
+        ],
+    }
+    text = json.dumps(data, indent=2, ensure_ascii=False).replace("</", "<\\/")
+    return '  <script type="application/ld+json">\n' + text + "\n  </script>"
+
+
 def page(path, head_args, body):
     foot = FOOT.replace("{icons}", ICONS)
-    html = HEAD.format(**head_args) + body + foot
+    html = HEAD.format(structured=structured(head_args), **head_args) + body + foot
     out = ROOT / path
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8", newline="\n")
