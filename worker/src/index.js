@@ -2,7 +2,8 @@
 //   POST /request    a build request: checked by Turnstile, kept in D1, mailed to the project mailbox,
 //                    and added to the email list only if the requester ticked that box
 //   POST /subscribe  the email list: checked by Turnstile, handed to Kit's form (Kit sends its own confirm email)
-//   POST /contact    a message from the Contact page: checked by Turnstile, kept in D1, mailed to the project mailbox
+//   POST /contact    a message from the Contact page ("Tell us how it went"): checked by Turnstile, kept in D1, mailed to
+//                    the project mailbox, with its kind, the run questions' answers and the game's report code
 //   GET|POST /approve  his Approve link from a request mail: shows the request; its button mails the requester a build key (keys.js)
 // No cookies, nothing kept beyond the request row. Secrets (TURNSTILE_SECRET, MAILBOX, KIT_API_KEY, RESEND_API_KEY) live in
 // Cloudflare, never in this repo.
@@ -10,6 +11,16 @@
 import { handleApprove, heldKey, keysLeft, makeApproveLink, remindKey } from "./keys.js";
 
 const PLATFORMS = ["windows", "mac", "linux"];
+// The Contact page's choices (migrations/0001_feedback.sql); each may be left out, which keeps "".
+const KINDS = ["bug", "idea", "thanks", "other"];
+const RAN = ["yes", "trouble", "no", "not-played"];
+const SEVERITIES = ["blocker", "annoying", "small"];
+// What the mail shows for each choice, in the page's own words.
+const SAID = {
+  kind: { bug: "A bug", idea: "An idea", thanks: "Thanks", other: "Something else" },
+  ran: { yes: "Yes", trouble: "Yes, with trouble", no: "No", "not-played": "Hasn't played yet" },
+  severity: { blocker: "It stopped them playing", annoying: "It got in the way", small: "Small, but worth saying" },
+};
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default {
@@ -111,10 +122,20 @@ export default {
     }
 
     if (path === "/contact") {
-      // The name goes into the mail's subject line: no line breaks or other control characters in it.
-      const name = String(data.name || "").replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 100);
+      // The name goes into the mail's subject line: no line breaks or other control characters in it. The same goes
+      // for the one-line answers and the report code.
+      const line = (v, max) => String(v || "").replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
+      const pick = (v, list) => (list.includes(v) ? v : "");
+      const name = line(data.name, 100);
       const message = String(data.message || "").trim().slice(0, 2000);
       if (!message) return reply(400, { ok: false, error: "message" });
+      const fb = {
+        kind: pick(data.kind, KINDS),
+        ran: pick(data.ran, RAN),
+        played: line(data.played, 200),
+        severity: pick(data.severity, SEVERITIES),
+        report_code: line(data.report_code, 1000),
+      };
 
       // A few messages per email per hour is plenty; past that the page is told plainly (429) and keeps the draft.
       const recent = await env.DB.prepare(
@@ -123,10 +144,10 @@ export default {
       if (recent && recent.n >= 3) return reply(429, { ok: false, error: "rate" });
 
       await env.DB.prepare(
-        "INSERT INTO messages (email, name, message) VALUES (?, ?, ?)"
-      ).bind(email, name, message).run();
+        "INSERT INTO messages (email, name, message, kind, ran, played, severity, report_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+      ).bind(email, name, message, fb.kind, fb.ran, fb.played, fb.severity, fb.report_code).run();
 
-      await mailMessage(env, email, name, message);
+      await mailMessage(env, email, name, message, fb);
       return reply(200, { ok: true });
     }
 
@@ -219,14 +240,25 @@ async function mailHim(env, email, platform, note, joinList, approve, left, id, 
 }
 
 // A Contact page message, to the same mailbox. The row is already in D1, so a failed mail loses nothing.
-async function mailMessage(env, email, name, message) {
+// fb: the kind, the run questions' answers and the report code, each "" when not given.
+async function mailMessage(env, email, name, message, fb) {
+  const kind = SAID.kind[fb.kind] || "";
   const text = [
-    "A message from projecttrinity.dev/contact",
+    "A message from projecttrinity.dev/contact (Tell us how it went)",
     "",
     `From:  ${name || "(no name given)"}`,
     `Email: ${email}`,
+    `Kind:  ${kind || "(not said)"}`,
     "",
+    `Did it run:  ${SAID.ran[fb.ran] || "(not said)"}`,
+    `They played: ${fb.played || "(not said)"}`,
+    `How bad:     ${SAID.severity[fb.severity] || "(not said)"}`,
+    "",
+    "What happened:",
     message,
+    "",
+    "Report code:",
+    fb.report_code || "(none)",
     "",
     "Reply by writing to the address above.",
   ].join("\n");
@@ -234,7 +266,7 @@ async function mailMessage(env, email, name, message) {
     await env.NOTIFY.send({
       to: env.MAILBOX,
       from: env.MAIL_FROM,
-      subject: `Message: ${name ? name + ", " : ""}${email}`,
+      subject: `${kind || "Message"}: ${name ? name + ", " : ""}${email}`,
       text,
     });
   } catch (err) {

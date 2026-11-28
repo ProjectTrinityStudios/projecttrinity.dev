@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS build_requests (
 );
 CREATE INDEX IF NOT EXISTS build_requests_email ON build_requests (email);
 
--- Messages from the Contact page. One row per message; nothing else is kept.
+-- Messages from the Contact page ("Tell us how it went"). One row per message; nothing else is kept.
+-- migrations/0001_feedback.sql adds its kind, ran, played, severity and report_code columns: run it after this file
+-- (`npx wrangler d1 migrations apply projecttrinity-forms`, with --local or --remote).
 CREATE TABLE IF NOT EXISTS messages (
   id         INTEGER PRIMARY KEY AUTOINCREMENT,
   created_at TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),

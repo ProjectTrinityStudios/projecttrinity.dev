@@ -232,6 +232,14 @@
         firstBad = firstBad || email;
       }
 
+      // The Contact page's kind (bug, idea, thanks, something else) is the one choice it asks for.
+      var kinds = form.querySelectorAll('input[name="kind"]');
+      if (kinds.length && !form.querySelector('input[name="kind"]:checked')) {
+        Array.prototype.forEach.call(kinds, function (r) { r.setAttribute("aria-invalid", "true"); });
+        problems.push("Pick what it is: a bug, an idea, thanks, or something else.");
+        firstBad = firstBad || kinds[0];
+      }
+
       var platforms = form.querySelectorAll('input[name="platform"]');
       var picked = form.querySelector('input[name="platform"]:checked');
       if (platforms.length && !picked) {
@@ -271,6 +279,9 @@
       var join = field("join_list");
       var noteField = field("note");
       var name = field("name");
+      var played = field("played");
+      var code = field("report_code");
+      function chosen(n) { var r = form.querySelector('input[name="' + n + '"]:checked'); return r ? r.value : undefined; }
       var body = {
         email: email.value.trim(),
         age: true,
@@ -279,7 +290,12 @@
         note: noteField ? noteField.value : undefined,
         join_list: join ? join.checked : undefined,
         name: name ? name.value.trim() : undefined,
-        message: message ? message.value : undefined
+        message: message ? message.value : undefined,
+        kind: chosen("kind"),
+        ran: chosen("ran"),
+        severity: chosen("severity"),
+        played: played ? played.value.trim() : undefined,
+        report_code: code ? code.value.trim() : undefined
       };
 
       sending = true;

@@ -291,8 +291,11 @@ async function remindAgain(env, id, token) {
 // ---- the mails ----
 
 // Each key mail is one list of blocks, so its plain-text part and its HTML part carry the same words:
-// { p } a paragraph, { link } the key's link on its own line, { note } the platform's lines (a line indented four
+// { p } a paragraph (with { href }, a link on the line after it), { link } the key's link on its own line, { note } the platform's lines (a line indented four
 // spaces is a command to type), { sign } the sign-off lines.
+// Where a tester writes back (Site 9): the Contact page, "Tell us how it went".
+const FEEDBACK_URL = "https://projecttrinity.dev/contact/";
+
 function mailBlocks(platform, keyUrl, again) {
   return [
     { p: "Hello," },
@@ -304,14 +307,14 @@ function mailBlocks(platform, keyUrl, again) {
         ? "It is the same link as before and it is still yours. It opens the game's itch.io page with the Windows, Mac and Linux downloads, no itch.io account needed. Please keep it to yourself. Claiming it with an itch.io account lets the itch.io app install the game and keep it updated."
         : "The link opens the game's itch.io page with the Windows, Mac and Linux downloads, no itch.io account needed. It is yours alone, so please keep it to yourself. Claiming it with an itch.io account lets the itch.io app install the game and keep it updated." },
     { note: PLATFORM_NOTES[platform] || [] },
-    { p: "It is an alpha: expect rough edges. To tell us what you found, reply to this mail." },
+    { p: "Thank you for playing. It is an alpha, so expect rough edges. When you have played, tell us how it went (did it run, what broke, what you liked) on the site, or reply to this mail:", href: FEEDBACK_URL },
     { sign: ["Project Trinity Studios", "https://projecttrinity.dev"] },
   ];
 }
 
 // The plain-text part, for mail apps that show no HTML: blocks apart by a blank line, a note's lines together.
 function mailText(blocks) {
-  return blocks.map((b) => (b.note || b.sign || [b.p ?? b.link]).join("\n")).filter(Boolean).join("\n\n");
+  return blocks.map((b) => (b.note || b.sign || (b.href ? [b.p, b.href] : [b.p ?? b.link])).join("\n")).filter(Boolean).join("\n\n");
 }
 
 export function keyMailText(platform, keyUrl) {
@@ -345,7 +348,9 @@ function mailHtml(blocks, title) {
   const body = [];
   let sign = [];
   for (const b of blocks) {
-    if (b.p !== undefined) body.push(para(b.p));
+    if (b.p !== undefined && b.href) {
+      body.push(`<p style="margin:0 0 16px;">${esc(b.p)}<br><a href="${esc(b.href)}" class="key" style="color:#5b3db0; font-weight:600; text-decoration:underline;">${esc(b.href.replace(/^https:\/\//, ""))}</a></p>`);
+    } else if (b.p !== undefined) body.push(para(b.p));
     else if (b.link !== undefined) {
       const url = String(b.link);
       const shown = esc(url);

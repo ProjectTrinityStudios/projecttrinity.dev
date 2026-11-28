@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Contact | Project Trinity</title>
-  <meta name="description" content="Send Project Trinity Studios a message.">
+  <title>Tell us how it went | Project Trinity</title>
+  <meta name="description" content="Played a build of Project Trinity: Shatterbound? Tell the studio how it went: a bug, an idea, or thanks.">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c3b3ea">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#12163a">
@@ -14,8 +14,8 @@
   <meta property="og:type" content="website">
   <meta name="author" content="Project Trinity Studios">
   <meta property="og:site_name" content="Project Trinity Studios">
-  <meta property="og:title" content="Contact Project Trinity Studios">
-  <meta property="og:description" content="A question, a bug, an idea, or just hello: send a message to Project Trinity Studios.">
+  <meta property="og:title" content="Tell us how it went | Project Trinity Studios">
+  <meta property="og:description" content="Played a build? A bug, an idea, or thanks: tell Project Trinity Studios how it went.">
   <meta property="og:url" content="https://projecttrinity.dev/contact/">
   <meta property="og:image" content="https://projecttrinity.dev/img/share/site-aa220bc303.jpg">
   <meta property="og:image:width" content="1200">
@@ -29,8 +29,8 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Contact",
-  "description": "Send Project Trinity Studios a message.",
+  "name": "Tell us how it went",
+  "description": "Played a build of Project Trinity: Shatterbound? Tell the studio how it went: a bug, an idea, or thanks.",
   "url": "https://projecttrinity.dev/contact/",
   "isPartOf": {
     "@type": "WebSite",
@@ -54,8 +54,8 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/fonts/CaveatBrush-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>/* Day or Night as this visitor last picked it (kept in this browser only); else the system's */try{var t=localStorage.getItem("pt-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-  <link rel="stylesheet" href="/css/site.css?v=65a8688d">
-  <script src="/js/site.js?v=67492294" defer></script>
+  <link rel="stylesheet" href="/css/site.css?v=d4e0d488">
+  <script src="/js/site.js?v=43774d8a" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to the page</a>
@@ -94,15 +94,56 @@
   <main id="main" class="page-top">
     <header class="wrap page-head">
       <p class="eyebrow">Contact</p>
-      <h1><span class="title-mark title-star">Send a message</span></h1>
-      <p class="lede">A question, a bug, an idea, or just hello. It goes straight to the studio.</p>
+      <h1><span class="title-mark title-star">Tell us how it went</span></h1>
+      <p class="lede">Played a build? A bug, an idea, or just thanks: it goes straight to the studio, and every one is read. A question or a hello is welcome too.</p>
     </header>
 
     <div class="wrap section contact-grid">
       <div class="book book-single">
         <div class="page">
-          <h2 id="contact-title">Your message</h2>
-          <form class="ledger-form" aria-labelledby="contact-title" data-endpoint="/contact" data-thanks="Thanks! Your message is in. Any reply goes to the email you gave." method="post" novalidate>
+          <h2 id="contact-title">Your note</h2>
+          <form class="ledger-form" aria-labelledby="contact-title" data-endpoint="/contact" data-thanks="Thank you! It's in, and it will be read. Any reply goes to the email you gave." method="post" novalidate>
+            <fieldset class="field">
+              <legend>What is it?</legend>
+              <div class="choices">
+                <label><input type="radio" name="kind" value="bug" required> A bug</label>
+                <label><input type="radio" name="kind" value="idea"> An idea</label>
+                <label><input type="radio" name="kind" value="thanks"> Thanks</label>
+                <label><input type="radio" name="kind" value="other"> Something else</label>
+              </div>
+            </fieldset>
+            <fieldset class="field">
+              <legend>Did the game run? <span class="optional">(optional)</span></legend>
+              <div class="choices">
+                <label><input type="radio" name="ran" value="yes"> Yes</label>
+                <label><input type="radio" name="ran" value="trouble"> Yes, with trouble</label>
+                <label><input type="radio" name="ran" value="no"> No</label>
+                <label><input type="radio" name="ran" value="not-played"> I haven't played yet</label>
+              </div>
+            </fieldset>
+            <div class="field">
+              <label for="msg-played">What did you play? <span class="optional">(optional)</span></label>
+              <input id="msg-played" name="played" type="text" maxlength="200" aria-describedby="msg-played-hint">
+              <p class="field-hint" id="msg-played-hint">The heroes, the fight or the place, as far as you got.</p>
+            </div>
+            <div class="field">
+              <label for="msg-text">What happened?</label>
+              <textarea id="msg-text" name="message" rows="6" maxlength="2000" required aria-describedby="msg-text-hint"></textarea>
+              <p class="field-hint" id="msg-text-hint">What you did, what you saw, and what you expected. For an idea or thanks, just say it.</p>
+            </div>
+            <fieldset class="field">
+              <legend>How bad was it? <span class="optional">(for a bug, optional)</span></legend>
+              <div class="choices">
+                <label><input type="radio" name="severity" value="blocker"> It stopped me playing</label>
+                <label><input type="radio" name="severity" value="annoying"> It got in the way</label>
+                <label><input type="radio" name="severity" value="small"> Small, but worth saying</label>
+              </div>
+            </fieldset>
+            <div class="field">
+              <label for="msg-code">Report code <span class="optional">(optional)</span></label>
+              <input id="msg-code" name="report_code" type="text" maxlength="1000" autocomplete="off" spellcheck="false" aria-describedby="msg-code-hint">
+              <p class="field-hint" id="msg-code-hint">If the game gave you a report code, paste it here. It tells the studio which build and which moment of your run.</p>
+            </div>
             <div class="field">
               <label for="msg-name">Name <span class="optional">(optional)</span></label>
               <input id="msg-name" name="name" type="text" autocomplete="name" maxlength="100">
@@ -110,10 +151,6 @@
             <div class="field">
               <label for="msg-email">Email</label>
               <input id="msg-email" name="email" type="email" autocomplete="email" required>
-            </div>
-            <div class="field">
-              <label for="msg-text">Message</label>
-              <textarea id="msg-text" name="message" rows="6" maxlength="2000" required></textarea>
             </div>
             <div class="ticks">
               <label class="tick"><input type="checkbox" name="age" required> <span>I'm 13 or older</span></label>
