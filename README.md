@@ -29,13 +29,18 @@ Add `?theme=dark` or `?theme=light` to force a mode. A visitor's own Day or Nigh
 | `devlog/` | The index, newest first, the email sign-up at its foot; one folder per post (`devlog/<slug>/index.html`). The five monthly recaps (July to November 2026) carry the same words as the game repository's drafts, `docs/devlog/recaps/`: a fix to one is made to both. |
 | `email/` | The email list's mail (Tooling 192): Kit's HTML template in the Book look, the confirm and welcome emails' words, and the sender steps (Kit's domain verification on Cloudflare DNS, DMARC, the hello@ forward). Not served (`_config.yml` excludes it); `python tools/preview-email.py` renders it for a look. |
 | `contact/` | The message form (the Worker's `/contact`). |
+| `privacy/` | What the list and the forms keep, why, for how long, and how to have it removed, with Kit's, Cloudflare's, GitHub's, Resend's and YouTube's parts named. Linked from every footer. Keep it true when a form, the Worker's tables or a service changes. |
+| `press/` | The press kit: the fact sheet, the video, screenshots (open each for its full size), the heroes, the studio and Shatterbound marks (`img/press/`, SVG and 1024 px PNG, copied from the game repository's `art/brand/mark/`), and contact. |
+| `404.html` | The page GitHub Pages shows for any address it doesn't have, in the Book look (not indexed). |
 | `css/site.css` | All styles, in the game's own look, the Wayfarers' Book: paper on a lilac sky by Day, blue paper on the night sky by Night, Caveat Brush lettering, stickers in each hero's colour, photos taped in, the gold brush for what to press. The colours are the game's tokens (`unity-b/Assets/UI/Theme/TrinityTokens.uss`). |
 | `tools/` | The generators below, and `share-card/` (`card.html`, the link cards' template, and `banner.html`, the YouTube banner's; not served). |
 | `js/site.js` | The light/dark switch, the header (solid on scroll, the phone menu), the film window, and the forms' checks. Nothing is sent or stored except what a form sends. |
 | `fonts/` | The game's UI fonts (Caveat Brush for names and titles, Source Sans 3 for reading), SIL Open Font License; licences beside them. |
 | `img/` | Stills, `share/` (every page's link card, 1200x630, drawn by the tools; see Link cards below), the two flow charts with a still of each for people who turn motion off, `party/` (the game's round portrait stickers, 256 px WebP), `portraits/` (Models 101's renders: the 4:5 cut-outs and the 16:9 banners, from `tools/make-portraits.py`), `fights/` (the game's fight cards, 16:9), `devlog/` (each post's pictures as WebP, a 720 px and an up-to-1200 px copy) and `book/` (the Book's own plates: paper, tape, brush strokes, stamps, clouds, from `unity-b/Assets/UI/Art/Book/`). |
 
-Every page carries the same header and footer: change one, change them all. Each page has its own link card
+Every page carries the same header and footer: change one, change them all. The address hello@ is written inside `<!--email_off-->` and
+`<!--/email_off-->` on every page: without them Cloudflare's Email Address Obfuscation rewrites each mail link into a
+`/cdn-cgi/l/email-protection` link (which answers 404 to anyone without its script) and adds its decoding script to the page. Each page has its own link card
 (`og:title`, `og:description`, `og:url`, and the card's picture; see Link cards below).
 
 ## Adding a devlog post
