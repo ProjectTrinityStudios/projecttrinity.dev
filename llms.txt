@@ -34,4 +34,4 @@
 ## Playing it
 
 - [Request a build](https://projecttrinity.dev/request/): builds of the alpha go out by hand, a few at a time
-- [Contact](https://projecttrinity.dev/contact/): a message to the studio
+- [Tell us how it went](https://projecttrinity.dev/contact/): feedback after a build (a bug, an idea, thanks) or a message to the studio

@@ -28,7 +28,7 @@ Add `?theme=dark` or `?theme=light` to force a mode. A visitor's own Day or Nigh
 | `research/` | Three short sections: how the party plays, how the research is done, how the game is built, with the two charts. |
 | `devlog/` | The index, newest first, the email sign-up at its foot; one folder per post (`devlog/<slug>/index.html`). The five monthly recaps (July to November 2026) carry the same words as the game repository's drafts, `docs/devlog/recaps/`: a fix to one is made to both. |
 | `email/` | The email list's mail (Tooling 192): Kit's HTML template in the Book look, the confirm and welcome emails' words, and the sender steps (Kit's domain verification on Cloudflare DNS, DMARC, the hello@ forward). Not served (`_config.yml` excludes it); `python tools/preview-email.py` renders it for a look. |
-| `contact/` | The message form (the Worker's `/contact`). |
+| `contact/` | "Tell us how it went" (Site 9): the feedback and message form (the Worker's `/contact`). It asks what kind it is (a bug, an idea, thanks, something else), then a few optional run questions (did it run, what was played, how bad) and a field for the game's report code (`report_code`: plain text, one line, at most 1,000 characters; the game's Report a problem button puts it on the clipboard, UI 136). The build key mail points testers here. |
 | `css/site.css` | All styles, in the game's own look, the Wayfarers' Book: paper on a lilac sky by Day, blue paper on the night sky by Night, Caveat Brush lettering, stickers in each hero's colour, photos taped in, the gold brush for what to press. The colours are the game's tokens (`unity-b/Assets/UI/Theme/TrinityTokens.uss`). |
 | `tools/` | The generators below, and `share-card/` (`card.html`, the link cards' template, and `banner.html`, the YouTube banner's; not served). |
 | `js/site.js` | The light/dark switch, the header (solid on scroll, the phone menu), the film window, and the forms' checks. Nothing is sent or stored except what a form sends. |
@@ -76,7 +76,7 @@ Every page carries the same header and footer: change one, change them all. Each
   (Kit sends its own confirm email). The Turnstile site key in `js/site.js` is public by design; the secret lives only in
   Cloudflare (`npx wrangler secret put TURNSTILE_SECRET`).
 - Locally: `cd worker`, `npm install` once (wrangler, pinned in `package.json`), put Cloudflare's published test secret in `.dev.vars` (`TURNSTILE_SECRET=1x0000000000000000000000000000000AA`),
-  `npx wrangler d1 execute projecttrinity-forms --local --file=./schema.sql`, `npx wrangler dev --local --port 8787 --ip 127.0.0.1`;
+  `npx wrangler d1 execute projecttrinity-forms --local --file=./schema.sql`, then `npx wrangler d1 migrations apply projecttrinity-forms --local` (the `migrations/` folder), `npx wrangler dev --local --port 8787 --ip 127.0.0.1`;
   on localhost the page uses the test site key and talks to port 8787.
 - `worker/` is not served (`_config.yml` excludes it).
 
@@ -108,6 +108,12 @@ with the same words as a plain-text part for mail apps that show no HTML; one li
   `npx wrangler deploy`, then the first batch imported.
 
 ## Not connected yet
+
+- **Site 9's Contact columns:** before the reshaped Contact page reaches `main`, from `worker/`:
+  `npx wrangler d1 migrations apply projecttrinity-forms --remote` (adds `kind`, `ran`, `played`, `severity` and
+  `report_code` to `messages`; `migrations/0001_feedback.sql`), then `npx wrangler deploy`, in that order: the new
+  Worker writes those columns, so it fails every message until the migration has run. Once both are done it takes the
+  old page's messages too, so the page itself can follow at any time.
 
 - The Contact form needs the Worker's `/contact` route live, so run these from `worker/` **before** the pages that use it
   reach `main`: `npx wrangler d1 execute projecttrinity-forms --remote --file=./schema.sql` (adds the `messages` table),
