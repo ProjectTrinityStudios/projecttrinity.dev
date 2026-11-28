@@ -22,7 +22,8 @@ SITE_CARD = dict(
 SITE_ALT = ("The title Project Trinity, with Shatterbound on a name slip beneath it, over Old Hunger, a huge armoured grub "
             "on a dark dungeon floor. A paper strip below shows the four heroes' stickers and reads Swap heroes mid-fight: "
             "a dungeon crawler built like an MMO raid.")
-SITE_PAGES = ["index.html", "research/index.html", "devlog/index.html", "contact/index.html", "request/index.html"]
+SITE_PAGES = ["index.html", "research/index.html", "devlog/index.html", "contact/index.html", "request/index.html",
+              "privacy/index.html", "press/index.html", "404.html"]
 
 MONTH = re.compile(r"^((?:January|February|March|April|May|June|July|August|September|October|November|December) \d{4}): (.+)$")
 TAPED = " Taped in beside the post's title: "

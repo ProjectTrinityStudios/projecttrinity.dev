@@ -273,13 +273,14 @@ FOOT = """
           <li><a href="/contact/">Contact</a></li>
           <li><a href="/request/">Request a build</a></li>
           <li><a href="/#join">Join the email list</a></li>
+          <li><a href="/press/">Press kit</a></li>
         </ul>
       </div>
       <div>
         <h2>Contact</h2>
         <ul>
           <li><a href="/contact/">Send a message</a></li>
-          <li><a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a></li>
+          <li><!--email_off--><a href="mailto:hello@projecttrinity.dev">hello@projecttrinity.dev</a><!--/email_off--></li>
         </ul>
       </div>
       <div>
@@ -289,6 +290,7 @@ FOOT = """
       <div class="privacy">
         <h2>Privacy</h2>
         <p>This site sets no cookies and runs no trackers or ads. The gameplay video plays from YouTube's privacy-enhanced player, and only once you press play; from then, YouTube's own privacy terms apply to it. If you request a build or send a message, it goes to the project mailbox; your email joins the list only if you ask. All of it is for people 13 or older.</p>
+        <p><a href="/privacy/">What the forms keep, and how to have it removed</a></p>
       </div>
     </div>
     <p class="colophon-foot">Disclosure: AI tools and AI-generated assets were used in making this game.</p>

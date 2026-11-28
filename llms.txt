@@ -35,3 +35,5 @@
 
 - [Request a build](https://projecttrinity.dev/request/): builds of the alpha go out by hand, a few at a time
 - [Contact](https://projecttrinity.dev/contact/): a message to the studio
+- [Press kit](https://projecttrinity.dev/press/): the fact sheet, the marks, screenshots, the video and the heroes, for creators and press
+- [Privacy](https://projecttrinity.dev/privacy/): what the site keeps and how to have it removed
