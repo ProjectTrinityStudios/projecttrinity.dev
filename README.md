@@ -111,8 +111,9 @@ with the same words as a plain-text part for mail apps that show no HTML; one li
 
 - **Site 9's Contact columns:** before the reshaped Contact page reaches `main`, from `worker/`:
   `npx wrangler d1 migrations apply projecttrinity-forms --remote` (adds `kind`, `ran`, `played`, `severity` and
-  `report_code` to `messages`; `migrations/0001_feedback.sql`), then `npx wrangler deploy`. The new Worker also takes the
-  old page's messages, so it can go first.
+  `report_code` to `messages`; `migrations/0001_feedback.sql`), then `npx wrangler deploy`, in that order: the new
+  Worker writes those columns, so it fails every message until the migration has run. Once both are done it takes the
+  old page's messages too, so the page itself can follow at any time.
 
 - The Contact form needs the Worker's `/contact` route live, so run these from `worker/` **before** the pages that use it
   reach `main`: `npx wrangler d1 execute projecttrinity-forms --remote --file=./schema.sql` (adds the `messages` table),

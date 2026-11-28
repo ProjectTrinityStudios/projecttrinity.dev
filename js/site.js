@@ -218,8 +218,9 @@
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       if (sending) return;
+      // Each problem with the box it is about, said and focused in the form's own order.
       var problems = [];
-      var firstBad = null;
+      function bad(el, text) { el.setAttribute("aria-invalid", "true"); problems.push({ el: el, text: text }); }
 
       Array.prototype.forEach.call(form.querySelectorAll("[aria-invalid]"), function (el) {
         el.removeAttribute("aria-invalid");
@@ -227,44 +228,39 @@
 
       var email = form.querySelector('input[type="email"]');
       if (email && !email.checkValidity()) {
-        email.setAttribute("aria-invalid", "true");
-        problems.push(email.value ? "That email doesn't look right." : "Add your email.");
-        firstBad = firstBad || email;
+        bad(email, email.value ? "That email doesn't look right." : "Add your email.");
       }
 
       // The Contact page's kind (bug, idea, thanks, something else) is the one choice it asks for.
       var kinds = form.querySelectorAll('input[name="kind"]');
       if (kinds.length && !form.querySelector('input[name="kind"]:checked')) {
         Array.prototype.forEach.call(kinds, function (r) { r.setAttribute("aria-invalid", "true"); });
-        problems.push("Pick what it is: a bug, an idea, thanks, or something else.");
-        firstBad = firstBad || kinds[0];
+        bad(kinds[0], "Pick what it is: a bug, an idea, thanks, or something else.");
       }
 
       var platforms = form.querySelectorAll('input[name="platform"]');
       var picked = form.querySelector('input[name="platform"]:checked');
       if (platforms.length && !picked) {
         Array.prototype.forEach.call(platforms, function (r) { r.setAttribute("aria-invalid", "true"); });
-        problems.push("Pick where you'll play.");
-        firstBad = firstBad || platforms[0];
+        bad(platforms[0], "Pick where you'll play.");
       }
 
       var message = field("message");
       if (message && !message.value.trim()) {
-        message.setAttribute("aria-invalid", "true");
-        problems.push("Write your message.");
-        firstBad = firstBad || message;
+        bad(message, "Say what happened, or what is on your mind.");
       }
 
       var age = field("age");
       if (age && !age.checked) {
-        age.setAttribute("aria-invalid", "true");
-        problems.push("Tick the box to say you're 13 or older.");
-        firstBad = firstBad || age;
+        bad(age, "Tick the box to say you're 13 or older.");
       }
 
       if (problems.length) {
-        say(problems.join(" "), true);
-        if (firstBad) firstBad.focus();
+        problems.sort(function (a, b) {
+          return a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+        });
+        say(problems.map(function (p) { return p.text; }).join(" "), true);
+        problems[0].el.focus();
         return;
       }
 
